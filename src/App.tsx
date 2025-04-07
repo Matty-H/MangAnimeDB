@@ -1,35 +1,44 @@
-import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
-import './App.css'
+import { useState } from 'react';
+import './App.css';
+import SearchBar from './components/SearchBar';
+import ResultsDisplay from './components/ResultsDisplay';
+import sampleData from './data/sampleData.json';
+import { MangaAnimeItem } from './types';
+
 
 function App() {
-  const [count, setCount] = useState(0)
+  const [searchResults, setSearchResults] = useState<MangaAnimeItem[]>([]);
+
+  const handleSearch = (searchTerm: string) => {
+    
+    // Filtrer les résultats à partir du terme de recherche
+    const results = sampleData.filter((item: MangaAnimeItem) => {
+      const mainTitle = item.title.toLowerCase();
+      const altTitles = item.alternativeTitles ? 
+        item.alternativeTitles.map(title => title.toLowerCase()) : 
+        [];
+      
+      const searchTermLower = searchTerm.toLowerCase();
+      
+      return mainTitle.includes(searchTermLower) || 
+        altTitles.some(title => title.includes(searchTermLower));
+    });
+    
+    setSearchResults(results);
+   
+  };
 
   return (
-    <>
-      <div>
-        <a href="https://vite.dev" target="_blank">
-          <img src={viteLogo} className="logo" alt="Vite logo" />
-        </a>
-        <a href="https://react.dev" target="_blank">
-          <img src={reactLogo} className="logo react" alt="React logo" />
-        </a>
-      </div>
-      <h1>Vite + React</h1>
-      <div className="card">
-        <button onClick={() => setCount((count) => count + 1)}>
-          count is {count}
-        </button>
-        <p>
-          Edit <code>src/App.tsx</code> and save to test HMR
-        </p>
-      </div>
-      <p className="read-the-docs">
-        Click on the Vite and React logos to learn more
-      </p>
-    </>
-  )
+    <div className="App">
+      <header className="App-header">
+        <h1>MangAnime Où.lire?</h1>
+      </header>
+      <main>
+        <SearchBar onSearch={handleSearch} />
+        <ResultsDisplay results={searchResults} />
+      </main>
+    </div>
+  );
 }
 
-export default App
+export default App;

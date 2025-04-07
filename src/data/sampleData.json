@@ -1,0 +1,857 @@
+[
+    {
+        "id": "one-piece",
+        "title": "One Piece",
+        "alternativeTitles": ["ワンピース"],
+        "correspondences": [
+            {
+                "mangaVolumes": "1-3",
+                "animeEpisodes": "1-3",
+                "animeSeason": 1,
+                "arc": "East Blue - Romance Dawn"
+            },
+            {
+                "mangaVolumes": "4-5",
+                "animeEpisodes": "4-8",
+                "animeSeason": 1,
+                "arc": "East Blue - Orange Town"
+            },
+            {
+                "mangaVolumes": "6-7",
+                "animeEpisodes": "9-18",
+                "animeSeason": 1,
+                "arc": "East Blue - Syrup Village"
+            },
+            {
+                "mangaVolumes": "8-11",
+                "animeEpisodes": "19-30",
+                "animeSeason": 1,
+                "arc": "East Blue - Baratie"
+            },
+            {
+                "mangaVolumes": "11-12",
+                "animeEpisodes": "31-44",
+                "animeSeason": 1,
+                "arc": "East Blue - Arlong Park"
+            },
+            {
+                "mangaVolumes": "12-15",
+                "animeEpisodes": "45-53",
+                "animeSeason": 1,
+                "arc": "East Blue - Loguetown"
+            },
+            {
+                "mangaVolumes": "15-17",
+                "animeEpisodes": "54-61",
+                "animeSeason": 1,
+                "arc": "East Blue - Reverse Mountain"
+            },
+            {
+                "mangaVolumes": "17-18",
+                "animeEpisodes": "62-63",
+                "animeSeason": 1,
+                "arc": "Whiskey Peak"
+            },
+            {
+                "mangaVolumes": "18-19",
+                "animeEpisodes": "64-67",
+                "animeSeason": 1,
+                "arc": "Little Garden"
+            },
+            {
+                "mangaVolumes": "19-23",
+                "animeEpisodes": "68-91",
+                "animeSeason": 1,
+                "arc": "Drum Island"
+            },
+            {
+                "mangaVolumes": "24-32",
+                "animeEpisodes": "92-130",
+                "animeSeason": 1,
+                "arc": "Arabasta"
+            },
+            {
+                "mangaVolumes": "32-34",
+                "animeEpisodes": "131-135",
+                "animeSeason": 1,
+                "arc": "Post-Arabasta"
+            },
+            {
+                "mangaVolumes": "34-39",
+                "animeEpisodes": "136-206",
+                "animeSeason": 1,
+                "arc": "Skypiea"
+            },
+            {
+                "mangaVolumes": "39-45",
+                "animeEpisodes": "207-325",
+                "animeSeason": 1,
+                "arc": "Water 7 & Enies Lobby"
+            },
+            {
+                "mangaVolumes": "45-50",
+                "animeEpisodes": "326-384",
+                "animeSeason": 1,
+                "arc": "Thriller Bark"
+            },
+            {
+                "mangaVolumes": "50-53",
+                "animeEpisodes": "385-405",
+                "animeSeason": 1,
+                "arc": "Sabaody Archipelago"
+            },
+            {
+                "mangaVolumes": "53-61",
+                "animeEpisodes": "408-516",
+                "animeSeason": 1,
+                "arc": "Summit War"
+            },
+            {
+                "mangaVolumes": "61-66",
+                "animeEpisodes": "517-574",
+                "animeSeason": 1,
+                "arc": "Fish-Man Island"
+            },
+            {
+                "mangaVolumes": "66-70",
+                "animeEpisodes": "579-628",
+                "animeSeason": 1,
+                "arc": "Punk Hazard"
+            },
+            {
+                "mangaVolumes": "70-80",
+                "animeEpisodes": "629-746",
+                "animeSeason": 1,
+                "arc": "Dressrosa"
+            },
+            {
+                "mangaVolumes": "80-90",
+                "animeEpisodes": "747-878",
+                "animeSeason": 1,
+                "arc": "Whole Cake Island"
+            },
+            {
+                "mangaVolumes": "90-104",
+                "animeEpisodes": "879-ongoing",
+                "animeSeason": 1,
+                "arc": "Wano Country"
+            }
+        ]
+    },
+    {
+        "id": "attack-on-titan",
+        "title": "Attack on Titan",
+        "alternativeTitles": ["Shingeki no Kyojin", "進撃の巨人"],
+        "correspondences": [
+            {
+                "mangaVolumes": "1-4",
+                "animeEpisodes": "1-13",
+                "animeSeason": 1,
+                "arc": "The Fall of Shiganshina & Humanity's Comeback"
+            },
+            {
+                "mangaVolumes": "5-8",
+                "animeEpisodes": "14-25",
+                "animeSeason": 1,
+                "arc": "The Struggle for Trost & Female Titan"
+            },
+            {
+                "mangaVolumes": "9-12",
+                "animeEpisodes": "26-37",
+                "animeSeason": 2,
+                "arc": "Clash of the Titans"
+            },
+            {
+                "mangaVolumes": "13-17",
+                "animeEpisodes": "38-49",
+                "animeSeason": 3,
+                "arc": "Uprising"
+            },
+            {
+                "mangaVolumes": "18-22",
+                "animeEpisodes": "50-59",
+                "animeSeason": 3,
+                "arc": "Return to Shiganshina"
+            },
+            {
+                "mangaVolumes": "23-26",
+                "animeEpisodes": "60-67",
+                "animeSeason": 4,
+                "arc": "Marley"
+            },
+            {
+                "mangaVolumes": "27-34",
+                "animeEpisodes": "68-75",
+                "animeSeason": 4,
+                "arc": "War for Paradis"
+            }
+        ]
+    },
+    {
+        "id": "naruto",
+        "title": "Naruto",
+        "alternativeTitles": ["ナルト"],
+        "correspondences": [
+            {
+                "mangaVolumes": "1-2",
+                "animeEpisodes": "1-5",
+                "animeSeason": 1,
+                "arc": "Introduction"
+            },
+            {
+                "mangaVolumes": "2-4",
+                "animeEpisodes": "6-19",
+                "animeSeason": 1,
+                "arc": "Land of Waves"
+            },
+            {
+                "mangaVolumes": "4-13",
+                "animeEpisodes": "20-67",
+                "animeSeason": 1,
+                "arc": "Chunin Exams"
+            },
+            {
+                "mangaVolumes": "13-16",
+                "animeEpisodes": "68-80",
+                "animeSeason": 1,
+                "arc": "Konoha Crush"
+            },
+            {
+                "mangaVolumes": "17-19",
+                "animeEpisodes": "81-100",
+                "animeSeason": 1,
+                "arc": "Search for Tsunade"
+            },
+            {
+                "mangaVolumes": "20-27",
+                "animeEpisodes": "107-135",
+                "animeSeason": 1,
+                "arc": "Sasuke Recovery"
+            },
+            {
+                "mangaVolumes": "28-31",
+                "animeEpisodes": "1-32",
+                "animeSeason": 2,
+                "arc": "Kazekage Rescue"
+            },
+            {
+                "mangaVolumes": "32-35",
+                "animeEpisodes": "33-53",
+                "animeSeason": 2,
+                "arc": "Sasuke and Sai"
+            },
+            {
+                "mangaVolumes": "35-38",
+                "animeEpisodes": "54-71",
+                "animeSeason": 2,
+                "arc": "Hidan and Kakuzu"
+            },
+            {
+                "mangaVolumes": "38-42",
+                "animeEpisodes": "72-88",
+                "animeSeason": 2,
+                "arc": "Itachi Pursuit"
+            },
+            {
+                "mangaVolumes": "43-48",
+                "animeEpisodes": "113-126",
+                "animeSeason": 2,
+                "arc": "Pain's Assault"
+            },
+            {
+                "mangaVolumes": "49-51",
+                "animeEpisodes": "152-175",
+                "animeSeason": 2,
+                "arc": "Five Kage Summit"
+            },
+            {
+                "mangaVolumes": "52-55",
+                "animeEpisodes": "197-221",
+                "animeSeason": 2,
+                "arc": "Fourth Shinobi World War: Countdown"
+            },
+            {
+                "mangaVolumes": "56-59",
+                "animeEpisodes": "261-321",
+                "animeSeason": 2,
+                "arc": "Fourth Shinobi World War: Confrontation"
+            },
+            {
+                "mangaVolumes": "60-66",
+                "animeEpisodes": "322-375",
+                "animeSeason": 2,
+                "arc": "Fourth Shinobi World War: Climax"
+            },
+            {
+                "mangaVolumes": "67-70",
+                "animeEpisodes": "376-393",
+                "animeSeason": 2,
+                "arc": "Birth of the Ten-Tails' Jinchuriki"
+            },
+            {
+                "mangaVolumes": "71-72",
+                "animeEpisodes": "414-479",
+                "animeSeason": 2,
+                "arc": "Kaguya Otsutsuki Strikes"
+            },
+            {
+                "mangaVolumes": "72",
+                "animeEpisodes": "480-500",
+                "animeSeason": 2,
+                "arc": "Sasuke Shinden: Book of Sunrise"
+            }
+        ]
+    },
+    {
+        "id": "fullmetal-alchemist",
+        "title": "Fullmetal Alchemist",
+        "alternativeTitles": ["Hagane no Renkinjutsushi", "鋼の錬金術師"],
+        "correspondences": [
+            {
+                "mangaVolumes": "1-2",
+                "animeEpisodes": "1-9",
+                "animeSeason": 1,
+                "arc": "Introduction"
+            },
+            {
+                "mangaVolumes": "3-4",
+                "animeEpisodes": "10-14",
+                "animeSeason": 1,
+                "arc": "Laboratory 5"
+            },
+            {
+                "mangaVolumes": "5-6",
+                "animeEpisodes": "15-19",
+                "animeSeason": 1,
+                "arc": "Rush Valley"
+            },
+            {
+                "mangaVolumes": "7-8",
+                "animeEpisodes": "20-24",
+                "animeSeason": 1,
+                "arc": "Xingese"
+            },
+            {
+                "mangaVolumes": "9-10",
+                "animeEpisodes": "25-30",
+                "animeSeason": 1,
+                "arc": "Briggs"
+            },
+            {
+                "mangaVolumes": "11-12",
+                "animeEpisodes": "31-35",
+                "animeSeason": 1,
+                "arc": "Promised Day Preparation"
+            },
+            {
+                "mangaVolumes": "13-14",
+                "animeEpisodes": "36-40",
+                "animeSeason": 1,
+                "arc": "Promised Day"
+            },
+            {
+                "mangaVolumes": "15-16",
+                "animeEpisodes": "41-46",
+                "animeSeason": 1,
+                "arc": "Father"
+            },
+            {
+                "mangaVolumes": "17-18",
+                "animeEpisodes": "47-51",
+                "animeSeason": 1,
+                "arc": "Final Battle"
+            },
+            {
+                "mangaVolumes": "19-20",
+                "animeEpisodes": "52-57",
+                "animeSeason": 1,
+                "arc": "Journey's End"
+            }
+        ]
+    },
+    {
+      "id": "demon-slayer",
+      "title": "Demon Slayer",
+      "alternativeTitles": ["Kimetsu no Yaiba", "鬼滅の刃"],
+      "correspondences": [
+        {
+            "mangaVolumes": "1-2",
+            "animeEpisodes": "1-5",
+            "animeSeason": 1,
+            "arc": "Final Selection"
+          },
+          {
+            "mangaVolumes": "2-3",
+            "animeEpisodes": "6-7",
+            "animeSeason": 1,
+            "arc": "Kidnapper's Bog"
+          },
+          {
+            "mangaVolumes": "3-4",
+            "animeEpisodes": "8-10",
+            "animeSeason": 1,
+            "arc": "Asakusa"
+          },
+          {
+            "mangaVolumes": "4-5",
+            "animeEpisodes": "11-14",
+            "animeSeason": 1,
+            "arc": "Tsuzumi Mansion"
+          },
+          {
+            "mangaVolumes": "5-7",
+            "animeEpisodes": "15-21",
+            "animeSeason": 1,
+            "arc": "Natagumo Mountain"
+          },
+          {
+            "mangaVolumes": "7-8",
+            "animeEpisodes": "22-26",
+            "animeSeason": 1,
+            "arc": "Rehabilitation Training"
+          },
+          {
+            "mangaVolumes": "8-11",
+            "animeEpisodes": "Mugen Train Movie / Season 2: Eps 1-7",
+            "animeSeason": 2,
+            "arc": "Mugen Train"
+          },
+          {
+            "mangaVolumes": "9-11",
+            "animeEpisodes": "Season 2: Eps 8-18",
+            "animeSeason": 2,
+            "arc": "Entertainment District"
+          },
+          {
+            "mangaVolumes": "12-15",
+            "animeEpisodes": "Season 3: Eps 1-11",
+            "animeSeason": 3,
+            "arc": "Swordsmith Village"
+          },
+          {
+            "mangaVolumes": "15-16",
+            "animeEpisodes": "Season 4 (TBA)",
+            "animeSeason": 4,
+            "arc": "Hashira Training"
+          },
+          {
+            "mangaVolumes": "17-23",
+            "animeEpisodes": "Future seasons (TBA)",
+            "animeSeason": null,
+            "arc": "Final Battle (Infinity Castle + Sunrise Countdown)"
+          }
+      ]
+    },
+    {
+    "id": "jujutsu-kaisen",
+    "title": "Jujutsu Kaisen",
+    "alternativeTitles": ["呪術廻戦"],
+    "correspondences": [
+      {
+        "arc": "Cursed Child",
+        "mangaVolumes": "0",
+        "animeEpisodes": "Film 'Jujutsu Kaisen 0'",
+        "animeSeason": null
+      },
+      {
+        "arc": "Fearsome Womb",
+        "mangaVolumes": "1-2",
+        "animeEpisodes": "1-8",
+        "animeSeason": 1
+      },
+      {
+        "arc": "Vs. Mahito",
+        "mangaVolumes": "3-4",
+        "animeEpisodes": "9-13",
+        "animeSeason": 1
+      },
+      {
+        "arc": "Kyoto Goodwill Event",
+        "mangaVolumes": "4-6",
+        "animeEpisodes": "14-21",
+        "animeSeason": 1
+      },
+      {
+        "arc": "Death Painting",
+        "mangaVolumes": "6-8",
+        "animeEpisodes": "22-24",
+        "animeSeason": 1
+      },
+      {
+        "arc": "Gojo's Past",
+        "mangaVolumes": "8-9",
+        "animeEpisodes": "25-29",
+        "animeSeason": 2
+      },
+      {
+        "arc": "Shibuya Incident",
+        "mangaVolumes": "10-16",
+        "animeEpisodes": "30-47",
+        "animeSeason": 2
+      },
+      {
+        "arc": "Itadori's Extermination",
+        "mangaVolumes": "16-17",
+        "animeEpisodes": "À venir",
+        "animeSeason": 3
+      },
+      {
+        "arc": "Perfect Preparation",
+        "mangaVolumes": "17-18",
+        "animeEpisodes": "À venir",
+        "animeSeason": 3
+      },
+      {
+        "arc": "Culling Game",
+        "mangaVolumes": "18-22",
+        "animeEpisodes": "À venir",
+        "animeSeason": 3
+      }
+    ]
+  },
+  {
+    "id": "my-hero-academia",
+    "title": "My Hero Academia",
+    "alternativeTitles": ["Boku no Hero Academia", "僕のヒーローアカデミア"],
+    "correspondences": [
+      {
+        "arc": "Entrance Exam",
+        "mangaVolumes": "1",
+        "animeEpisodes": "1-4",
+        "animeSeason": 1
+      },
+      {
+        "arc": "Quirk Apprehension Test",
+        "mangaVolumes": "1-2",
+        "animeEpisodes": "5-6",
+        "animeSeason": 1
+      },
+      {
+        "arc": "Battle Trial",
+        "mangaVolumes": "2",
+        "animeEpisodes": "7-8",
+        "animeSeason": 1
+      },
+      {
+        "arc": "U.S.J.",
+        "mangaVolumes": "2-3",
+        "animeEpisodes": "9-13",
+        "animeSeason": 1
+      },
+      {
+        "arc": "U.A. Sports Festival",
+        "mangaVolumes": "3-5",
+        "animeEpisodes": "14-25",
+        "animeSeason": 2
+      },
+      {
+        "arc": "Vs. Hero Killer",
+        "mangaVolumes": "5-7",
+        "animeEpisodes": "26-33",
+        "animeSeason": 2
+      },
+      {
+        "arc": "Final Exams",
+        "mangaVolumes": "7-8",
+        "animeEpisodes": "34-38",
+        "animeSeason": 2
+      },
+      {
+        "arc": "Forest Training Camp",
+        "mangaVolumes": "8-10",
+        "animeEpisodes": "39-44",
+        "animeSeason": 3
+      },
+      {
+        "arc": "Hideout Raid",
+        "mangaVolumes": "10-11",
+        "animeEpisodes": "45-50",
+        "animeSeason": 3
+      },
+      {
+        "arc": "Provisional Hero License Exam",
+        "mangaVolumes": "11-14",
+        "animeEpisodes": "51-63",
+        "animeSeason": 3
+      },
+      {
+        "arc": "Shie Hassaikai",
+        "mangaVolumes": "14-18",
+        "animeEpisodes": "64-78",
+        "animeSeason": 4
+      },
+      {
+        "arc": "U.A. School Festival",
+        "mangaVolumes": "19-20",
+        "animeEpisodes": "79-83",
+        "animeSeason": 4
+      },
+      {
+        "arc": "Pro Hero",
+        "mangaVolumes": "21",
+        "animeEpisodes": "84-86",
+        "animeSeason": 4
+      },
+      {
+        "arc": "Joint Training",
+        "mangaVolumes": "21-23",
+        "animeEpisodes": "91-100",
+        "animeSeason": 5
+      },
+      {
+        "arc": "Meta Liberation Army",
+        "mangaVolumes": "24-26",
+        "animeEpisodes": "101-112",
+        "animeSeason": 5
+      },
+      {
+        "arc": "Endeavor Agency",
+        "mangaVolumes": "26-27",
+        "animeEpisodes": "113-116",
+        "animeSeason": 5
+      },
+      {
+        "arc": "Paranormal Liberation War",
+        "mangaVolumes": "27-31",
+        "animeEpisodes": "117-138",
+        "animeSeason": 6
+      },
+      {
+        "arc": "Dark Hero",
+        "mangaVolumes": "32-34",
+        "animeEpisodes": "139-146",
+        "animeSeason": 6
+      },
+      {
+        "arc": "Star and Stripe",
+        "mangaVolumes": "34-35",
+        "animeEpisodes": "147-150",
+        "animeSeason": 7
+      },
+      {
+        "arc": "U.A. Traitor",
+        "mangaVolumes": "35",
+        "animeEpisodes": "151-153",
+        "animeSeason": 7
+      },
+      {
+        "arc": "Final War",
+        "mangaVolumes": "36-38",
+        "animeEpisodes": "154-159",
+        "animeSeason": 7
+      },
+      {
+        "arc": "Epilogue",
+        "mangaVolumes": "38",
+        "animeEpisodes": "160-161",
+        "animeSeason": 7
+      }
+    ]
+  },
+  {
+    "id": "jujutsu-kaisen",
+    "title": "Jujutsu Kaisen",
+    "alternativeTitles": ["呪術廻戦"],
+    "correspondences": [
+      {
+        "arc": "Cursed Child",
+        "mangaVolumes": "0",
+        "animeEpisodes": "Film 'Jujutsu Kaisen 0'",
+        "animeSeason": null
+      },
+      {
+        "arc": "Fearsome Womb",
+        "mangaVolumes": "1-2",
+        "animeEpisodes": "1-8",
+        "animeSeason": 1
+      },
+      {
+        "arc": "Vs. Mahito",
+        "mangaVolumes": "3-4",
+        "animeEpisodes": "9-13",
+        "animeSeason": 1
+      },
+      {
+        "arc": "Kyoto Goodwill Event",
+        "mangaVolumes": "4-6",
+        "animeEpisodes": "14-21",
+        "animeSeason": 1
+      },
+      {
+        "arc": "Death Painting",
+        "mangaVolumes": "6-8",
+        "animeEpisodes": "22-24",
+        "animeSeason": 1
+      },
+      {
+        "arc": "Gojo's Past",
+        "mangaVolumes": "8-9",
+        "animeEpisodes": "25-29",
+        "animeSeason": 2
+      },
+      {
+        "arc": "Shibuya Incident",
+        "mangaVolumes": "10-16",
+        "animeEpisodes": "30-47",
+        "animeSeason": 2
+      },
+      {
+        "arc": "Itadori's Extermination",
+        "mangaVolumes": "16-17",
+        "animeEpisodes": "À venir",
+        "animeSeason": 3
+      },
+      {
+        "arc": "Perfect Preparation",
+        "mangaVolumes": "17-18",
+        "animeEpisodes": "À venir",
+        "animeSeason": 3
+      },
+      {
+        "arc": "Culling Game",
+        "mangaVolumes": "18-22",
+        "animeEpisodes": "À venir",
+        "animeSeason": 3
+      }
+    ]
+  },
+  {
+    "id": "my-hero-academia",
+    "title": "My Hero Academia",
+    "alternativeTitles": ["Boku no Hero Academia", "僕のヒーローアカデミア"],
+    "correspondences": [
+      {
+        "arc": "Entrance Exam",
+        "mangaVolumes": "1",
+        "animeEpisodes": "1-4",
+        "animeSeason": 1
+      },
+      {
+        "arc": "Quirk Apprehension Test",
+        "mangaVolumes": "1-2",
+        "animeEpisodes": "5-6",
+        "animeSeason": 1
+      },
+      {
+        "arc": "Battle Trial",
+        "mangaVolumes": "2",
+        "animeEpisodes": "7-8",
+        "animeSeason": 1
+      },
+      {
+        "arc": "U.S.J.",
+        "mangaVolumes": "2-3",
+        "animeEpisodes": "9-13",
+        "animeSeason": 1
+      },
+      {
+        "arc": "U.A. Sports Festival",
+        "mangaVolumes": "3-5",
+        "animeEpisodes": "14-25",
+        "animeSeason": 2
+      },
+      {
+        "arc": "Vs. Hero Killer",
+        "mangaVolumes": "5-7",
+        "animeEpisodes": "26-33",
+        "animeSeason": 2
+      },
+      {
+        "arc": "Final Exams",
+        "mangaVolumes": "7-8",
+        "animeEpisodes": "34-38",
+        "animeSeason": 2
+      },
+      {
+        "arc": "Forest Training Camp",
+        "mangaVolumes": "8-10",
+        "animeEpisodes": "39-44",
+        "animeSeason": 3
+      },
+      {
+        "arc": "Hideout Raid",
+        "mangaVolumes": "10-11",
+        "animeEpisodes": "45-50",
+        "animeSeason": 3
+      },
+      {
+        "arc": "Provisional Hero License Exam",
+        "mangaVolumes": "11-14",
+        "animeEpisodes": "51-63",
+        "animeSeason": 3
+      },
+      {
+        "arc": "Shie Hassaikai",
+        "mangaVolumes": "14-18",
+        "animeEpisodes": "64-78",
+        "animeSeason": 4
+      },
+      {
+        "arc": "U.A. School Festival",
+        "mangaVolumes": "19-20",
+        "animeEpisodes": "79-83",
+        "animeSeason": 4
+      },
+      {
+        "arc": "Pro Hero",
+        "mangaVolumes": "21",
+        "animeEpisodes": "84-86",
+        "animeSeason": 4
+      },
+      {
+        "arc": "Joint Training",
+        "mangaVolumes": "21-23",
+        "animeEpisodes": "91-100",
+        "animeSeason": 5
+      },
+      {
+        "arc": "Meta Liberation Army",
+        "mangaVolumes": "24-26",
+        "animeEpisodes": "101-112",
+        "animeSeason": 5
+      },
+      {
+        "arc": "Endeavor Agency",
+        "mangaVolumes": "26-27",
+        "animeEpisodes": "113-116",
+        "animeSeason": 5
+      },
+      {
+        "arc": "Paranormal Liberation War",
+        "mangaVolumes": "27-31",
+        "animeEpisodes": "117-138",
+        "animeSeason": 6
+      },
+      {
+        "arc": "Dark Hero",
+        "mangaVolumes": "32-34",
+        "animeEpisodes": "139-146",
+        "animeSeason": 6
+      },
+      {
+        "arc": "Star and Stripe",
+        "mangaVolumes": "34-35",
+        "animeEpisodes": "147-150",
+        "animeSeason": 7
+      },
+      {
+        "arc": "U.A. Traitor",
+        "mangaVolumes": "35",
+        "animeEpisodes": "151-153",
+        "animeSeason": 7
+      },
+      {
+        "arc": "Final War",
+        "mangaVolumes": "36-38",
+        "animeEpisodes": "154-159",
+        "animeSeason": 7
+      },
+      {
+        "arc": "Epilogue",
+        "mangaVolumes": "38",
+        "animeEpisodes": "160-161",
+        "animeSeason": 7
+      }
+    ]
+  }
+  ]
