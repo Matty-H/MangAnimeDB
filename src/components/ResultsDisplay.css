@@ -1,0 +1,75 @@
+/* ResultsDisplay.css */
+
+.results-container {
+    display: flex;
+    flex-direction: column;
+    gap: 2rem;
+    padding: 1rem;
+  }
+  
+  .result-card {
+    border-radius: 1rem;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+  }
+  
+  .manga-block,
+  .anime-block {
+    margin-bottom: 1rem;
+  }
+
+  .manga-block.original-work,
+  .anime-block.original-work {
+    background: #2196F3;
+    margin-bottom: 1rem;
+  }
+  
+  .badge {
+    padding: 0.2rem 0.6rem;
+    margin-left: 0.5rem;
+    border-radius: 0.5rem;
+    font-size: 0.8rem;
+    font-weight: bold;
+    color: #fff;
+  }
+  
+  .badge-green { background-color: #4CAF50; }
+  .badge-gray { background-color: #9E9E9E; }
+  .badge-blue { background-color: #2196F3; }
+  .badge-yellow { background-color: #FFC107; color: #000; }
+  .badge-red { background-color: #F44336; }
+  .badge-purple { background-color: #9C27B0; }
+  .badge-orange { background-color: #FF9800; }
+  .badge-default { background-color: #607D8B; }
+  
+  .coverage-line {
+    display: flex;
+    align-items: center;
+    margin-top: 0.5rem;
+    flex-wrap: wrap;
+  }
+  
+  .coverage-line .point {
+    width: 12px;
+    height: 12px;
+    background-color: #ddd;
+    margin: 1px;
+    border-radius: 2px;
+    position: relative;
+  }
+  
+  .coverage-line .highlight {
+    position: absolute;
+    height: 100%;
+    top: 0;
+    z-index: 1;
+    opacity: 0.7;
+  }
+  
+  .coverage-line .highlight.faithful {
+    background-color: #4CAF50;
+  }
+  
+  .coverage-line .highlight.divergent {
+    background-color: #FF9800;
+  }
+  

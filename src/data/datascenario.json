@@ -1,0 +1,384 @@
+[
+  {
+    "id": "FMA001",
+    "title": "Fullmetal Alchemist",
+    "manga": {
+      "id": "FMA301",
+      "authors": ["Hiromu Arakawa"],
+      "volumes": 27,
+      "status": "completed",
+      "start_date": "2001-07",
+      "end_date": "2010-06",
+      "publisher": "Square Enix"
+    },
+    "anime_adaptations": [
+      {
+        "id": "FMA302",
+        "title": "Fullmetal Alchemist (2003)",
+        "studio": "Bones",
+        "episodes": 51,
+        "start_date": "2003-10",
+        "end_date": "2004-10",
+        "status": "completed",
+        "fidelity": "partial",
+        "coverage": {
+          "manga_volumes": [1, 6]
+        },
+        "divergence_point": {
+          "manga_volume": 6,
+          "description": "L’anime diverge du manga à partir du volume 6."
+        },
+        "notes": "Fin originale qui ne suit pas le manga.",
+        "relation_type": "original"
+      },
+      {
+        "id": "FMA303",
+        "title": "Fullmetal Alchemist: Brotherhood",
+        "studio": "Bones",
+        "episodes": 64,
+        "start_date": "2009-04",
+        "end_date": "2010-07",
+        "status": "completed",
+        "fidelity": "faithful",
+        "coverage": {
+          "manga_volumes": [1, 27]
+        },
+        "notes": "Adaptation fidèle du manga jusqu’à la fin.",
+        "relation_type": "remake",
+        "related_to": "FMA302"
+      }
+    ]
+  },
+  {
+    "id": "DN001",
+    "title": "Death Note",
+    "manga": {
+      "id": "DN301",
+      "authors": ["Tsugumi Ohba", "Takeshi Obata"],
+      "volumes": 12,
+      "status": "completed",
+      "start_date": "2003-12",
+      "end_date": "2006-05",
+      "publisher": "Shueisha"
+    },
+    "anime_adaptations": [
+      {
+        "id": "DN302",
+        "title": "Death Note",
+        "studio": "Madhouse",
+        "episodes": 37,
+        "start_date": "2006-10",
+        "end_date": "2007-06",
+        "status": "completed",
+        "fidelity": "faithful",
+        "coverage": {
+          "manga_volumes": [1, 12]
+        },
+        "notes": "Adaptation fidèle du manga avec très peu de changements.",
+        "relation_type": "original"
+      }
+    ]
+  },
+  {
+    "id": "TG001",
+    "title": "Tokyo Ghoul",
+    "manga": {
+      "id": "TG301",
+      "authors": ["Sui Ishida"],
+      "volumes": 14,
+      "status": "completed",
+      "start_date": "2011-09",
+      "end_date": "2014-09",
+      "publisher": "Shueisha"
+    },
+    "anime_adaptations": [
+      {
+        "id": "TG302",
+        "title": "Tokyo Ghoul",
+        "studio": "Pierrot",
+        "episodes": 12,
+        "start_date": "2014-07",
+        "end_date": "2014-09",
+        "status": "completed",
+        "fidelity": "partial",
+        "coverage": {
+          "manga_volumes": [1, 8]
+        },
+        "divergence_point": {
+          "manga_volume": 6,
+          "description": "Les arcs majeurs du manga sont supprimés ou résumés en montage."
+        },
+        "notes": "Adaptation fidèle au début, mais changements d’ordre et rythme accéléré.",
+        "relation_type": "original"
+      }
+    ]
+  },
+  {
+    "id": "BC001",
+    "title": "Black Clover",
+    "manga": {
+      "id": "BC301",
+      "authors": ["Yūki Tabata"],
+      "volumes": 35,
+      "status": "ongoing",
+      "start_date": "2015-02",
+      "publisher": "Shueisha"
+    },
+    "anime_adaptations": [
+      {
+        "id": "BC302",
+        "title": "Black Clover",
+        "studio": "Pierrot",
+        "episodes": 170,
+        "start_date": "2017-10",
+        "end_date": "2021-03",
+        "status": "completed",
+        "fidelity": "partial",
+        "coverage": {
+          "manga_volumes": [1, 27]
+        },
+        "divergence_point": {
+          "manga_volume": 27,
+          "description": "Fidèle jusqu’à l’arc final, puis fin accélérée et non canon."
+        },
+        "notes": "Fidèle jusqu’à l’arc final, puis fin accélérée et non canon.",
+        "relation_type": "original"
+      }
+    ]
+  },
+  {
+    "id": "CB001",
+    "title": "Code Geass",
+    "manga": {
+      "id": "CB301",
+      "authors": ["Ichirō Ōkouchi", "Majiko! (adaptation)"],
+      "volumes": 8,
+      "status": "completed",
+      "start_date": "2006-12",
+      "publisher": "Kadokawa"
+    },
+    "anime_adaptations": [
+      {
+        "id": "CB302",
+        "title": "Code Geass: Lelouch of the Rebellion",
+        "studio": "Sunrise",
+        "episodes": 50,
+        "start_date": "2006-10",
+        "end_date": "2008-09",
+        "status": "completed",
+        "fidelity": "anime_original",
+        "notes": "L’anime est l’œuvre originale, le manga est une adaptation dérivée.",
+        "relation_type": "original"
+      }
+    ]
+  },
+  {
+    "id": "BE001",
+    "title": "Berserk",
+    "manga": {
+      "id": "BE301",
+      "authors": ["Kentaro Miura"],
+      "volumes": 41,
+      "status": "unfinished",
+      "start_date": "1989-08",
+      "end_date": "2021-05",
+      "publisher": "Hakusensha"
+    },
+    "anime_adaptations": [
+      {
+        "id": "BE302",
+        "title": "Berserk (1997)",
+        "studio": "OLM",
+        "episodes": 25,
+        "start_date": "1997-10",
+        "end_date": "1998-03",
+        "status": "completed",
+        "fidelity": "faithful",
+        "coverage": {
+          "manga_volumes": [4, 13]
+        },
+        "divergence_point": {
+          "manga_volume": 13,
+          "description": "Ne couvre que l’arc de l’âge d’or. Aucun contenu postérieur."
+        },
+        "notes": "Ne couvre que l’arc de l’âge d’or. Aucun contenu postérieur.",
+        "relation_type": "original"
+      }
+    ]
+  },
+  {
+    "id": "HX001",
+    "title": "Hunter x Hunter",
+    "manga": {
+      "id": "HX301",
+      "authors": ["Yoshihiro Togashi"],
+      "volumes": 37,
+      "status": "hiatus",
+      "start_date": "1998-03",
+      "publisher": "Shueisha"
+    },
+    "anime_adaptations": [
+      {
+        "id": "HX302",
+        "title": "Hunter x Hunter (1999)",
+        "studio": "Nippon Animation",
+        "episodes": 62,
+        "start_date": "1999-10",
+        "end_date": "2001-03",
+        "status": "completed",
+        "fidelity": "faithful",
+        "coverage": {
+          "manga_volumes": [1, 11]
+        },
+        "notes": "S’arrête à la fin de l’arc Yorkshin.",
+        "relation_type": "original"
+      },
+      {
+        "id": "HX303",
+        "title": "Hunter x Hunter (2011)",
+        "studio": "Madhouse",
+        "episodes": 148,
+        "start_date": "2011-10",
+        "end_date": "2014-09",
+        "status": "completed",
+        "fidelity": "faithful",
+        "coverage": {
+          "manga_volumes": [1, 32]
+        },
+        "notes": "Adaptation fidèle jusqu’à l’arc élections.",
+        "relation_type": "reboot"
+      }
+    ]
+  },
+  {
+    "id": "PN001",
+    "title": "The Promised Neverland",
+    "manga": {
+      "id": "PN301",
+      "authors": ["Kaiu Shirai", "Posuka Demizu"],
+      "volumes": 20,
+      "status": "completed",
+      "start_date": "2016-08",
+      "end_date": "2020-06",
+      "publisher": "Shueisha"
+    },
+    "anime_adaptations": [
+      {
+        "id": "PN302",
+        "title": "The Promised Neverland",
+        "studio": "CloverWorks",
+        "seasons": [
+          {
+            "season": 1,
+            "episodes": 12,
+            "start_date": "2019-01",
+            "end_date": "2019-03",
+            "fidelity": "faithful",
+            "coverage": {
+              "manga_volumes": [1, 5]
+            },
+            "notes": "Adaptation fidèle du premier arc."
+          },
+          {
+            "season": 2,
+            "episodes": 11,
+            "start_date": "2021-01",
+            "end_date": "2021-03",
+            "fidelity": "partial",
+            "coverage": {
+              "manga_volumes": [6, 20]
+            },
+            "divergence_point": {
+              "manga_volume": 6,
+              "description": "Les arcs majeurs du manga sont supprimés ou résumés en montage."
+            },
+            "notes": "Fin originale très condensée, controversée.",
+            "relation_type": "sequel",
+            "related_to": "PN302"
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "id": "BB001",
+    "title": "Black Butler",
+    "manga": {
+      "id": "BB301",
+      "authors": ["Yana Toboso"],
+      "volumes": 31,
+      "status": "ongoing",
+      "start_date": "2006-09",
+      "publisher": "Square Enix"
+    },
+    "anime_adaptations": [
+      {
+        "id": "BB302",
+        "title": "Black Butler",
+        "studio": "A-1 Pictures",
+        "episodes": 24,
+        "start_date": "2008-10",
+        "end_date": "2009-03",
+        "status": "completed",
+        "fidelity": "partial",
+        "coverage": {
+          "manga_volumes": [1, 6]
+        },
+        "divergence_point": {
+          "manga_volume": 6,
+          "description": "L’anime diverge à partir du volume 6 avec des éléments originaux ajoutés."
+        },
+        "notes": "L’anime suit fidèlement les premiers arcs, mais après, il introduit des événements originaux.",
+        "relation_type": "original"
+      },
+      {
+        "id": "BB303",
+        "title": "Black Butler: Book of Circus",
+        "studio": "A-1 Pictures",
+        "episodes": 10,
+        "start_date": "2014-07",
+        "end_date": "2014-09",
+        "status": "completed",
+        "fidelity": "faithful",
+        "coverage": {
+          "manga_volumes": [11, 14]
+        },
+        "notes": "Adaptation fidèle de l'arc du cirque avec une couverture du manga jusqu'au volume 14.",
+        "relation_type": "sequel",
+        "related_to": "BB302"
+      },
+      {
+        "id": "BB304",
+        "title": "Black Butler: Book of Murder",
+        "studio": "A-1 Pictures",
+        "episodes": 2,
+        "start_date": "2014-10",
+        "end_date": "2014-11",
+        "status": "completed",
+        "fidelity": "faithful",
+        "coverage": {
+          "manga_volumes": [15, 16]
+        },
+        "notes": "Adaptation fidèle de l'arc de l'assassinat.",
+        "relation_type": "sequel",
+        "related_to": "BB302"
+      },
+      {
+        "id": "BB305",
+        "title": "Black Butler: Book of the Atlantic",
+        "studio": "A-1 Pictures",
+        "episodes": 1,
+        "start_date": "2017-01",
+        "end_date": "2017-01",
+        "status": "completed",
+        "fidelity": "faithful",
+        "coverage": {
+          "manga_volumes": [17, 18]
+        },
+        "notes": "Adaptation fidèle de l'arc de l'Atlantique.",
+        "relation_type": "sequel",
+        "related_to": "BB302"
+      }
+    ]
+  }
+]

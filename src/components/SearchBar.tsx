@@ -1,4 +1,5 @@
 import { useState, FormEvent, ChangeEvent } from 'react';
+import './SearchBar.css';
 
 interface SearchBarProps {
   onSearch: (searchTerm: string) => void;
@@ -20,7 +21,7 @@ function SearchBar({ onSearch }: SearchBarProps) {
 
   return (
     <div className="search-container">
-      <form onSubmit={handleSubmit}>
+      <form className="search-bar" onSubmit={handleSubmit}>
         <input
           type="text"
           placeholder="Rechercher un manga ou anime..."

@@ -1,0 +1,46 @@
+[
+    {
+      "id": "FMA001",
+      "title": "Fullmetal Alchemist",
+      "anime_adaptations": [
+        {
+          "id": "FMA302",
+          "title": "Fullmetal Alchemist (2003)",
+          "studio": "Bones",
+          "episodes": 51,
+          "start_date": "2003-10",
+          "end_date": "2004-10",
+          "fidelity": "partial",
+          "relation_type": "original"
+        },
+        {
+          "id": "FMA303",
+          "title": "Fullmetal Alchemist: Brotherhood",
+          "studio": "Bones",
+          "episodes": 64,
+          "start_date": "2009-04",
+          "end_date": "2010-07",
+          "fidelity": "faithful",
+          "relation_type": "remake",
+          "related_to": "FMA302"
+        }
+      ]
+    },
+    {
+      "id": "DN001",
+      "title": "Death Note",
+      "anime_adaptations": [
+        {
+          "id": "DN302",
+          "title": "Death Note",
+          "studio": "Madhouse",
+          "episodes": 37,
+          "start_date": "2006-10",
+          "end_date": "2007-06",
+          "fidelity": "faithful",
+          "relation_type": "original"
+        }
+      ]
+    }
+  ]
+  
