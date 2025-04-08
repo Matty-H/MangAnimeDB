@@ -38,6 +38,7 @@ body, #root {
 /* Search section */
 .search-container {
   display: flex;
+  margin-bottom: 1em;
   justify-content: center;
   align-items: center;
   gap: 10px;
@@ -127,3 +128,4 @@ tr:nth-child(even) {
 tr:hover {
   background-color: #3a3a3a;
 }
+

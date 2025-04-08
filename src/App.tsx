@@ -25,7 +25,7 @@ function App() {
   return (
     <div className="App">
       <header className="App-header">
-        <h1>MangAnime sassaretou?</h1>
+        <h1>MangAnime Link</h1>
       </header>
       <main>
         <SearchBar onSearch={handleSearch} />
