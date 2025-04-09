@@ -1,0 +1,30 @@
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+body, #root {
+  height: 100vh;
+  background-color: #0f0f0f;
+  color: #f0f0f0;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 2rem;
+}
+
+.App {
+  padding: 3rem 2rem;
+}
+
+.App-header {
+  font-size: 1.5rem;
+  font-weight: 600;
+  color: #ffb74d;
+}
+
+.App-name {
+  margin-bottom: 0.2em;
+}

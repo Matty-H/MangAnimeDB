@@ -1,28 +1,28 @@
 import { useState, FormEvent, ChangeEvent, KeyboardEvent } from 'react';
-import './SearchBar.css';
-import data from '../data/datascenario.json'; // 🧠 ici on importe le fichier JSON local
+import './searchBar.css';
+import data from '../../data/datascenario.json';
+import { useNavigate } from '@tanstack/react-router';
 
 interface SearchBarProps {
-  onSearch: (searchTerm: string) => void;
+  onSearch?: (searchTerm: string) => void; // Rendu optionnel
 }
 
-function SearchBar({ onSearch }: SearchBarProps) {
+function SearchBar({ onSearch = () => {} }: SearchBarProps) {
   const [searchTerm, setSearchTerm] = useState('');
   const [filteredSuggestions, setFilteredSuggestions] = useState<string[]>([]);
   const [showSuggestions, setShowSuggestions] = useState(false);
   const [activeIndex, setActiveIndex] = useState(-1);
+  const navigate = useNavigate();
 
   const handleInputChange = (e: ChangeEvent<HTMLInputElement>) => {
     const input = e.target.value;
     setSearchTerm(input);
-
     if (input.trim()) {
       const matches = data
         .filter(entry =>
           entry.title.toLowerCase().includes(input.toLowerCase())
         )
         .map(entry => entry.title);
-
       setFilteredSuggestions(matches);
       setShowSuggestions(true);
     } else {
@@ -36,6 +36,7 @@ function SearchBar({ onSearch }: SearchBarProps) {
     e.preventDefault();
     if (searchTerm.trim()) {
       onSearch(searchTerm);
+      navigate({ to: '/$title', params: { title: searchTerm } });
       setShowSuggestions(false);
       setActiveIndex(-1);
     }
@@ -43,7 +44,6 @@ function SearchBar({ onSearch }: SearchBarProps) {
 
   const handleKeyDown = (e: KeyboardEvent<HTMLInputElement>) => {
     if (!showSuggestions || filteredSuggestions.length === 0) return;
-
     if (e.key === 'ArrowDown') {
       e.preventDefault();
       setActiveIndex(prev => (prev < filteredSuggestions.length - 1 ? prev + 1 : 0));
@@ -65,35 +65,40 @@ function SearchBar({ onSearch }: SearchBarProps) {
     setFilteredSuggestions([]);
     setActiveIndex(-1);
     onSearch(suggestion);
+    navigate({ to: '/$title', params: { title: suggestion } });
   };
 
   return (
     <div className="search-container">
       <form className="search-bar" onSubmit={handleSubmit} autoComplete="off">
-        <input
-          type="text"
-          placeholder="Rechercher un manga ou anime..."
-          value={searchTerm}
-          onChange={handleInputChange}
-          onKeyDown={handleKeyDown}
-          className="search-input"
-        />
-        <button type="submit" className="search-button">Rechercher</button>
+        <div className="search-input-container">
+          <input
+            type="text"
+            placeholder="Rechercher un manga ou anime..."
+            value={searchTerm}
+            onChange={handleInputChange}
+            onKeyDown={handleKeyDown}
+            className="search-input"
+          />
+          <button type="submit" className="search-button">Rechercher</button>
+        </div>
+        
+        {showSuggestions && filteredSuggestions.length > 0 && (
+          <div className="suggestions-container">
+            <ul className="suggestions-list">
+              {filteredSuggestions.map((suggestion, index) => (
+                <li
+                  key={index}
+                  className={`suggestion-item ${index === activeIndex ? 'active' : ''}`}
+                  onClick={() => handleSuggestionClick(suggestion)}
+                >
+                  {suggestion}
+                </li>
+              ))}
+            </ul>
+          </div>
+        )}
       </form>
-
-      {showSuggestions && filteredSuggestions.length > 0 && (
-        <ul className="suggestions-list">
-          {filteredSuggestions.map((suggestion, index) => (
-            <li
-              key={index}
-              className={`suggestion-item ${index === activeIndex ? 'active' : ''}`}
-              onClick={() => handleSuggestionClick(suggestion)}
-            >
-              {suggestion}
-            </li>
-          ))}
-        </ul>
-      )}
     </div>
   );
 }
