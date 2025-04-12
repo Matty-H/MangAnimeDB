@@ -1,0 +1,80 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model manga_anime {
+  @@map("manga_anime")
+
+  id              Int               @id @default(autoincrement())
+  title           String
+  manga           manga?
+  animeAdaptations anime_adaptation[]
+}
+
+model manga {
+  @@map("manga")
+
+  id              Int               @id @default(autoincrement())
+  mangaAnimeId    Int               @unique
+  mangaAnime      manga_anime        @relation(fields: [mangaAnimeId], references: [id])
+  volumes         Int
+  status          String
+  startDate       DateTime?         @map("start_date")
+  endDate         DateTime?         @map("end_date")
+  publisher       String
+  authors         manga_author[]
+}
+
+model manga_author {
+  @@map("manga_author")
+
+  id          Int     @id @default(autoincrement())
+  mangaId     Int
+  manga       manga   @relation(fields: [mangaId], references: [id])
+  name        String
+}
+
+model anime_adaptation {
+  @@map("anime_adaptation")
+
+  id              Int              @id @default(autoincrement())
+  mangaAnimeId    Int
+  mangaAnime      manga_anime       @relation(fields: [mangaAnimeId], references: [id])
+  title           String
+  studio          String
+  episodes        Int
+  startDate       DateTime?        @map("start_date")
+  endDate         DateTime?        @map("end_date")
+  status          String?
+  fidelity        String?
+  notes           String?
+  relationType    String?          @map("relation_type")
+  relatedTo       Int?             @map("related_to")
+  coverages       coverage[]
+  divergencePoints divergence_point[]
+}
+
+model coverage {
+  @@map("coverage")
+
+  id              Int             @id @default(autoincrement())
+  adaptationId    Int             @map("adaptation_id")
+  adaptation      anime_adaptation @relation(fields: [adaptationId], references: [id])
+  volumeStart     Int             @map("volume_start")
+  volumeEnd       Int             @map("volume_end")
+}
+
+model divergence_point {
+  @@map("divergence_point")
+
+  id              Int             @id @default(autoincrement())
+  adaptationId    Int             @map("adaptation_id")
+  adaptation      anime_adaptation @relation(fields: [adaptationId], references: [id])
+  mangaVolume     Int             @map("manga_volume")
+  description     String
+}

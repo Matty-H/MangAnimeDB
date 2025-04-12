@@ -1,7 +1,7 @@
 .search-container {
   position: relative;
   width: 100%;
-  margin: 0
+  margin: 0;
 }
 
 .search-bar {
@@ -82,4 +82,3 @@
   background-color: #2b2b2b;
   color: #ffb74d;
 }
-

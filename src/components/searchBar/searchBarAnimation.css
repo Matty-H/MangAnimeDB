@@ -1,0 +1,70 @@
+/* Fade-in animation on page/app load */
+@keyframes fadeInUp {
+  0% {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+body {
+  animation: fadeInUp 0.8s ease-out both;
+}
+
+/* App animation */
+.App {
+  animation: fadeInUp 1s ease-out both;
+  transition:
+    box-shadow 0.3s ease,
+    background-color 0.3s ease;
+}
+
+/* Hover effect for input container */
+.search-input-container {
+  transition:
+    border 0.3s ease,
+    background-color 0.3s ease;
+}
+
+.search-input-container:hover {
+  border-color: #444;
+  background-color: #181818;
+}
+
+/* Suggestions fade-in */
+.suggestions-list {
+  animation: fadeInUp 0.3s ease;
+  transition:
+    opacity 0.3s ease,
+    transform 0.3s ease;
+}
+
+/* On hover transition for suggestion item */
+.suggestion-item {
+  transition:
+    background-color 0.2s ease,
+    color 0.2s ease;
+}
+
+/* Slight pop effect on button hover */
+.search-button {
+  transition:
+    transform 0.2s ease,
+    background-color 0.3s ease;
+}
+
+.search-button:hover {
+  transform: scale(1.03);
+}
+
+/* Optional: animate App header */
+.App-header {
+  transition: color 0.3s ease;
+}
+
+.App-header:hover {
+  color: #ffc107;
+}

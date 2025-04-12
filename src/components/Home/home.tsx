@@ -5,7 +5,7 @@ function Home() {
   return (
     <div className="App">
       <header className="App-header">
-        <h1 className='App-name'>MangAnime Link</h1>
+        <h1 className="App-name">MangAnime Link</h1>
       </header>
       <main>
         <SearchBar onSearch={() => {}} />

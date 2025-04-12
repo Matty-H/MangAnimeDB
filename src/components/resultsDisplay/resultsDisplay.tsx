@@ -1,45 +1,81 @@
 import { useEffect, useState } from 'react';
 import './resultsDisplay.css';
-import data from '../../data/datascenario.json';
 import { MangaAnimeItem } from '../../types';
+import ScenarioSection from '../scenarioSection/scenarioSection';
+import BookCovers from '../bookCovers/bookCovers';
+import AdaptationTable from '../adaptationTable/adaptationTable';
+import { fetchMangaAnimeByTitle } from '../../services/apiService';
 
 interface ResultsDisplayProps {
   searchTerm?: string;
   results?: MangaAnimeItem[];
 }
 
-function ResultsDisplay({ searchTerm, results: propResults }: ResultsDisplayProps) {
+function ResultsDisplay({
+  searchTerm,
+  results: propResults,
+}: ResultsDisplayProps) {
   const [results, setResults] = useState<MangaAnimeItem[]>([]);
+  const [loading, setLoading] = useState<boolean>(false);
+  const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
+    // Si des résultats sont passés directement en props, on les utilise
     if (propResults) {
-      // Utiliser les résultats fournis directement
       setResults(propResults);
-    } else if (searchTerm) {
-      // Filtrer les données selon le terme de recherche
-      const filteredResults = data.filter(item => 
-        item.title.toLowerCase().includes(searchTerm.toLowerCase())
-      ) as MangaAnimeItem[];
-      setResults(filteredResults);
+      return;
+    }
+
+    // Si un terme de recherche est fourni, on interroge l'API
+    if (searchTerm) {
+      setLoading(true);
+      setError(null);
+
+      fetchMangaAnimeByTitle(searchTerm)
+        .then((data) => {
+          setResults(data);
+          setLoading(false);
+        })
+        .catch((err) => {
+          console.error('Erreur lors de la recherche:', err);
+          setError('Une erreur est survenue lors de la recherche.');
+          setLoading(false);
+          setResults([]);
+        });
     } else {
       setResults([]);
     }
   }, [searchTerm, propResults]);
 
+  if (loading) {
+    return (
+      <div className="search-results">
+        <p>Chargement en cours...</p>
+      </div>
+    );
+  }
+
+  if (error) {
+    return (
+      <div className="search-results">
+        <p className="error-message">{error}</p>
+      </div>
+    );
+  }
+
   return (
     <div className="search-results">
-      {searchTerm && <h2>Résultats pour : {searchTerm}</h2>}
       {!searchTerm && propResults && <h2>Résultats de la recherche</h2>}
       {results.length === 0 ? (
         <p>Aucun résultat trouvé</p>
       ) : (
-        <ul className="results-list">
-          {results.map((item, index) => (
-            <li key={index} className="result-item">
-              <h3>{item.title}</h3>
-            </li>
-          ))}
-        </ul>
+        results.map((item) => (
+          <div key={item.id} className="result-table">
+            <BookCovers title={item.title} />
+            <ScenarioSection title={item.title} />
+            <AdaptationTable adaptations={item.anime_adaptations} />
+          </div>
+        ))
       )}
     </div>
   );

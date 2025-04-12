@@ -1,3 +1,4 @@
+// Path: /Users/matisse/Documents/Dev/MangAnimeDB/src/types.ts
 export interface Coverage {
   manga_volumes?: [number, number];
   anime_titles?: string[];
@@ -17,6 +18,7 @@ export interface Season {
   notes?: string;
   coverage?: {
     manga_volumes: [number, number];
+    manga_chapters: [number, number];
   };
   divergence_point?: DivergencePoint;
 }
@@ -34,9 +36,12 @@ export interface AnimeAdaptation {
     episodes: number;
     coverage?: {
       manga_volumes: number[];
+      manga_chapters: number[];
     };
     notes?: string;
   }[];
+  start_date: string;
+  end_date?: string;
   relation_type?: string;
   related_to?: string;
   notes?: string;

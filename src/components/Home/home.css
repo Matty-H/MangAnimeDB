@@ -4,7 +4,8 @@
   padding: 0;
 }
 
-body, #root {
+body,
+#root {
   height: 100vh;
   background-color: #0f0f0f;
   color: #f0f0f0;
