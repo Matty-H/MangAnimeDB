@@ -95,13 +95,6 @@ export interface AnimeSeason {
   updatedAt: Date;
 }
 
-export interface MangaAnimeItem {
-  id: string;
-  title: string;
-  manga: MangaWork[];
-  anime_adaptations: AnimeWork[];
-}
-
 export interface SearchSuggestion {
   id: string;
   title: string;

@@ -1,8 +1,8 @@
 import React, { useMemo } from 'react';
 import { useState, FormEvent, ChangeEvent, KeyboardEvent, useEffect } from 'react';
+import { useNavigate } from '@tanstack/react-router';
 import './searchBar.css';
 import './searchBarAnimation.css';
-import { useNavigate } from '@tanstack/react-router';
 
 interface SearchBarProps {
   onSearch?: (searchTerm: string) => void;

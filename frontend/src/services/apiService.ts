@@ -1,7 +1,7 @@
 // frontend/src/services/apiService.ts
-import { MangaAnimeItem, SearchSuggestion } from '../types';
+import { License, SearchSuggestion } from '../types';
 
-export const searchDetailed = async (searchTerm: string): Promise<MangaAnimeItem[]> => {
+export const searchDetailed = async (searchTerm: string): Promise<License[]> => {
   try {
     const response = await fetch(`/api/search/detailed?query=${encodeURIComponent(searchTerm)}`);
     if (!response.ok) {
