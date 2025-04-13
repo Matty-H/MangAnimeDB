@@ -3,6 +3,9 @@
   "private": true,
   "version": "0.0.0",
   "type": "module",
+  "prisma": {
+    "schema": "./backend/prisma/schema.prisma"
+  },
   "scripts": {
     "dev:client": "vite",
     "dev:server": "ts-node --esm backend/src/index.ts",
@@ -16,7 +19,7 @@
     "watch-routes": "tsr watch",
     "build-routes": "npm run generate-routes && ...",
     "dev-routes": "npm run watch-routes && ...",
-    "seed": "node prisma/seed.js",
+    "seed": "ts-node prisma/seed.ts",
     "ping": "npx ts-node test-db.ts",
     "format": "prettier --write .",
     "add-comment": "node add-comment.js"

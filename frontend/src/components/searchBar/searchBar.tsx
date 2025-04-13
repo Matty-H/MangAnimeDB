@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useMemo } from 'react';
 import { useState, FormEvent, ChangeEvent, KeyboardEvent, useEffect } from 'react';
 import './searchBar.css';
 import './searchBarAnimation.css';
@@ -8,27 +8,33 @@ interface SearchBarProps {
   onSearch?: (searchTerm: string) => void;
 }
 
+// Interface pour les suggestions de recherche correspondant à notre modèle Prisma
+interface SearchSuggestion {
+  id: string;
+  title: string;
+}
+
 function SearchBar({ onSearch = () => {} }: SearchBarProps) {
   const [searchTerm, setSearchTerm] = useState('');
-  const [filteredSuggestions, setFilteredSuggestions] = useState<{ id: number; title: string }[]>([]);
+  const [filteredSuggestions, setFilteredSuggestions] = useState<SearchSuggestion[]>([]);
   const [showSuggestions, setShowSuggestions] = useState(false);
   const [activeIndex, setActiveIndex] = useState(-1);
   const [isLoading, setIsLoading] = useState(false);
   const navigate = useNavigate();
 
-  // Function to fetch suggestions from the database
+  // Fonction pour récupérer les suggestions depuis notre API
   const fetchSuggestions = async (input: string) => {
     if (!input.trim()) return [];
     
     setIsLoading(true);
     try {
-      // Make an API call to your backend endpoint
-      const response = await fetch(`/api/search?query=${encodeURIComponent(input)}`);
+      // Appel à notre nouveau endpoint API
+      const response = await fetch(`/api/search/suggestions?query=${encodeURIComponent(input)}`);
       if (!response.ok) {
         throw new Error('Failed to fetch suggestions');
       }
       const data = await response.json();
-      return data;
+      return data as SearchSuggestion[]; // Le format correspond déjà à notre interface
     } catch (error) {
       console.error('Error fetching suggestions:', error);
       return [];
@@ -37,7 +43,7 @@ function SearchBar({ onSearch = () => {} }: SearchBarProps) {
     }
   };
 
-  // Debounce function to limit API calls
+  // Fonction de debounce pour limiter les appels API
   const debounce = (func: Function, delay: number) => {
     let timeoutId: NodeJS.Timeout;
     return function(...args: any[]) {
@@ -46,12 +52,16 @@ function SearchBar({ onSearch = () => {} }: SearchBarProps) {
     };
   };
 
-  // Create a debounced version of fetchSuggestions
-  const debouncedFetchSuggestions = debounce(async (input: string) => {
-    const results = await fetchSuggestions(input);
-    setFilteredSuggestions(results);
-    setShowSuggestions(true);
-  }, 300);
+  // Version debounce de fetchSuggestions
+  const debouncedFetchSuggestions = useMemo(() => 
+    debounce(async (input: string) => {
+      console.log("debouncedFetchSuggestions called with:", input);
+      const results = await fetchSuggestions(input);
+      console.log("Fetched suggestions:", results);
+      setFilteredSuggestions(results);
+      setShowSuggestions(results.length > 0);
+    }, 300), []
+  );
 
   const handleInputChange = (e: ChangeEvent<HTMLInputElement>) => {
     const input = e.target.value;
@@ -71,7 +81,7 @@ function SearchBar({ onSearch = () => {} }: SearchBarProps) {
     if (searchTerm.trim()) {
       onSearch(searchTerm);
       
-      // If we have a matching suggestion, use its ID for navigation
+      // Si on a une suggestion correspondante, utiliser son ID pour la navigation
       const matchingSuggestion = filteredSuggestions.find(
         suggestion => suggestion.title.toLowerCase() === searchTerm.toLowerCase()
       );
@@ -109,7 +119,7 @@ function SearchBar({ onSearch = () => {} }: SearchBarProps) {
     }
   };
 
-  const handleSuggestionClick = (suggestion: { id: number; title: string }) => {
+  const handleSuggestionClick = (suggestion: SearchSuggestion) => {
     setSearchTerm(suggestion.title);
     setShowSuggestions(false);
     setFilteredSuggestions([]);
@@ -118,12 +128,16 @@ function SearchBar({ onSearch = () => {} }: SearchBarProps) {
     navigate({ to: '/$title', params: { title: suggestion.title } });
   };
 
-  // Close suggestions when clicking outside
+  // Fermer les suggestions en cliquant à l'extérieur
   useEffect(() => {
-    const handleClickOutside = () => {
-      setShowSuggestions(false);
+    const searchContainer = document.querySelector('.search-container');
+  
+    const handleClickOutside = (event: MouseEvent) => {
+      if (searchContainer && !searchContainer.contains(event.target as Node)) {
+        setShowSuggestions(false);
+      }
     };
-    
+  
     document.addEventListener('click', handleClickOutside);
     return () => {
       document.removeEventListener('click', handleClickOutside);

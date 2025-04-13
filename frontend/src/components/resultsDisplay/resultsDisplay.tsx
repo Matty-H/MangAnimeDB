@@ -6,8 +6,7 @@ import { MangaAnimeItem } from '../../types';
 import ScenarioSection from '../scenarioSection/scenarioSection';
 import BookCovers from '../bookCovers/bookCovers';
 import AdaptationTable from '../adaptationTable/adaptationTable';
-import apiHandler from "../../services/apiService"
-
+import { searchDetailed } from "../../services/apiService";
 interface ResultsDisplayProps {
   searchTerm?: string;
   results?: MangaAnimeItem[];
@@ -33,7 +32,7 @@ function ResultsDisplay({
       setLoading(true);
       setError(null);
 
-      apiHandler(searchTerm)
+      searchDetailed(searchTerm)
         .then((data) => {
           setResults(data);
           setLoading(false);

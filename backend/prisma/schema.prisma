@@ -1,80 +1,120 @@
-generator client {
-  provider = "prisma-client-js"
-}
-
 datasource db {
   provider = "postgresql"
   url      = env("DATABASE_URL")
 }
 
-model manga_anime {
-  @@map("manga_anime")
-
-  id              Int               @id @default(autoincrement())
-  title           String
-  manga           manga?
-  animeAdaptations anime_adaptation[]
+generator client {
+  provider      = "prisma-client-js"
+  binaryTargets = ["rhel-openssl-1.0.x"]
 }
 
-model manga {
-  @@map("manga")
+// This is your Prisma schema file
+// Learn more about it in the docs: https:
 
-  id              Int               @id @default(autoincrement())
-  mangaAnimeId    Int               @unique
-  mangaAnime      manga_anime        @relation(fields: [mangaAnimeId], references: [id])
-  volumes         Int
-  status          String
-  startDate       DateTime?         @map("start_date")
-  endDate         DateTime?         @map("end_date")
-  publisher       String
-  authors         manga_author[]
+model License {
+  id               String      @id @default(cuid())
+  externalId       String?     @unique //Pour FMA001, DN001, etc.
+  title            String
+  mangas           MangaWork[] @relation(name: "LicenseToManga")
+  animeAdaptations AnimeWork[] @relation(name: "AnimeAdaptationToLicense")
+  createdAt        DateTime    @default(now())
+  updatedAt        DateTime    @updatedAt
+
+  @@map("licenses")
 }
 
-model manga_author {
-  @@map("manga_author")
+model MangaWork {
+  id          String         @id @default(cuid())
+  externalId  String?        @unique //Pour FMA301, DN301, etc.
+  licenseId   String
+  license     License        @relation(name: "LicenseToManga", fields: [licenseId], references: [id], onDelete: Cascade)
+  authors     String[]
+  volumes     Int
+  status      WorkStatus
+  startDate   DateTime?
+  endDate     DateTime?
+  publisher   String
+  adaptations MangaToAnime[] @relation(name: "MangaToMangaToAnime")
+  createdAt   DateTime       @default(now())
+  updatedAt   DateTime       @updatedAt
 
-  id          Int     @id @default(autoincrement())
-  mangaId     Int
-  manga       manga   @relation(fields: [mangaId], references: [id])
-  name        String
+  @@map("mangas")
 }
 
-model anime_adaptation {
-  @@map("anime_adaptation")
+model AnimeWork {
+  id           String         @id @default(cuid())
+  externalId   String?        @unique //Pour FMA302, DN302, etc.
+  licenseId    String
+  license      License        @relation(name: "AnimeAdaptationToLicense", fields: [licenseId], references: [id], onDelete: Cascade)
+  title        String
+  studio       String
+  episodes     Int
+  startDate    DateTime?
+  endDate      DateTime?
+  status       WorkStatus
+  fidelity     AnimeFidelity
+  notes        String?        @db.Text
+  relationType RelationType
+  seasons      AnimeSeason[]  @relation(name: "AnimeAdaptationToAnimeSeason")
+  sourcedFrom  MangaToAnime[] @relation(name: "AnimeAdaptationToMangaToAnime")
+  createdAt    DateTime       @default(now())
+  updatedAt    DateTime       @updatedAt
 
-  id              Int              @id @default(autoincrement())
-  mangaAnimeId    Int
-  mangaAnime      manga_anime       @relation(fields: [mangaAnimeId], references: [id])
-  title           String
-  studio          String
-  episodes        Int
-  startDate       DateTime?        @map("start_date")
-  endDate         DateTime?        @map("end_date")
-  status          String?
-  fidelity        String?
-  notes           String?
-  relationType    String?          @map("relation_type")
-  relatedTo       Int?             @map("related_to")
-  coverages       coverage[]
-  divergencePoints divergence_point[]
+  @@map("anime_adaptations")
 }
 
-model coverage {
-  @@map("coverage")
+// Table intermédiaire pour la relation many-to-many entre Manga et AnimeAdaptation
 
-  id              Int             @id @default(autoincrement())
-  adaptationId    Int             @map("adaptation_id")
-  adaptation      anime_adaptation @relation(fields: [adaptationId], references: [id])
-  volumeStart     Int             @map("volume_start")
-  volumeEnd       Int             @map("volume_end")
+model MangaToAnime {
+  id                 String    @id @default(cuid())
+  mangaId            String
+  manga_name         MangaWork @relation(name: "MangaToMangaToAnime", fields: [mangaId], references: [id], onDelete: Cascade)
+  animeAdaptationId  String
+  anime_name         AnimeWork @relation(name: "AnimeAdaptationToMangaToAnime", fields: [animeAdaptationId], references: [id], onDelete: Cascade)
+  coverageFromVolume Int?
+  coverageToVolume   Int?
+  createdAt          DateTime  @default(now())
+  updatedAt          DateTime  @updatedAt
+
+  @@unique([mangaId, animeAdaptationId])
+  @@map("manga_to_anime")
 }
 
-model divergence_point {
-  @@map("divergence_point")
+model AnimeSeason {
+  id                 String        @id @default(cuid())
+  animeAdaptationId  String
+  animeAdaptation    AnimeWork     @relation(name: "AnimeAdaptationToAnimeSeason", fields: [animeAdaptationId], references: [id], onDelete: Cascade)
+  seasonNumber       Int
+  episodes           Int
+  fidelity           AnimeFidelity
+  coverageFromVolume Int?
+  coverageToVolume   Int?
+  notes              String?       @db.Text
+  relationType       RelationType?
+  createdAt          DateTime      @default(now())
+  updatedAt          DateTime      @updatedAt
 
-  id              Int             @id @default(autoincrement())
-  adaptationId    Int             @map("adaptation_id")
-  adaptation      anime_adaptation @relation(fields: [adaptationId], references: [id])
-  mangaVolume     Int             @map("manga_volume")
-  description     String
+  @@map("anime_seasons")
+}
+
+enum WorkStatus {
+  ONGOING
+  COMPLETED
+  HIATUS
+  UNFINISHED
+}
+
+enum AnimeFidelity {
+  FAITHFUL
+  PARTIAL
+  ANIME_ORIGINAL
+}
+
+enum RelationType {
+  ORIGINAL
+  SEQUEL
+  PREQUEL
+  REMAKE
+  SPIN_OFF
+  REBOOT
 }

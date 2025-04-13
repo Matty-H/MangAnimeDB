@@ -1,78 +1,108 @@
 // MangAnimeDB/src/types.ts
 
-export interface Author {
-  id: number;
-  name: string;
+export enum WorkStatus {
+  ONGOING = 'ONGOING',
+  COMPLETED = 'COMPLETED',
+  HIATUS = 'HIATUS',
+  UNFINISHED = 'UNFINISHED'
 }
 
-export interface MangaData {
-  id: number;
-  volumes: number;
-  status: string;
-  startDate: Date | null;
-  endDate: Date | null;
-  publisher: string;
-  authors: Author[];
+export enum AnimeFidelity {
+  FAITHFUL = 'FAITHFUL',
+  PARTIAL = 'PARTIAL',
+  ANIME_ORIGINAL = 'ANIME_ORIGINAL'
 }
 
-export interface Coverage {
-  id: number;
-  volumeStart: number;
-  volumeEnd: number;
-  manga_volumes?: [number, number];
-  anime_titles?: string[];
+export enum RelationType {
+  ORIGINAL = 'ORIGINAL',
+  SEQUEL = 'SEQUEL',
+  PREQUEL = 'PREQUEL',
+  REMAKE = 'REMAKE',
+  SPIN_OFF = 'SPIN_OFF',
+  REBOOT = 'REBOOT'
 }
 
-export interface DivergencePoint {
-  id: number;
-  mangaVolume: number;
-  description: string;
-}
-
-export interface Season {
-  season: number;
-  episodes: number;
-  start_date: string;
-  end_date: string;
-  fidelity: string;
-  notes?: string;
-  coverage?: {
-    manga_volumes: [number, number];
-    manga_chapters: [number, number];
-  };
-  divergence_point?: DivergencePoint;
-}
-
-export interface AnimeAdaptation {
+export interface License {
   id: string;
+  externalId?: string;
+  title: string;
+  mangas: MangaWork[];
+  animeAdaptations: AnimeWork[];
+  createdAt: Date;
+  updatedAt: Date;
+}
+
+export interface MangaWork {
+  id: string;
+  externalId?: string;
+  licenseId: string;
+  license?: License;
+  authors: string[];
+  volumes: number;
+  status: WorkStatus;
+  startDate?: Date;
+  endDate?: Date;
+  publisher: string;
+  adaptations?: MangaToAnime[];
+  createdAt: Date;
+  updatedAt: Date;
+}
+
+export interface AnimeWork {
+  id: string;
+  externalId?: string;
+  licenseId: string;
+  license?: License;
   title: string;
   studio: string;
   episodes: number;
-  seasons?: Season[];
-  startDate: Date | null;
-  endDate: Date | null;
-  relation_type?: string;
-  related_to?: string;
+  startDate?: Date;
+  endDate?: Date;
+  status: WorkStatus;
+  fidelity: AnimeFidelity;
   notes?: string;
-  fidelity?: string;
-  status?: string;
-  coverage: Coverage[];
-  divergencePoints: DivergencePoint[];
+  relationType: RelationType;
+  seasons: AnimeSeason[];
+  sourcedFrom?: MangaToAnime[];
+  createdAt: Date;
+  updatedAt: Date;
 }
 
-export interface Manga {
-  authors: string[];
-  volumes: number;
-  status: string;
-  start_date: string;
-  end_date?: string;
-  publisher: string;
-  coverage?: Coverage;
+export interface MangaToAnime {
+  id: string;
+  mangaId: string;
+  manga_name?: MangaWork;
+  animeAdaptationId: string;
+  anime_name?: AnimeWork;
+  coverageFromVolume?: number;
+  coverageToVolume?: number;
+  createdAt: Date;
+  updatedAt: Date;
+}
+
+export interface AnimeSeason {
+  id: string;
+  animeAdaptationId: string;
+  animeAdaptation?: AnimeWork;
+  seasonNumber: number;
+  episodes: number;
+  fidelity: AnimeFidelity;
+  coverageFromVolume?: number;
+  coverageToVolume?: number;
+  notes?: string;
+  relationType?: RelationType;
+  createdAt: Date;
+  updatedAt: Date;
 }
 
 export interface MangaAnimeItem {
   id: string;
   title: string;
-  manga: MangaData | null;
-  anime_adaptations: AnimeAdaptation[];
+  manga: MangaWork[];
+  anime_adaptations: AnimeWork[];
+}
+
+export interface SearchSuggestion {
+  id: string;
+  title: string;
 }

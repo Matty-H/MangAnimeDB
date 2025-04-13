@@ -1,9 +1,14 @@
-//frontend/src/components/adaptationTable/adaptationTable.tsx
 import React from 'react';
-import { AnimeAdaptation } from '../../types';
+import { AnimeWork, AnimeFidelity, WorkStatus, RelationType, AnimeSeason } from '../../types';
 
 interface Props {
-  adaptations?: AnimeAdaptation[];
+  adaptations?: AnimeWork[];
+}
+
+// Type for volume coverage - aligning with your database schema
+interface VolumeCoverage {
+  volumeStart: number;
+  volumeEnd: number;
 }
 
 const AdaptationTable = ({ adaptations = [] }: Props) => {
@@ -17,7 +22,6 @@ const AdaptationTable = ({ adaptations = [] }: Props) => {
       partial: 'badge-yellow',
       divergent: 'badge-red',
       original: 'badge-purple',
-      diverges_from_manga: 'badge-orange',
       anime_original: 'badge-purple',
       unfinished: 'badge-orange',
       hiatus: 'badge-orange',
@@ -28,17 +32,17 @@ const AdaptationTable = ({ adaptations = [] }: Props) => {
 
   // Organisation en groupes de séries reliées
   const organizeAdaptations = (
-    adaptations: AnimeAdaptation[],
-  ): AnimeAdaptation[][] => {
-    const seriesGroups: AnimeAdaptation[][] = [];
+    adaptations: AnimeWork[],
+  ): AnimeWork[][] => {
+    const seriesGroups: AnimeWork[][] = [];
     const processedIds = new Set<string>();
 
     adaptations.forEach((anime) => {
       if (
         !processedIds.has(anime.id) &&
-        (!anime.relation_type ||
-          anime.relation_type === 'original' ||
-          anime.relation_type === 'reboot')
+        (!anime.relationType ||
+          anime.relationType === RelationType.ORIGINAL ||
+          anime.relationType === RelationType.REBOOT)
       ) {
         const group = [anime];
         processedIds.add(anime.id);
@@ -47,10 +51,12 @@ const AdaptationTable = ({ adaptations = [] }: Props) => {
         while (hasAddedMore) {
           hasAddedMore = false;
           adaptations.forEach((related) => {
+            // Updated to handle the correct relation structure
             if (
               !processedIds.has(related.id) &&
-              related.related_to &&
-              group.some((a) => a.id === related.related_to)
+              related.relationType !== RelationType.ORIGINAL &&
+              related.relationType !== RelationType.REBOOT &&
+              group.some((a) => a.id === related.id)
             ) {
               group.push(related);
               processedIds.add(related.id);
@@ -79,7 +85,11 @@ const AdaptationTable = ({ adaptations = [] }: Props) => {
             <div className="anime-title">
               <h3>{seriesTitle}</h3>
               {studio && <span className="studio-label">({studio})</span>}
-              {group[0].status && renderBadge(group[0].status)}
+              {group[0].status && renderBadge(
+                Object.entries(WorkStatus).find(
+                  ([_, value]) => value === group[0].status
+                )?.[0] || String(group[0].status)
+              )}
             </div>
             <table className="correspondence-table">
               <thead>
@@ -91,18 +101,17 @@ const AdaptationTable = ({ adaptations = [] }: Props) => {
               </thead>
               <tbody>
                 {group.map((anime, animeIndex) => {
-                  if (anime.seasons) {
+                  if (anime.seasons && anime.seasons.length > 0) {
                     return anime.seasons.map((season, seasonIndex) => {
-                      // Utilise la propriété coverage de Season
-                      const volumeRange = season.coverage?.manga_volumes || [0, 0];
-                      const hasNotes =
-                        season.notes && season.notes.trim() !== '';
+                      const volumeStart = season.coverageFromVolume || 0;
+                      const volumeEnd = season.coverageToVolume || 0;
+                      const hasNotes = season.notes && season.notes.trim() !== '';
 
                       return (
                         <tr key={`anime-${anime.id}-season-${seasonIndex}`}>
                           <td className={hasNotes ? 'has-tooltip' : ''}>
                             {hasNotes && <span className="info-icon"></span>}{' '}
-                            Saison {season.season}
+                            Saison {season.seasonNumber}
                             {hasNotes && (
                               <div className="tooltip-content tooltip-left">
                                 {season.notes}
@@ -111,38 +120,17 @@ const AdaptationTable = ({ adaptations = [] }: Props) => {
                           </td>
                           <td>{season.episodes}</td>
                           <td>
-                            {volumeRange[0]}-{volumeRange[1]}
+                            {volumeStart}-{volumeEnd}
                           </td>
                         </tr>
                       );
                     });
                   } else {
-                    // Pour les anime sans saisons, utilise le tableau coverage
-                    // Recherche des plages de volume dans le tableau coverage ou utilise la valeur par défaut
-                    let volumeStart = 0;
-                    let volumeEnd = 0;
+                    // For anime without seasons data structure
+                    // Find the MangaToAnime relation to get volume coverage
+                    const volumeStart = 0;
+                    const volumeEnd = 0;
                     
-                    // Si coverage existe et contient des éléments
-                    if (anime.coverage && anime.coverage.length > 0) {
-                      // Obtient la première et dernière valeur dans le tableau coverage
-                      const firstCoverage = anime.coverage[0];
-                      const lastCoverage = anime.coverage[anime.coverage.length - 1];
-                      
-                      // Utilise manga_volumes s'il existe, sinon utilise volumeStart/volumeEnd
-                      if (firstCoverage.manga_volumes) {
-                        volumeStart = firstCoverage.manga_volumes[0];
-                      } else {
-                        volumeStart = firstCoverage.volumeStart;
-                      }
-                      
-                      if (lastCoverage.manga_volumes) {
-                        volumeEnd = lastCoverage.manga_volumes[1];
-                      } else {
-                        volumeEnd = lastCoverage.volumeEnd;
-                      }
-                    }
-                    
-                    const volumeRange = [volumeStart, volumeEnd];
                     const seasonLabel =
                       anime.title.includes(seriesTitle) &&
                       anime.title !== seriesTitle
@@ -163,7 +151,7 @@ const AdaptationTable = ({ adaptations = [] }: Props) => {
                         </td>
                         <td>{anime.episodes}</td>
                         <td>
-                          {volumeRange[0]}-{volumeRange[1]}
+                          {volumeStart}-{volumeEnd}
                         </td>
                       </tr>
                     );

@@ -1,21 +1,35 @@
-// src/services/apiService.ts
-import { MangaAnimeItem } from '../types';
+// frontend/src/services/apiService.ts
+import { MangaAnimeItem, SearchSuggestion } from '../types';
 
-const apiHandler = async (searchTerm: string): Promise<MangaAnimeItem[]> => {
+export const searchDetailed = async (searchTerm: string): Promise<MangaAnimeItem[]> => {
   try {
-    // Call the API endpoint we created for searching
     const response = await fetch(`/api/search/detailed?query=${encodeURIComponent(searchTerm)}`);
-    
     if (!response.ok) {
       throw new Error(`Error: ${response.status}`);
     }
-    
-    const data = await response.json();
-    return data;
+    return await response.json();
   } catch (error) {
     console.error('API error:', error);
     throw error;
   }
 };
 
-export default apiHandler;
+// Fonction pour les suggestions de recherche
+export const fetchSuggestions = async (searchTerm: string): Promise<SearchSuggestion[]> => {
+  try {
+    const response = await fetch(`/api/search/suggestions?query=${encodeURIComponent(searchTerm)}`);
+    if (!response.ok) {
+      throw new Error(`Error: ${response.status}`);
+    }
+    return await response.json();
+  } catch (error) {
+    console.error('API error:', error);
+    throw error;
+  }
+};
+
+// Export par défaut pour ceux qui préfèrent importer le service entier
+export default {
+  searchDetailed,
+  fetchSuggestions
+};
