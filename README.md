@@ -20,11 +20,10 @@ MangAnime Link est une application web qui permet aux utilisateurs de rechercher
   - [React](https://reactjs.org/)
   - [TypeScript](https://www.typescriptlang.org/)
   - [@tanstack/react-router](https://tanstack.com/router/latest)
-  - CSS modules (`.css` classiques + animations)
   
-- **Backend :** (non inclus ici, mais utilisé via API `/api/search/suggestions`)
-  - Probablement [Prisma](https://www.prisma.io/) côté serveur (vu l’interface `SearchSuggestion`)
-  - Serveur attendu côté Node.js/Express/NestJS/etc.
+- **Backend :**
+  - [Prisma](https://www.prisma.io/) côté serveur
+  - Serveur Express
 
 ---
 
@@ -60,3 +59,23 @@ Response:
 ]
 ```
 
+### 2. Lancer le projet
+
+#### Lancer le projet
+```bash
+"dev": "concurrently \"npm run dev:client\" \"npm run dev:server\" \"npm run dev:db\"",
+```
+
+##### Lancer uniquement le Frontend
+```bash
+"dev:client": "vite",
+```
+##### Lancer uniquement le Backend
+```bash
+"dev:server": "ts-node --esm backend/src/index.ts",
+```
+
+##### Lancer Prisma Studio
+```bash
+"dev:db": "npx prisma studio --schema=backend/prisma/schema.prisma",
+```
