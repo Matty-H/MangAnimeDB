@@ -1,3 +1,4 @@
+//frontend/src/components/home/home.tsx
 import React from 'react';
 import SearchBar from '../searchBar/searchBar';
 import './Home.css';
