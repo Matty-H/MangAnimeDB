@@ -9,7 +9,7 @@ MangAnime Link est une application web qui permet aux utilisateurs de rechercher
 - 🔎 Barre de recherche intelligente avec suggestions en temps réel
 - ⌨️ Navigation clavier dans les suggestions
 - ⚡️ Déclenchement de la recherche au clic ou avec la touche "Entrée"
-- 🌐 Intégration avec un backend API pour récupérer dynamiquement les résultats (endpoint `/api/search/suggestions`)
+- 🌐 Intégration avec un backend API pour récupérer dynamiquement les résultats (endpoint `/api/suggestions`)
 - 🧭 Navigation vers les pages de résultats via React Router
 
 ---
@@ -48,7 +48,7 @@ npm install
 ```
 
 ```bash
-GET /api/search/suggestions?query=naruto
+GET /api/suggestions?query=naruto
 ```
 
 ```bash
