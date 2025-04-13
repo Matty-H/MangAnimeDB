@@ -6,7 +6,7 @@ import searchRoutes from './api/endPoint.ts';
 const app: Express = express();
 const PORT = 3000;
 
-app.use('/api', searchRoutes);
+app.use('/api/search', searchRoutes);
 
 app.listen(PORT, () => {
   console.log(`✅ Serveur démarré sur http://localhost:${PORT} ✅`);

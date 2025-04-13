@@ -71,7 +71,7 @@ const ResultsDisplay: React.FC<ResultsDisplayProps> = ({ searchTerm }) => {
   // Manual testing of API connection
   const testApiConnection = async () => {
     try {
-      const response = await fetch('/api/detailed?query=test');
+      const response = await fetch('/api/search/detailed?query=test');
       const statusText = response.ok ? 'OK' : 'Failed';
       const status = response.status;
       const contentType = response.headers.get('content-type');

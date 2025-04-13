@@ -3,7 +3,7 @@ import { License, SearchSuggestion } from '../types';
 
 export const searchDetailed = async (searchTerm: string): Promise<License[]> => {
   try {
-    const response = await fetch(`/api/detailed?query=${encodeURIComponent(searchTerm)}`);
+    const response = await fetch(`/api/search/detailed?query=${encodeURIComponent(searchTerm)}`);
     if (!response.ok) {
       throw new Error(`Error: ${response.status}`);
     }
@@ -17,7 +17,7 @@ export const searchDetailed = async (searchTerm: string): Promise<License[]> => 
 // Fonction pour les suggestions de recherche
 export const fetchSuggestions = async (searchTerm: string): Promise<SearchSuggestion[]> => {
   try {
-    const response = await fetch(`/api/suggestions?query=${encodeURIComponent(searchTerm)}`);
+    const response = await fetch(`/api/search/suggestions?query=${encodeURIComponent(searchTerm)}`);
     if (!response.ok) {
       throw new Error(`Error: ${response.status}`);
     }

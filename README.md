@@ -2,7 +2,60 @@
 
 MangAnime Link est une application web qui permet aux utilisateurs de rechercher des mangas et des animes via une barre de recherche dynamique avec autocomplétion. Elle offre une navigation fluide vers des pages détaillées basées sur les résultats sélectionnés.
 
----
+## 🛠 Technologies utilisées
+
+<div style="display: flex; justify-content: space-evenly; align-items: center; flex-wrap: wrap; gap: 20px; padding: 1px; background: #f5f5f5; border-radius: 8px;">
+  <a href="https://vite.dev/$0" target="_blank" style="display: inline-block;">
+    <img src="https://raw.githubusercontent.com/marwin1991/profile-technology-icons/refs/heads/main/icons/vite.png" 
+         alt="Vite" 
+         width="50" 
+         style="transition: transform 0.3s;" 
+         onmouseover="this.style.transform='scale(1.1)'" 
+         onmouseout="this.style.transform='scale(1)'">
+  </a>
+  <a href="https://reactjs.org" target="_blank" style="display: inline-block;">
+    <img src="https://raw.githubusercontent.com/marwin1991/profile-technology-icons/main/icons/react.png" 
+         alt="React" 
+         width="50" 
+         style="transition: transform 0.3s;" 
+         onmouseover="this.style.transform='scale(1.1)'" 
+         onmouseout="this.style.transform='scale(1)'">
+  </a>
+  <a href="https://tanstack.com/router/latest$0" target="_blank" style="display: inline-block;">
+    <img src="https://tanstack.com/_build/assets/logo-color-100w-br5_Ikqp.png" 
+         alt="Tanstack Rtouer" 
+         width="50" 
+         style="transition: transform 0.3s;" 
+         onmouseover="this.style.transform='scale(1.1)'" 
+         onmouseout="this.style.transform='scale(1)'">
+  </a>
+  <a href="https://expressjs.com" target="_blank" style="display: inline-block;">
+    <img src="https://raw.githubusercontent.com/marwin1991/profile-technology-icons/main/icons/express.png" 
+         alt="Express" 
+         width="50"
+         style="transition: transform 0.3s;" 
+         onmouseover="this.style.transform='scale(1.1)'" 
+         onmouseout="this.style.transform='scale(1)'">
+  </a>
+  
+  <a href="https://www.postgresql.org" target="_blank" style="display: inline-block;">
+    <img src="https://raw.githubusercontent.com/marwin1991/profile-technology-icons/main/icons/postgresql.png" 
+         alt="PostgreSQL" 
+         width="50"
+         style="transition: transform 0.3s;" 
+         onmouseover="this.style.transform='scale(1.1)'" 
+         onmouseout="this.style.transform='scale(1)'">
+  </a>
+  
+  <a href="https://www.prisma.io" target="_blank" style="display: inline-block;">
+    <img src="http://made-with.prisma.io/dark.svg" 
+         alt="Prisma" 
+         width="120"
+         style="transition: transform 0.3s;" 
+         onmouseover="this.style.transform='scale(1.05)'" 
+         onmouseout="this.style.transform='scale(1)'">
+  </a>
+</div>
 
 ## 🚀 Fonctionnalités
 
@@ -47,35 +100,42 @@ cd manganime-link/frontend
 npm install
 ```
 
+### 2. Initialiser un base de donnée PostegreSQL + Prisma
+WIP
+
+### 3. Lancer le projet
+
+#### Lancer le projet (Vite + Express)
 ```bash
-GET /api/suggestions?query=naruto
+npm run dev
 ```
 
+#### Lancer le projet (Vite + Express + Prisma Studio)
 ```bash
-Response:
-[
-  { "id": "1", "title": "Naruto" },
-  { "id": "2", "title": "Naruto Shippuden" }
-]
+npm run fulldev
 ```
-
-### 2. Lancer le projet
-
-#### Lancer le projet
-```bash
-"dev": "concurrently \"npm run dev:client\" \"npm run dev:server\" \"npm run dev:db\"",
-```
+---
 
 ##### Lancer uniquement le Frontend
 ```bash
-"dev:client": "vite",
+npm run dev:client
 ```
 ##### Lancer uniquement le Backend
 ```bash
-"dev:server": "ts-node --esm backend/src/index.ts",
+npm run dev:server
 ```
 
-##### Lancer Prisma Studio
+##### Lancer uniquement Prisma Studio
 ```bash
-"dev:db": "npx prisma studio --schema=backend/prisma/schema.prisma",
+npm run dev:db
+```
+
+### 4. Les API Endpoints
+```bash
+GET /api/search/uggestions?query={manga_anime_name}
+```
+
+```bash
+GET /api/search/detailed?query={manga_anime_name}
+```
 ```

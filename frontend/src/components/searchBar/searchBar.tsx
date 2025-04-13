@@ -29,7 +29,7 @@ function SearchBar({ onSearch = () => {} }: SearchBarProps) {
     setIsLoading(true);
     try {
       // Appel à notre nouveau endpoint API
-      const response = await fetch(`/api/suggestions?query=${encodeURIComponent(input)}`);
+      const response = await fetch(`/api/search/suggestions?query=${encodeURIComponent(input)}`);
       if (!response.ok) {
         throw new Error('Failed to fetch suggestions');
       }

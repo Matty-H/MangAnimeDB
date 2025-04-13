@@ -20,7 +20,8 @@
     "watch-routes": "tsr watch",
     "build-routes": "npm run generate-routes && ...",
     "dev-routes": "npm run watch-routes && ...",
-    "seed": "ts-node prisma/seed.ts",
+    "prismagen": "prisma generate --schema=backend/prisma/schema.prisma",
+    "seed": "ts-node backend/prisma/seed.ts",
     "ping": "npx ts-node test-db.ts",
     "format": "prettier --write .",
     "add-comment": "node add-comment.js"
