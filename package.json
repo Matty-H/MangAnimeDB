@@ -8,7 +8,7 @@
   },
   "scripts": {
     "dev:client": "vite",
-    "dev:server": "ts-node --esm backend/apiServer.ts",
+    "dev:server": "node backend/apiServer.ts",
     "dev:db": "npx prisma studio --schema=backend/prisma/schema.prisma",
     "dev": "concurrently \"npm run dev:client\" \"npm run dev:server\"",
     "fulldev": "concurrently \"npm run dev:client\" \"npm run dev:server\" \"npm run dev:db\"",

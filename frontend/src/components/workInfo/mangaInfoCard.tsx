@@ -30,48 +30,45 @@ const MangaInfoCard: React.FC<MangaInfoCardProps> = ({ manga }) => {
     }
   };
 
+  // Get the start and end years for publication
+  const startYear = manga.startDate ? new Date(manga.startDate).getFullYear() : 'N/A';
+  const endYear = manga.endDate 
+    ? new Date(manga.endDate).getFullYear() 
+    : (manga.status === WorkStatus.ONGOING ? 'présent' : 'N/A');
+  const publishYears = startYear === endYear ? startYear : `${startYear} - ${endYear}`;
+
   return (
-    <div className="manga-info-card">
-      <div className="manga-header">
-        <h3>{manga.publisher}</h3>
+    <div className="manga-info-card media-card">
+      <div className="manga-header media-header">
+        <h3>{manga.title}</h3>
+      </div>
+
+      <div className="media-detail-row">
+        <div className="detail-label">Éditeur : </div>
+        <div className="detail-value">{manga.publisher}</div>
       </div>
       
-      <div className="manga-details">
-        <div className="manga-detail-row">
-          <div className="detail-label">Auteur(s)</div>
-          <div className="detail-value">{manga.authors.join(', ')}</div>
+      <div className="manga-stats media-stats">
+        <div className="stat-item">
+          <div className="stat-value">{manga.volumes}</div>
+          <div className="stat-label">Volume{manga.volumes !== 1 ? 's' : ''}</div>
         </div>
         
-        <div className="manga-detail-row">
-          <div className="detail-label">Volumes</div>
-          <div className="detail-value">{manga.volumes}</div>
+        <div className="stat-item">
+          <div className="stat-value">{startYear}</div>
+          <div className="stat-label">Publication</div>
         </div>
         
-        <div className="manga-detail-row">
-          <div className="detail-label">Statut</div>
-          <div className="detail-value">
-            <span className={`status-badge status-${manga.status.toLowerCase()}`}>
-              {formatStatus(manga.status)}
-            </span>
+        <div className="stat-item">
+          <div className={`stat-value status-badge status-${manga.status.toLowerCase()}`}>
+            {formatStatus(manga.status)}
           </div>
+          <div className="stat-label">Statut</div>
         </div>
-        
-        <div className="manga-detail-row">
-          <div className="detail-label">Début</div>
-          <div className="detail-value">{formatDate(manga.startDate)}</div>
-        </div>
-        
-        {manga.status === WorkStatus.COMPLETED && (
-          <div className="manga-detail-row">
-            <div className="detail-label">Fin</div>
-            <div className="detail-value">{formatDate(manga.endDate)}</div>
-          </div>
-        )}
-        
-        <div className="manga-detail-row">
-          <div className="detail-label">Éditeur</div>
-          <div className="detail-value">{manga.publisher}</div>
-        </div>
+      </div>
+      
+      <div className="manga-details media-details">
+        {/* Vous pouvez ajouter d'autres détails ici */}
       </div>
     </div>
   );

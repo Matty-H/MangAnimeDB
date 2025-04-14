@@ -4,6 +4,7 @@ import { searchDetailed } from '../../services/apiService';
 import AdaptationTable from '../adaptationTable/adaptationTable';
 import MangaInfoCard from '../workInfo/mangaInfoCard';
 import AnimeInfoCard from '../workInfo/animeInfoCard';
+import SearchBar from '../searchBar/searchBar';
 import { 
   License, 
   MangaWork, 
@@ -64,37 +65,38 @@ const ResultsDisplay: React.FC<ResultsDisplayProps> = ({ searchTerm }) => {
 
   return (
     <div className="results-display">
-      
+      <SearchBar />
       {results.map(license => (
         <div key={license.id} className="license-result">
-          <h2>{license.title}</h2>
-          
-          
-          {/* Manga Works Section */}
-          {license.mangas.length > 0 && (
-            <div className="manga-section">
-              <h3>Mangas</h3>
-              <div className="manga-grid">
-                {license.mangas.map(manga => (
-                  <MangaInfoCard key={manga.id} manga={manga} />
-                ))}
-              </div>
-            </div>
-          )}
-          
-          {/* Anime Adaptations Section */}
-          {license.animeAdaptations.length > 0 && (
-            <div className="anime-section">
-              <h3>Animes</h3>
-              <div className="anime-grid">
-                {license.animeAdaptations.map(anime => (
-                  <AnimeInfoCard key={anime.id} anime={anime} />
-                ))}
-              </div>
+
           {/* Manga-Anime Adaptation Table */}
           <AdaptationTable license={license} />
-            </div>
-          )}
+          
+          <div className='works-section'>
+            {/* Manga Works Section */}
+            {license.mangas.length > 0 && (
+              <div className="manga-section">
+                <h3>Mangas</h3>
+                <div className="manga-grid">
+                  {license.mangas.map(manga => (
+                    <MangaInfoCard key={manga.id} manga={manga} />
+                  ))}
+                </div>
+              </div>
+            )}
+            
+            {/* Anime Adaptations Section */}
+            {license.animeAdaptations.length > 0 && (
+              <div className="anime-section">
+                <h3>Animes</h3>
+                <div className="anime-grid">
+                  {license.animeAdaptations.map(anime => (
+                    <AnimeInfoCard key={anime.id} anime={anime} />
+                  ))}
+                </div>
+              </div>
+            )}
+          </div>
         </div>
       ))}
     </div>

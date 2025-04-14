@@ -38,6 +38,7 @@ export interface MangaWork {
   licenseId: string;
   license?: License;
   authors: string[];
+  title: string;
   volumes: number;
   status: WorkStatus;
   startDate?: Date;

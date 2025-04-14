@@ -36,7 +36,7 @@ const AnimeInfoCard: React.FC<AnimeInfoCardProps> = ({ anime }) => {
       case AnimeFidelity.FAITHFUL:
         return 'Fidèle';
       case AnimeFidelity.PARTIAL:
-        return 'Partiellement fidèle';
+        return 'Peu fidèle';
       case AnimeFidelity.ANIME_ORIGINAL:
         return 'Original';
       default:
@@ -78,55 +78,49 @@ const AnimeInfoCard: React.FC<AnimeInfoCardProps> = ({ anime }) => {
   const airYears = startYear === endYear ? startYear : `${startYear} - ${endYear}`;
 
   return (
-    <div className="anime-info-card">
-      <div className="anime-header">
+    <div className="anime-info-card media-card">
+      <div className="anime-header media-header">
         <h3>{anime.title}</h3>
       </div>
+
+      <div className="media-detail-row">
+        <div className="detail-label">Studio : </div>
+        <div className="detail-value">{anime.studio}</div>
+
+        <div className="detail-label">Type : </div>
+        <div className="detail-value">{formatRelationType(anime.relationType)}</div>
+      </div>
       
-      <div className="anime-details">
-        <div className="anime-stats">
+      <div className="anime-stats media-stats">
+        {seasonCount === 0 ? "" :
           <div className="stat-item">
             <div className="stat-value">{seasonCount}</div>
             <div className="stat-label">Saison{seasonCount !== 1 ? 's' : ''}</div>
           </div>
+        }
           
-          <div className="stat-item">
-            <div className="stat-value">{totalEpisodes}</div>
-            <div className="stat-label">Épisode{totalEpisodes !== 1 ? 's' : ''}</div>
-          </div>
-          
-          <div className="stat-item">
-            <div className="stat-value">{airYears}</div>
-            <div className="stat-label">Diffusion</div>
-          </div>
-          
-          <div className="stat-item">
-            <div className="stat-value status-badge status-{anime.status.toLowerCase()}">
-              {formatStatus(anime.status)}
-            </div>
-            <div className="stat-label">Statut</div>
-          </div>
+        <div className="stat-item">
+          <div className="stat-value">{totalEpisodes}</div>
+          <div className="stat-label">Épisode{totalEpisodes !== 1 ? 's' : ''}</div>
         </div>
         
-        <div className="anime-detail-row">
-          <div className="detail-label">Studio</div>
-          <div className="detail-value">{anime.studio}</div>
+        <div className="stat-item">
+          <div className="stat-value">{startYear}</div>
+          <div className="stat-label">Diffusion</div>
         </div>
         
-        <div className="anime-detail-row">
-          <div className="detail-label">Fidélité</div>
-          <div className="detail-value">
-            <span className={`fidelity-badge fidelity-${anime.fidelity.toLowerCase()}`}>
-              {formatFidelity(anime.fidelity)}
-            </span>
+        <div className="stat-item">
+          <div className={`stat-value status-badge status-${anime.status.toLowerCase()}`}>
+            {formatStatus(anime.status)}
           </div>
+          <div className="stat-label">Statut</div>
         </div>
-        
-        <div className="anime-detail-row">
-          <div className="detail-label">Type</div>
-          <div className="detail-value">{formatRelationType(anime.relationType)}</div>
-        </div>
-        
+        <span className={`fidelity-badge fidelity-${anime.fidelity.toLowerCase()}`}>
+          {formatFidelity(anime.fidelity)}
+        </span>
+      </div>
+      
+      <div className="anime-details media-details">
         {anime.seasons && anime.seasons.length > 0 && (
           <div className="anime-seasons">
             <h4>Saisons</h4>
@@ -147,6 +141,11 @@ const AnimeInfoCard: React.FC<AnimeInfoCardProps> = ({ anime }) => {
                       </span>
                     )}
                   </div>
+                  {season.notes && (
+                    <div className="season-notes">
+                      <p>{season.notes}</p>
+                    </div>
+                  )}
                 </div>
               ))}
             </div>
@@ -154,7 +153,7 @@ const AnimeInfoCard: React.FC<AnimeInfoCardProps> = ({ anime }) => {
         )}
         
         {anime.notes && (
-          <div className="anime-notes">
+          <div className="anime-notes media-notes">
             <h4>Notes</h4>
             <p>{anime.notes}</p>
           </div>

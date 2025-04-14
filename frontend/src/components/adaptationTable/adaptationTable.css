@@ -1,7 +1,17 @@
 .adaptation-table-container {
-    margin: 1rem 0;
+    margin : 1rem 0;
+    width: 100%;
+    background-color: #1a1a1a;
+    border-radius: 8px;
+    padding: 1.5rem;
   }
   
+  .adaptation-table-container h3 {
+    color: #ffb74d;
+    margin: 0px 0px 1rem;
+    font-size: 1.5rem;
+  }
+
   .adaptation-table {
     width: 100%;
     border-collapse: collapse;
@@ -26,4 +36,12 @@
   
   .adaptation-table tr:hover {
     background-color: #181717;
+  }
+
+/* Mise en page côte à côte pour manga et anime */
+@media (min-width: 800px) {
+    .adaptation-table-container {
+      width: 100%;
+      flex: 0 0 100%;
+    }
   }

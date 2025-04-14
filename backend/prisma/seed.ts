@@ -23,6 +23,7 @@ async function main() {
           externalId: item.manga.id,
           licenseId: license.id,
           authors: item.manga.authors,
+          title: license.title,
           volumes: item.manga.volumes,
           status: item.manga.status.toUpperCase() as WorkStatus,
           startDate: item.manga.start_date ? new Date(item.manga.start_date) : null,

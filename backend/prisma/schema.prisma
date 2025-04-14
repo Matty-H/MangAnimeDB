@@ -28,6 +28,7 @@ model MangaWork {
   externalId  String?        @unique //Pour FMA301, DN301, etc.
   licenseId   String
   license     License        @relation(name: "LicenseToManga", fields: [licenseId], references: [id], onDelete: Cascade)
+  title       String
   authors     String[]
   volumes     Int
   status      WorkStatus
@@ -39,6 +40,7 @@ model MangaWork {
   updatedAt   DateTime       @updatedAt
 
   @@map("mangas")
+  @@index([title])
 }
 
 model AnimeWork {

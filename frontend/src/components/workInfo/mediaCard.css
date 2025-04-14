@@ -1,0 +1,235 @@
+/* Style commun pour les cards (à placer dans mediaCard.css) */
+.media-card {
+    background-color: #1a1a1a;
+    border-radius: 8px;
+    padding: 16px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+    border: 1px solid #333;
+  }
+  
+  .media-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+  
+  .media-header h3 {
+    margin: 0;
+    font-size: 1.25rem;
+    color: #f0f0f0;
+  }
+  
+  .media-stats {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(60px, 0fr));
+    gap: 12px;
+    background-color: #272727;
+    border-radius: 6px;
+    padding: 12px;
+    border: 1px solid #333;
+    margin-bottom: 16px;
+  }
+  
+  .stat-item {
+    text-align: center;
+  }
+  
+  .stat-value {
+    font-weight: 600;
+    color: #f0f0f0;
+  }
+  
+  .stat-label {
+    font-size: 0.55rem;
+    color: #aaa;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+  }
+  
+  .media-details {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 8px;
+  }
+  
+  .media-detail-row {
+    display: flex;
+    border-bottom: 1px solid #333;
+    padding: 8px 0;
+    font-size: 10px;
+  }
+  
+  .media-detail-row:last-child {
+    border-bottom: none;
+  }
+  
+  .detail-label {
+    flex: 0.5;
+    font-weight: 600;
+    color: #f0f0f0;
+  }
+  
+  .detail-value {
+    flex: 1;
+    justify-content: start;
+    color: #f0f0f0;
+    font-style: italic;
+  }
+  
+  .status-badge {
+    display: inline-block;
+    padding: 2px 8px;
+    border-radius: 12px;
+    font-size: 0.85rem;
+    font-weight: 500;
+  }
+  
+  .status-ongoing {
+    background-color: #0366d6;
+    color: #fff;
+  }
+  
+  .status-completed {
+    background-color: #28a745;
+    color: #fff;
+  }
+  
+  .status-hiatus {
+    background-color: #b08800;
+    color: #fff;
+  }
+  
+  .status-unfinished {
+    background-color: #d73a49;
+    color: #fff;
+  }
+  
+  .fidelity-badge {
+    display: inline-block;
+    align-content: center;
+    padding: 2px 8px;
+    border-radius: 12px;
+    font-size: 0.85rem;
+    font-weight: 500;
+  }
+  
+  .fidelity-faithful {
+    background-color: #28a745;
+    color: #fff;
+  }
+  
+  .fidelity-partial {
+    background-color: #b08800;
+    color: #fff;
+  }
+  
+  .fidelity-anime_original {
+    background-color: #d73a49;
+    color: #fff;
+  }
+  
+  .media-notes {
+    margin-top: 16px;
+    padding: 12px;
+    background-color: #272727;
+    border: 1px solid #333;
+    border-radius: 4px;
+  }
+  
+  .media-notes h4 {
+    font-size: 1rem;
+    margin: 0 0 8px 0;
+    color: #f0f0f0;
+  }
+  
+  .media-notes p {
+    margin: 0;
+    color: #f0f0f0;
+    font-size: 0.9rem;
+    line-height: 1.5;
+  }
+  
+  /* Styles pour les sections */
+  .media-section {
+    margin-bottom: 2rem;
+  }
+  
+  .media-section h3 {
+    color: #ffb74d;
+    margin-bottom: 1.5rem;
+    border-bottom: 1px solid #444;
+    padding-bottom: 0.5rem;
+  }
+  
+  .media-grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 16px;
+  }
+  
+  /* Styles spécifiques pour les saisons d'anime */
+  .seasons-list {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 8px;
+  }
+  
+  .season-item {
+    background-color: #272727;
+    border: 1px solid #333;
+    border-radius: 4px;
+    padding: 8px 12px;
+  }
+  
+  .season-header {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 4px;
+  }
+  
+  .season-title {
+    font-weight: 600;
+    color: #f0f0f0;
+  }
+  
+  .season-episodes {
+    color: #aaa;
+    font-size: 0.9rem;
+  }
+  
+  .season-detail {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 0.85rem;
+    color: #f0f0f0;
+  }
+  
+  .season-coverage {
+    background-color: #333;
+    padding: 2px 6px;
+    border-radius: 4px;
+    font-size: 0.8rem;
+    color: #aaa;
+  }
+  
+  /* Styles spécifiques pour les volumes de manga */
+  .volumes-list {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(50px, 1fr));
+    gap: 8px;
+  }
+  
+  .volume-item {
+    background-color: #272727;
+    border: 1px solid #333;
+    border-radius: 4px;
+    padding: 8px;
+    text-align: center;
+    font-weight: 600;
+    color: #f0f0f0;
+  }
+
+.manga-section h3, .anime-section h3 {
+    margin: 0
+}

@@ -1,85 +1,11 @@
-.manga-info-card {
-    background-color: #f8f9fa;
-    border-radius: 8px;
-    padding: 16px;
-    margin-bottom: 16px;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+@import './mediaCard.css';
+
+.manga-volumes {
+  margin-top: 16px;
 }
 
-.manga-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin-bottom: 16px;
-    border-bottom: 1px solid #e1e4e8;
-    padding-bottom: 8px;
-}
-
-.manga-header h3 {
-    margin: 0;
-    font-size: 1.25rem;
-    color: #24292e;
-}
-
-.external-id {
-    font-size: 0.875rem;
-    color: #6a737d;
-    background-color: #f1f8ff;
-    padding: 2px 6px;
-    border-radius: 4px;
-}
-
-.manga-details {
-    display: grid;
-    grid-template-columns: 1fr;
-    gap: 8px;
-}
-
-.manga-detail-row {
-    display: flex;
-    border-bottom: 1px solid #eaecef;
-    padding: 8px 0;
-}
-
-.manga-detail-row:last-child {
-    border-bottom: none;
-}
-
-.detail-label {
-    flex: 0 0 100px;
-    font-weight: 600;
-    color: #24292e;
-}
-
-.detail-value {
-    flex: 1;
-    color: #24292e;
-}
-
-.status-badge {
-    display: inline-block;
-    padding: 2px 8px;
-    border-radius: 12px;
-    font-size: 0.85rem;
-    font-weight: 500;
-}
-
-.status-ongoing {
-    background-color: #dbedff;
-    color: #0366d6;
-}
-
-.status-completed {
-    background-color: #dcffe4;
-    color: #28a745;
-}
-
-.status-hiatus {
-    background-color: #fff5b1;
-    color: #b08800;
-}
-
-.status-unfinished {
-    background-color: #ffdce0;
-    color: #d73a49;
+.manga-volumes h4 {
+  font-size: 1rem;
+  margin: 0 0 12px 0;
+  color: #f0f0f0;
 }

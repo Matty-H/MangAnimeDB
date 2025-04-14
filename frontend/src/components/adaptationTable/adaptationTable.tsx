@@ -84,20 +84,18 @@ const AdaptationTable: React.FC<AdaptationTableProps> = ({ license }) => {
   
   return (
     <div className="adaptation-table-container">
-      <h3>Correspondance Manga-Anime</h3>
+      <h3>Correspondance de {license.title}</h3>
       <table className="adaptation-table">
         <thead>
           <tr>
-            <th>Saison</th>
-            <th>Nb épisodes</th>
-            <th>Tomes</th>
+            <th>Anime</th>
+            <th>Vol. manga</th>
           </tr>
         </thead>
         <tbody>
           {adaptationRows.map((row, index) => (
             <tr key={index}>
               <td>{row.seasonName}</td>
-              <td>{row.episodes}</td>
               <td>
                 {row.fromVolume && row.toVolume 
                   ? `${row.fromVolume}-${row.toVolume}`

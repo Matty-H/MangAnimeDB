@@ -56,14 +56,8 @@ body,
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 12px;
-  background-color: #333;
   border-radius: 6px;
   transition: background-color 0.3s ease;
-}
-
-.manga-header:hover {
-  background-color: #444;
 }
 
 .anime-table-container {
@@ -172,43 +166,106 @@ body,
 }
 
 /* Style de la table des résultats */
-.result-table {
+.results-display {
+  padding: 1.5rem;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.license-result {
+  margin-bottom: 3rem;
+  background-color: #0f0f0f;
+  border-radius: 10px;
+  padding: 2rem;
+}
+
+/* Titre principal */
+.results-display h2 {
+  text-align: center;
   margin-bottom: 2rem;
+  color: #ffb74d;
+  font-size: 2rem;
+  font-weight: 700;
+}
+
+
+/* Mise en page côte à côte pour manga et anime */
+@media (min-width: 800px) {
+  .license-result {
+    display: flex;
+    flex-direction: column;
+  }
+  
+  .license-result h2 {
+    width: 100%;
+  }
+
+  
+  /* Container pour manga et anime sections */
+  .license-result::after {
+    content: "";
+    display: flex;
+    width: 100%;
+  }
+  
+  .manga-section,
+  .anime-section {
+    flex: 1;
+    padding: 0;
+  }
+  
+  /* Pour forcer le layout côte à côte */
+  .license-result .manga-section + .anime-section {
+    margin-top: -2rem; /* Annule la marge du manga-section */
+  }
+  
+  /* Layout flexbox pour mettre manga et anime côte à côte */
+  .license-result {
+    display: flex;
+    flex-wrap: wrap;
+  }
+  
+  .license-result h2 {
+    width: 100%;
+    flex: 0 0 100%;
+  }
+  
+  .manga-section, 
+  .anime-section {
+    flex: 0 0 50%;
+    box-sizing: border-box;
+  }
+}
+
+/* Message de chargement et d'erreur */
+.results-display > div:not(.license-result) {
+  padding: 2rem;
+  text-align: center;
   background-color: #1a1a1a;
   border-radius: 8px;
-  overflow: hidden;
-  padding: 2em;
-  max-width: 1000px;
-}
-
-.result-table h4,
-.result-table p,
-.anime-title {
-  margin-bottom: 1rem;
-  display: flex;
-  gap: 1em;
-}
-
-.result-table table {
-  width: 100%;
-  border-collapse: collapse;
-}
-
-.result-table th,
-.result-table td {
-  border: 1px solid #444;
-  padding: 12px;
-  text-align: center;
   color: #f0f0f0;
+  margin-bottom: 1rem;
 }
 
-.result-table th {
-  background-color: #272727;
-  font-weight: bold;
+/* Animation de chargement */
+@keyframes pulse {
+  0% { opacity: 0.6; }
+  50% { opacity: 1; }
+  100% { opacity: 0.6; }
 }
 
-/* Animation de survol sur les lignes de la table */
-.result-table td:hover {
-  background-color: #444;
-  cursor: pointer;
+.results-display > div:first-child:not(.license-result) {
+  animation: pulse 1.5s infinite;
+}
+
+/* Style d'erreur */
+.results-display > div:first-child:contains("Error") {
+  border-left: 4px solid #d73a49;
+  background-color: rgba(215, 58, 73, 0.1);
+}
+
+.works-section {
+  display: flex;
+  align-items: baseline;
+  gap: 1rem;
 }
