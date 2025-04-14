@@ -27,7 +27,7 @@ const getSuggestions: RequestHandler = async (req, res): Promise<void> => {
         id: true,
         title: true,
       },
-      take: 2,
+      take: 10,
     });
     
     res.json(suggestions);

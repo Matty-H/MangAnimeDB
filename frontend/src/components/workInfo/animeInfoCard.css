@@ -1,0 +1,209 @@
+.anime-info-card {
+    background-color: #f8f9fa;
+    border-radius: 8px;
+    padding: 16px;
+    margin-bottom: 16px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+  }
+  
+  .anime-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 16px;
+    border-bottom: 1px solid #e1e4e8;
+    padding-bottom: 8px;
+  }
+  
+  .anime-header h3 {
+    margin: 0;
+    font-size: 1.25rem;
+    color: #24292e;
+  }
+  
+  .external-id {
+    font-size: 0.875rem;
+    color: #6a737d;
+    background-color: #f1f8ff;
+    padding: 2px 6px;
+    border-radius: 4px;
+  }
+  
+  .anime-stats {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(80px, 1fr));
+    gap: 12px;
+    margin-bottom: 16px;
+    background-color: #fff;
+    border-radius: 6px;
+    padding: 12px;
+    border: 1px solid #eaecef;
+  }
+  
+  .stat-item {
+    text-align: center;
+  }
+  
+  .stat-value {
+    font-size: 1.125rem;
+    font-weight: 600;
+    margin-bottom: 4px;
+  }
+  
+  .stat-label {
+    font-size: 0.75rem;
+    color: #6a737d;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+  }
+  
+  .anime-details {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 8px;
+  }
+  
+  .anime-detail-row {
+    display: flex;
+    border-bottom: 1px solid #eaecef;
+    padding: 8px 0;
+  }
+  
+  .anime-detail-row:last-child {
+    border-bottom: none;
+  }
+  
+  .detail-label {
+    flex: 0 0 100px;
+    font-weight: 600;
+    color: #24292e;
+  }
+  
+  .detail-value {
+    flex: 1;
+    color: #24292e;
+  }
+  
+  .status-badge {
+    display: inline-block;
+    padding: 2px 8px;
+    border-radius: 12px;
+    font-size: 0.85rem;
+    font-weight: 500;
+  }
+  
+  .status-ongoing {
+    background-color: #dbedff;
+    color: #0366d6;
+  }
+  
+  .status-completed {
+    background-color: #dcffe4;
+    color: #28a745;
+  }
+  
+  .status-hiatus {
+    background-color: #fff5b1;
+    color: #b08800;
+  }
+  
+  .status-unfinished {
+    background-color: #ffdce0;
+    color: #d73a49;
+  }
+  
+  .fidelity-badge {
+    display: inline-block;
+    padding: 2px 8px;
+    border-radius: 12px;
+    font-size: 0.85rem;
+    font-weight: 500;
+  }
+  
+  .fidelity-faithful {
+    background-color: #dcffe4;
+    color: #28a745;
+  }
+  
+  .fidelity-partial {
+    background-color: #fff5b1;
+    color: #b08800;
+  }
+  
+  .fidelity-anime_original {
+    background-color: #ffdce0;
+    color: #d73a49;
+  }
+  
+  .anime-seasons {
+    margin-top: 16px;
+  }
+  
+  .anime-seasons h4 {
+    font-size: 1rem;
+    margin: 0 0 12px 0;
+    color: #24292e;
+  }
+  
+  .seasons-list {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 8px;
+  }
+  
+  .season-item {
+    background-color: #fff;
+    border: 1px solid #eaecef;
+    border-radius: 4px;
+    padding: 8px 12px;
+  }
+  
+  .season-header {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 4px;
+  }
+  
+  .season-title {
+    font-weight: 600;
+  }
+  
+  .season-episodes {
+    color: #6a737d;
+    font-size: 0.9rem;
+  }
+  
+  .season-detail {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 0.85rem;
+  }
+  
+  .season-coverage {
+    background-color: #f1f8ff;
+    padding: 2px 6px;
+    border-radius: 4px;
+    font-size: 0.8rem;
+  }
+  
+  .anime-notes {
+    margin-top: 16px;
+    padding: 12px;
+    background-color: #fff;
+    border: 1px solid #eaecef;
+    border-radius: 4px;
+  }
+  
+  .anime-notes h4 {
+    font-size: 1rem;
+    margin: 0 0 8px 0;
+    color: #24292e;
+  }
+  
+  .anime-notes p {
+    margin: 0;
+    color: #24292e;
+    font-size: 0.9rem;
+    line-height: 1.5;
+  }

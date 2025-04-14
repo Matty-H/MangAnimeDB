@@ -1,0 +1,29 @@
+.adaptation-table-container {
+    margin: 1rem 0;
+  }
+  
+  .adaptation-table {
+    width: 100%;
+    border-collapse: collapse;
+    border: 1px solid #ddd;
+  }
+  
+  .adaptation-table th, 
+  .adaptation-table td {
+    padding: 8px;
+    border: 1px solid #ddd;
+    text-align: center;
+  }
+  
+  .adaptation-table th {
+    background-color: #363535;
+    font-weight: bold;
+  }
+  
+  .adaptation-table tr:nth-child(even) {
+    background-color: #181616;
+  }
+  
+  .adaptation-table tr:hover {
+    background-color: #181717;
+  }
