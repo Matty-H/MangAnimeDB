@@ -132,10 +132,10 @@ npm run dev:db
 
 ### 4. Les API Endpoints
 ```bash
-GET /api/search/uggestions?query={manga_anime_name}
+GET /api/uggestions?query={manga_anime_name}
 ```
 
 ```bash
-GET /api/search/detailed?query={manga_anime_name}
+GET /api/detailed?query={manga_anime_name}
 ```
 ```

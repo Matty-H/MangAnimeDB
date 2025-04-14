@@ -1,0 +1,28 @@
+/* frontend/src/components/addDataButton/addDataButton.css */
+.add-data-container {
+    margin: 20px 0;
+    display: flex;
+    justify-content: center;
+  }
+  
+  .add-data-button {
+    background-color: #4a90e2;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    padding: 10px 16px;
+    font-size: 14px;
+    font-weight: 600;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    transition: background-color 0.2s ease;
+  }
+  
+  .add-data-button:hover {
+    background-color: #357abD;
+  }
+  
+  .add-data-button:active {
+    background-color: #2a6496;
+  }
