@@ -130,7 +130,7 @@ npm run dev:server
 npm run dev:db
 ```
 
-### 4. Les API Endpoints
+### 4. REST API
 ```bash
 GET /api/uggestions?query={manga_anime_name}
 ```

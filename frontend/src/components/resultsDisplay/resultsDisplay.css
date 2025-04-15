@@ -254,10 +254,6 @@ body,
   100% { opacity: 0.6; }
 }
 
-.results-display > div:first-child:not(.license-result) {
-  animation: pulse 1.5s infinite;
-}
-
 /* Style d'erreur */
 .results-display > div:first-child:contains("Error") {
   border-left: 4px solid #d73a49;

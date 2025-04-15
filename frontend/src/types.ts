@@ -1,5 +1,3 @@
-// MangAnimeDB/src/types.ts
-
 export enum WorkStatus {
   ONGOING = 'ONGOING',
   COMPLETED = 'COMPLETED',
@@ -20,6 +18,14 @@ export enum RelationType {
   REMAKE = 'REMAKE',
   SPIN_OFF = 'SPIN_OFF',
   REBOOT = 'REBOOT'
+}
+
+export enum AdaptationType {
+  TV_SERIES = 'TV_SERIES',
+  MOVIE = 'MOVIE',
+  OVA = 'OVA',
+  ONA = 'ONA',
+  SPECIAL = 'SPECIAL'
 }
 
 export interface License {
@@ -45,6 +51,27 @@ export interface MangaWork {
   endDate?: Date;
   publisher: string;
   adaptations?: MangaToAnime[];
+  parts?: MangaPart[]; // ✅ Ajout ici
+  createdAt: Date;
+  updatedAt: Date;
+}
+
+export interface MangaPart {
+  id: string;
+  externalId?: string;
+  mangaId: string;
+  manga?: MangaWork;
+  licenseId: string;
+  license?: License;
+  title: string;
+  partNumber: number;
+  volumes: number;
+  startVolume: number;
+  endVolume: number;
+  status: WorkStatus;
+  startDate?: Date;
+  endDate?: Date;
+  adaptations?: MangaPartToAnime[];
   createdAt: Date;
   updatedAt: Date;
 }
@@ -56,7 +83,8 @@ export interface AnimeWork {
   license?: License;
   title: string;
   studio: string;
-  episodes: number;
+  episodes?: number;
+  duration?: number;
   startDate?: Date;
   endDate?: Date;
   status: WorkStatus;
@@ -65,6 +93,7 @@ export interface AnimeWork {
   relationType: RelationType;
   seasons: AnimeSeason[];
   sourcedFrom?: MangaToAnime[];
+  partSourcedFrom?: MangaPartToAnime[];
   createdAt: Date;
   updatedAt: Date;
 }
@@ -77,6 +106,17 @@ export interface MangaToAnime {
   anime_name?: AnimeWork;
   coverageFromVolume?: number;
   coverageToVolume?: number;
+  createdAt: Date;
+  updatedAt: Date;
+}
+
+export interface MangaPartToAnime {
+  id: string;
+  mangaPartId: string;
+  mangaPart?: MangaPart;
+  animeAdaptationId: string;
+  animeAdaptation?: AnimeWork;
+  coverageComplete: boolean;
   createdAt: Date;
   updatedAt: Date;
 }

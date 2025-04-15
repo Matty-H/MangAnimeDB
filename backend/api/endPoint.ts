@@ -10,7 +10,6 @@ const prisma = new PrismaClient();
 router.use(express.json());
 
 // GET - Récupérer des suggestions de titres
-
 router.get('/suggestions', async (req: Request, res: Response) => {
   const { query } = req.query;
   
@@ -59,6 +58,7 @@ router.get('/detailed', async (req: Request, res: Response) => {
       include: {
         mangas: {
           include: {
+            parts: true,
             adaptations: {
               include: {
                 anime_name: true,
@@ -143,20 +143,23 @@ router.post('/manga', async (req: Request, res: Response) => {
     externalId 
   } = req.body;
 
+  const parsedStartDate = startDate ? new Date(startDate) : undefined;
+  const parsedEndDate = endDate ? new Date(endDate) : undefined;
+
   if (!licenseId || !title) {
     return res.status(400).json({ error: 'LicenseId and title are required' });
   }
 
   try {
-    const newManga = await prisma.manga.create({
+    const newManga = await prisma.mangaWork.create({
       data: {
         license: { connect: { id: licenseId } },
         title,
         authors,
         volumes,
         status,
-        startDate,
-        endDate,
+        startDate: parsedStartDate,
+        endDate: parsedEndDate,
         publisher,
         externalId
       },
@@ -185,6 +188,9 @@ router.post('/anime', async (req: Request, res: Response) => {
     externalId 
   } = req.body;
 
+  const parsedStartDate = startDate ? new Date(startDate) : undefined;
+  const parsedEndDate = endDate ? new Date(endDate) : undefined;
+
   if (!licenseId || !title) {
     return res.status(400).json({ error: 'LicenseId and title are required' });
   }
@@ -199,8 +205,8 @@ router.post('/anime', async (req: Request, res: Response) => {
         status,
         fidelity,
         relationType,
-        startDate,
-        endDate,
+        startDate: parsedStartDate,
+        endDate: parsedEndDate,
         notes,
         externalId
       },

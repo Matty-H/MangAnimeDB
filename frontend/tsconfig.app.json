@@ -23,5 +23,6 @@
     "noFallthroughCasesInSwitch": true,
     "noUncheckedSideEffectImports": true
   },
-  "include": ["frontend/src", "backend/server"]
+  "include": ["./frontend/src", "../backend/api"],
+  "exclude": ["../node_modules"]
 }

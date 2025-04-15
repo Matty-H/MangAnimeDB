@@ -5,20 +5,20 @@ datasource db {
 
 generator client {
   provider      = "prisma-client-js"
-  binaryTargets = ["native", "darwin-arm64","rhel-openssl-1.0.x"]
+  binaryTargets = ["native", "darwin-arm64", "rhel-openssl-1.0.x"]
 }
 
 // This is your Prisma schema file
 // Learn more about it in the docs: https:
-
 model License {
-  id               String      @id @default(cuid())
-  externalId       String?     @unique //Pour FMA001, DN001, etc.
+  id               String           @id @default(cuid())
+  externalId       String?          @unique //Pour FMA001, DN001, etc.
   title            String
-  mangas           MangaWork[] @relation(name: "LicenseToManga")
-  animeAdaptations AnimeWork[] @relation(name: "AnimeAdaptationToLicense")
-  createdAt        DateTime    @default(now())
-  updatedAt        DateTime    @updatedAt
+  mangas           MangaWork[]      @relation(name: "LicenseToManga")
+  mangaParts       MangaPart[]      @relation(name: "LicenseToMangaPart")
+  animeAdaptations AnimeAdaptation[] @relation(name: "AnimeAdaptationToLicense")
+  createdAt        DateTime         @default(now())
+  updatedAt        DateTime         @updatedAt
 
   @@map("licenses")
 }
@@ -35,6 +35,7 @@ model MangaWork {
   startDate   DateTime?
   endDate     DateTime?
   publisher   String
+  parts       MangaPart[]    @relation(name: "MangaWorkToParts")
   adaptations MangaToAnime[] @relation(name: "MangaToMangaToAnime")
   createdAt   DateTime       @default(now())
   updatedAt   DateTime       @updatedAt
@@ -43,58 +44,96 @@ model MangaWork {
   @@index([title])
 }
 
-model AnimeWork {
-  id           String         @id @default(cuid())
-  externalId   String?        @unique //Pour FMA302, DN302, etc.
+// New model for manga parts/subdivisions
+model MangaPart {
+  id          String         @id @default(cuid())
+  externalId  String?        @unique
+  mangaId     String
+  manga       MangaWork      @relation(name: "MangaWorkToParts", fields: [mangaId], references: [id], onDelete: Cascade)
+  licenseId   String
+  license     License        @relation(name: "LicenseToMangaPart", fields: [licenseId], references: [id], onDelete: Cascade)
+  title       String
+  partNumber  Int
+  volumes     Int
+  startVolume Int
+  endVolume   Int
+  status      WorkStatus
+  startDate   DateTime?
+  endDate     DateTime?
+  adaptations MangaPartToAnime[] @relation(name: "MangaPartToAnime")
+  createdAt   DateTime       @default(now())
+  updatedAt   DateTime       @updatedAt
+
+  @@map("manga_parts")
+}
+
+model AnimeAdaptation {
+  id           String           @id @default(cuid())
+  externalId   String?          @unique //Pour FMA302, DN302, etc.
   licenseId    String
-  license      License        @relation(name: "AnimeAdaptationToLicense", fields: [licenseId], references: [id], onDelete: Cascade)
+  license      License          @relation(name: "AnimeAdaptationToLicense", fields: [licenseId], references: [id], onDelete: Cascade)
   title        String
   studio       String
-  episodes     Int
+  adaptationType AdaptationType
+  episodes     Int?             // Optional for movies
+  duration     Int?             // Duration in minutes (useful for movies)
   startDate    DateTime?
   endDate      DateTime?
   status       WorkStatus
   fidelity     AnimeFidelity
-  notes        String?        @db.Text
+  notes        String?          @db.Text
   relationType RelationType
-  seasons      AnimeSeason[]  @relation(name: "AnimeAdaptationToAnimeSeason")
-  sourcedFrom  MangaToAnime[] @relation(name: "AnimeAdaptationToMangaToAnime")
-  createdAt    DateTime       @default(now())
-  updatedAt    DateTime       @updatedAt
+  seasons      AnimeSeason[]    @relation(name: "AnimeAdaptationToAnimeSeason")
+  sourcedFrom  MangaToAnime[]   @relation(name: "AnimeAdaptationToMangaToAnime")
+  partSourcedFrom MangaPartToAnime[] @relation(name: "AnimeAdaptationToMangaPartToAnime")
+  createdAt    DateTime         @default(now())
+  updatedAt    DateTime         @updatedAt
 
   @@map("anime_adaptations")
 }
 
 // Table intermédiaire pour la relation many-to-many entre Manga et AnimeAdaptation
-
 model MangaToAnime {
-  id                 String    @id @default(cuid())
+  id                 String          @id @default(cuid())
   mangaId            String
-  manga_name         MangaWork @relation(name: "MangaToMangaToAnime", fields: [mangaId], references: [id], onDelete: Cascade)
+  manga_name         MangaWork       @relation(name: "MangaToMangaToAnime", fields: [mangaId], references: [id], onDelete: Cascade)
   animeAdaptationId  String
-  anime_name         AnimeWork @relation(name: "AnimeAdaptationToMangaToAnime", fields: [animeAdaptationId], references: [id], onDelete: Cascade)
+  anime_name         AnimeAdaptation @relation(name: "AnimeAdaptationToMangaToAnime", fields: [animeAdaptationId], references: [id], onDelete: Cascade)
   coverageFromVolume Int?
   coverageToVolume   Int?
-  createdAt          DateTime  @default(now())
-  updatedAt          DateTime  @updatedAt
+  createdAt          DateTime        @default(now())
+  updatedAt          DateTime        @updatedAt
 
-  @@unique([mangaId, animeAdaptationId])
   @@map("manga_to_anime")
 }
 
+// New intermediate table for MangaPart to AnimeAdaptation relationship
+model MangaPartToAnime {
+  id                String          @id @default(cuid())
+  mangaPartId       String
+  mangaPart         MangaPart       @relation(name: "MangaPartToAnime", fields: [mangaPartId], references: [id], onDelete: Cascade)
+  animeAdaptationId String
+  animeAdaptation   AnimeAdaptation @relation(name: "AnimeAdaptationToMangaPartToAnime", fields: [animeAdaptationId], references: [id], onDelete: Cascade)
+  coverageComplete  Boolean         @default(false)
+  createdAt         DateTime        @default(now())
+  updatedAt         DateTime        @updatedAt
+
+  @@map("manga_part_to_anime")
+}
+
 model AnimeSeason {
-  id                 String        @id @default(cuid())
+  id                 String          @id @default(cuid())
   animeAdaptationId  String
-  animeAdaptation    AnimeWork     @relation(name: "AnimeAdaptationToAnimeSeason", fields: [animeAdaptationId], references: [id], onDelete: Cascade)
+  animeAdaptation    AnimeAdaptation @relation(name: "AnimeAdaptationToAnimeSeason", fields: [animeAdaptationId], references: [id], onDelete: Cascade)
   seasonNumber       Int
   episodes           Int
   fidelity           AnimeFidelity
   coverageFromVolume Int?
   coverageToVolume   Int?
-  notes              String?       @db.Text
+  notes              String?         @db.Text
   relationType       RelationType?
-  createdAt          DateTime      @default(now())
-  updatedAt          DateTime      @updatedAt
+  createdAt          DateTime        @default(now())
+  updatedAt          DateTime        @updatedAt
 
   @@map("anime_seasons")
 }
@@ -119,4 +158,13 @@ enum RelationType {
   REMAKE
   SPIN_OFF
   REBOOT
+}
+
+// New enum for anime adaptation type
+enum AdaptationType {
+  TV_SERIES
+  MOVIE
+  OVA
+  ONA
+  SPECIAL
 }

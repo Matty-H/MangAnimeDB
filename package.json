@@ -24,7 +24,8 @@
     "seed": "ts-node backend/prisma/seed.ts",
     "ping": "npx ts-node test-db.ts",
     "format": "prettier --write .",
-    "add-comment": "node add-comment.js"
+    "add-comment": "node add-comment.js",
+    "dbreboot": "npx prisma migrate reset && npx prisma migrate dev --name init && npm run seed"
   },
   "dependencies": {
     "@prisma/client": "^6.6.0",
