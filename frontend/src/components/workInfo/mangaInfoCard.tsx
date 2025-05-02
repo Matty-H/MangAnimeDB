@@ -1,19 +1,17 @@
+//frontend/src/components/workInfo/mangaInfoCard.tsx
 import React from 'react';
 import { MangaWork, WorkStatus, MangaPart } from '../../types';
-import './mangaInfoCard.css';
 
 interface MangaInfoCardProps {
   manga: MangaWork;
 }
 
 const MangaInfoCard: React.FC<MangaInfoCardProps> = ({ manga }) => {
-  // Helper function to format dates
   const formatDate = (dateString?: Date) => {
     if (!dateString) return 'N/A';
     return new Date(dateString).toLocaleDateString();
   };
 
-  // Helper function to display status in a more readable format
   const formatStatus = (status: WorkStatus) => {
     switch (status) {
       case WorkStatus.ONGOING:
@@ -30,83 +28,85 @@ const MangaInfoCard: React.FC<MangaInfoCardProps> = ({ manga }) => {
     }
   };
 
-  // Get the start and end years for publication
+  const getStatusBadgeClass = (status: WorkStatus) => {
+    switch (status) {
+      case WorkStatus.ONGOING:
+        return 'badge-primary';
+      case WorkStatus.COMPLETED:
+        return 'badge-success';
+      case WorkStatus.HIATUS:
+        return 'badge-warning';
+      case WorkStatus.UNFINISHED:
+        return 'badge-error';
+      default:
+        return 'badge-neutral';
+    }
+  };
+
   const startYear = manga.startDate ? new Date(manga.startDate).getFullYear() : 'N/A';
   const endYear = manga.endDate
     ? new Date(manga.endDate).getFullYear()
     : (manga.status === WorkStatus.ONGOING ? 'présent' : 'N/A');
   const publishYears = startYear === endYear ? startYear : `${startYear} - ${endYear}`;
-  
-  // Get the total number of parts
   const partsCount = manga.parts?.length || 0;
 
   return (
-    <div className="manga-info-card media-card">
-      <div className="manga-header media-header">
-        <h3>{manga.title}</h3>
-      </div>
+    <div className="card bg-base-200 shadow-sm w-full">
+      <div className="card-body">
+        <h2 className="card-title">{manga.title}</h2>
+        
+        <div className="flex text-sm">
+          <div className="font-semibold w-1/4">
+            Auteur{manga.authors.length > 1 ? 's' : ''} :
+          </div>
+          <div className="italic">{manga.authors.join(', ')}</div>
+        </div>
 
-      <div className="media-detail-row">
-        <div className="detail-label">Éditeur : </div>
-        <div className="detail-value">{manga.publisher}</div>
-        
-        <div className="detail-label">Auteurs : </div>
-        <div className="detail-value">{manga.authors.join(', ')}</div>
-      </div>
-      
-      <div className="manga-stats media-stats">
-        <div className="stat-item">
-          <div className="stat-value">{manga.volumes}</div>
-          <div className="stat-label">Volume{manga.volumes !== 1 ? 's' : ''}</div>
-        </div>
-        
-        {partsCount > 0 && (
-          <div className="stat-item">
-            <div className="stat-value">{partsCount}</div>
-            <div className="stat-label">Partie{partsCount !== 1 ? 's' : ''}</div>
+        <div className="card bg-primary shadow-sm">
+          <div className="card-body p-2">
+            <div className="grid grid-cols-4 gap-4">
+              <div className="text-center">
+                <div className="font-semibold">{manga.volumes}</div>
+                <div className="text-xs">Volume{manga.volumes !== 1 ? 's' : ''}</div>
+              </div>
+              {partsCount > 0 && (
+                <div className="text-center">
+                  <div className="font-semibold">{partsCount}</div>
+                  <div className="text-xs">Partie{partsCount !== 1 ? 's' : ''}</div>
+                </div>
+              )}
+              <div className="text-center">
+                <div className="font-semibold">{publishYears}</div>
+                <div className="text-xs">Publication</div>
+              </div>
+              <div className="text-center">
+                <div className={`badge ${getStatusBadgeClass(manga.status)}`}>
+                  {formatStatus(manga.status)}
+                </div>
+              </div>
+            </div>
           </div>
-        )}
-        
-        <div className="stat-item">
-          <div className="stat-value">{startYear}</div>
-          <div className="stat-label">Publication</div>
         </div>
-        
-        <div className="stat-item">
-          <div className={`stat-value status-badge status-${manga.status.toLowerCase()}`}>
-            {formatStatus(manga.status)}
-          </div>
-          <div className="stat-label">Statut</div>
-        </div>
-      </div>
-      
-      <div className="manga-details media-details">
+
         {manga.parts && manga.parts.length > 0 && (
-          <div className="manga-parts">
-            <h4>Parties</h4>
-            <div className="parts-list">
+          <div className="mt-4">
+            <ul className="list bg-base-100 rounded-box shadow-md divide-y divide-base-300">
               {manga.parts.map((part: MangaPart) => (
-                <div key={part.id} className="part-item">
-                  <div className="part-header">
-                    <div className="part-title">{part.title || `Partie ${part.partNumber}`}</div>
-                    <div className="part-volumes">{part.volumes} volumes</div>
-                  </div>
-                  <div className="part-detail">
-                    <span className="part-coverage">
+                <li key={part.id} className="list-row p-4 flex items-center justify-between gap-4">
+                  <span className="font-semibold">
+                    {part.title || `Partie ${part.partNumber}`}
+                  </span>
+                  <div className="flex items-center gap-2">
+                    <span className="text-xs uppercase font-semibold opacity-60">
                       Tomes {part.startVolume}-{part.endVolume}
                     </span>
-                    <span className={`status-badge status-${part.status.toLowerCase()}`}>
+                    <span className={`badge ${getStatusBadgeClass(part.status)}`}>
                       {formatStatus(part.status)}
                     </span>
                   </div>
-                  {part.startDate && (
-                    <div className="part-dates">
-                      Publication: {formatDate(part.startDate)} - {part.endDate ? formatDate(part.endDate) : 'présent'}
-                    </div>
-                  )}
-                </div>
+                </li>
               ))}
-            </div>
+            </ul>
           </div>
         )}
       </div>

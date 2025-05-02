@@ -1,7 +1,6 @@
 // frontend/src/components/addDataButton/addDataButton.tsx
 import React, { useState } from 'react';
 import AddDataModal from '../addDataModal/addDataModal';
-import './addDataButton.css';
 
 const AddDataButton: React.FC = () => {
   const [isModalOpen, setIsModalOpen] = useState<boolean>(false);

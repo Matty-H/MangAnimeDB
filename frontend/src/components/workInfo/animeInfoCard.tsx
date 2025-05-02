@@ -1,19 +1,16 @@
 import React from 'react';
 import { AnimeWork, WorkStatus, AnimeFidelity, RelationType } from '../../types';
-import './animeInfoCard.css';
 
 interface AnimeInfoCardProps {
   anime: AnimeWork;
 }
 
 const AnimeInfoCard: React.FC<AnimeInfoCardProps> = ({ anime }) => {
-  // Helper function to format dates
   const formatDate = (dateString?: Date) => {
     if (!dateString) return 'N/A';
     return new Date(dateString).toLocaleDateString();
   };
 
-  // Helper function to display status in a more readable format
   const formatStatus = (status: WorkStatus) => {
     switch (status) {
       case WorkStatus.ONGOING:
@@ -30,7 +27,21 @@ const AnimeInfoCard: React.FC<AnimeInfoCardProps> = ({ anime }) => {
     }
   };
 
-  // Helper function to display fidelity in a more readable format
+  const getStatusBadgeClass = (status: WorkStatus) => {
+    switch (status) {
+      case WorkStatus.ONGOING:
+        return 'badge-primary';
+      case WorkStatus.COMPLETED:
+        return 'badge-success';
+      case WorkStatus.HIATUS:
+        return 'badge-warning';
+      case WorkStatus.UNFINISHED:
+        return 'badge-error';
+      default:
+        return 'badge-neutral';
+    }
+  };
+
   const formatFidelity = (fidelity: AnimeFidelity) => {
     switch (fidelity) {
       case AnimeFidelity.FAITHFUL:
@@ -45,7 +56,19 @@ const AnimeInfoCard: React.FC<AnimeInfoCardProps> = ({ anime }) => {
     }
   };
 
-  // Helper function to display relation type in a more readable format
+  const getFidelityBadgeClass = (fidelity: AnimeFidelity) => {
+    switch (fidelity) {
+      case AnimeFidelity.FAITHFUL:
+        return 'badge-success';
+      case AnimeFidelity.PARTIAL:
+        return 'badge-warning';
+      case AnimeFidelity.ANIME_ORIGINAL:
+        return 'badge-info';
+      default:
+        return 'badge-neutral';
+    }
+  };
+
   const formatRelationType = (type: RelationType) => {
     switch (type) {
       case RelationType.ORIGINAL:
@@ -61,101 +84,130 @@ const AnimeInfoCard: React.FC<AnimeInfoCardProps> = ({ anime }) => {
       case RelationType.REBOOT:
         return 'Reboot';
       default:
-        const statusString = String(type);
-        return statusString.replace('_', ' ');
+        return String(type).replace('_', ' ');
     }
   };
 
-  // Get the total number of seasons
   const seasonCount = anime.seasons?.length || 0;
   const totalEpisodes = anime.episodes;
-
-  // Get the air years range
   const startYear = anime.startDate ? new Date(anime.startDate).getFullYear() : 'N/A';
-  const endYear = anime.endDate 
-    ? new Date(anime.endDate).getFullYear() 
+  const endYear = anime.endDate
+    ? new Date(anime.endDate).getFullYear()
     : (anime.status === WorkStatus.ONGOING ? 'présent' : 'N/A');
   const airYears = startYear === endYear ? startYear : `${startYear} - ${endYear}`;
 
+  // Créer un tableau des éléments à afficher dans la grille
+  interface GridItem {
+    value: React.ReactNode;
+    label: string;
+  }
+  
+  const gridItems: GridItem[] = [];
+  
+  if (seasonCount > 0) {
+    gridItems.push({
+      value: seasonCount,
+      label: `Saison${seasonCount !== 1 ? 's' : ''}`
+    });
+  }
+  
+  gridItems.push({
+    value: totalEpisodes,
+    label: `Épisode${totalEpisodes !== 1 ? 's' : ''}`
+  });
+  
+  gridItems.push({
+    value: airYears,
+    label: 'Diffusion'
+  });
+  
+  gridItems.push({
+    value: (
+      <div className={`badge ${getStatusBadgeClass(anime.status)}`}>
+        {formatStatus(anime.status)}
+      </div>
+    ),
+    label: ''
+  });
+  
+  gridItems.push({
+    value: (
+      <div className={`badge ${getFidelityBadgeClass(anime.fidelity)}`}>
+        {formatFidelity(anime.fidelity)}
+      </div>
+    ),
+    label: ''
+  });
+
+  // Déterminer la classe de grille en fonction du nombre d'éléments
+  const getGridClass = () => {
+    const count = gridItems.length;
+    // Toujours sur une seule ligne, avec le nombre exact de colonnes
+    return `grid-cols-${count}`;
+  };
+
   return (
-    <div className="anime-info-card media-card">
-      <div className="anime-header media-header">
-        <h3>{anime.title}</h3>
-      </div>
-
-      <div className="media-detail-row">
-        <div className="detail-label">Studio : </div>
-        <div className="detail-value">{anime.studio}</div>
-
-        <div className="detail-label">Type : </div>
-        <div className="detail-value">{formatRelationType(anime.relationType)}</div>
-      </div>
-      
-      <div className="anime-stats media-stats">
-        {seasonCount === 0 ? "" :
-          <div className="stat-item">
-            <div className="stat-value">{seasonCount}</div>
-            <div className="stat-label">Saison{seasonCount !== 1 ? 's' : ''}</div>
-          </div>
-        }
-          
-        <div className="stat-item">
-          <div className="stat-value">{totalEpisodes}</div>
-          <div className="stat-label">Épisode{totalEpisodes !== 1 ? 's' : ''}</div>
-        </div>
+    <div className="card bg-base-200 shadow-sm w-full">
+      <div className="card-body">
+        <h2 className="card-title">{anime.title}</h2>
         
-        <div className="stat-item">
-          <div className="stat-value">{startYear}</div>
-          <div className="stat-label">Diffusion</div>
-        </div>
-        
-        <div className="stat-item">
-          <div className={`stat-value status-badge status-${anime.status.toLowerCase()}`}>
-            {formatStatus(anime.status)}
+        <div className="grid grid-cols-1 gap-3">
+          <div className="flex text-sm">
+            <div className="font-semibold w-1/4">Studio :</div>
+            <div className="italic">{anime.studio}</div>
           </div>
-          <div className="stat-label">Statut</div>
+          <div className="flex text-sm">
+            <div className="font-semibold w-1/4">Type :</div>
+            <div className="italic">{formatRelationType(anime.relationType)}</div>
+          </div>
         </div>
-        <span className={`fidelity-badge fidelity-${anime.fidelity.toLowerCase()}`}>
-          {formatFidelity(anime.fidelity)}
-        </span>
-      </div>
-      
-      <div className="anime-details media-details">
-        {anime.seasons && anime.seasons.length > 0 && (
-          <div className="anime-seasons">
-            <h4>Saisons</h4>
-            <div className="seasons-list">
-              {anime.seasons.map(season => (
-                <div key={season.id} className="season-item">
-                  <div className="season-header">
-                    <div className="season-title">Saison {season.seasonNumber}</div>
-                    <div className="season-episodes">{season.episodes} épisodes</div>
-                  </div>
-                  <div className="season-detail">
-                    <span className={`fidelity-badge fidelity-${season.fidelity.toLowerCase()}`}>
-                      {formatFidelity(season.fidelity)}
-                    </span>
-                    {season.coverageFromVolume && season.coverageToVolume && (
-                      <span className="season-coverage">
-                        Tomes {season.coverageFromVolume}-{season.coverageToVolume}
-                      </span>
-                    )}
-                  </div>
-                  {season.notes && (
-                    <div className="season-notes">
-                      <p>{season.notes}</p>
-                    </div>
-                  )}
+
+        <div className="card bg-primary shadow-sm mt-2">
+          <div className="card-body p-2">
+            <div className="flex justify-between w-full gap-2 items-center">
+              {gridItems.map((item, index) => (
+                <div key={index} className="text-center flex-1">
+                  <div className="font-semibold">{item.value}</div>
+                  {item.label && <div className="text-xs">{item.label}</div>}
                 </div>
               ))}
             </div>
           </div>
+        </div>
+
+        {anime.seasons && anime.seasons.length > 0 && (
+          <div className="mt-4">
+            <ul className="list bg-base-100 rounded-box shadow-md">
+              {anime.seasons.map((season) => (
+                <li key={season.id} className="list-row">
+                  <div className="flex-1">
+                    <div className="font-semibold">Saison {season.seasonNumber}</div>
+                    <div className="text-xs opacity-60">
+                      {season.episodes} épisode{season.episodes !== 1 ? 's' : ''}
+                    </div>
+                  </div>
+                  <div className="flex gap-2 justify-end text-sm">
+                    <span className={`badge ${getFidelityBadgeClass(season.fidelity)}`}>
+                      {formatFidelity(season.fidelity)}
+                    </span>
+                    {season.coverageFromVolume && season.coverageToVolume && (
+                      <span className="badge badge-secondary">
+                        Tomes {season.coverageFromVolume}-{season.coverageToVolume}
+                      </span>
+                    )}
+                  </div>
+                </li>
+              ))}
+            </ul>
+          </div>
         )}
-        
+
         {anime.notes && (
-          <div className="anime-notes media-notes">
-            <h4>Notes</h4>
-            <p>{anime.notes}</p>
+          <div className="card bg-base-300 shadow-sm mt-4">
+            <div className="card-body p-3">
+              <h3 className="font-bold text-lg">Notes</h3>
+              <p className="text-xs">{anime.notes}</p>
+            </div>
           </div>
         )}
       </div>

@@ -1,4 +1,3 @@
-// frontend/src/components/resultsDisplay/resultsDisplay.tsx
 import React, { useState, useEffect } from 'react';
 import { searchDetailed } from '../../services/apiService';
 import AdaptationTable from '../adaptationTable/adaptationTable';
@@ -12,7 +11,6 @@ import {
   AnimeWork,
   WorkStatus
 } from '../../types';
-import './resultsDisplay.css';
 
 interface ResultsDisplayProps {
   searchTerm: string;
@@ -50,50 +48,62 @@ const ResultsDisplay: React.FC<ResultsDisplayProps> = ({ searchTerm }) => {
   }, [searchTerm]);
 
   if (loading) {
-    return <div>Loading search results for "{searchTerm}"...</div>;
+    return (
+      <div className="p-8 text-center animate-pulse text-base-content">
+        Loading search results for "{searchTerm}"...
+      </div>
+    );
   }
 
   if (error) {
     return (
-      <div>Error: {error}</div>
+      <div className="p-8 text-center bg-base-200 rounded-lg text-error-content border-l-4 border-error">
+        Error: {error}
+      </div>
     );
   }
 
   return (
-    <div className="results-display">
-      <SearchBar />
-      
-      {/* Bouton d'ajout de données */}
+    <div className="p-6 max-w-screen-xl mx-auto text-base-content">
+      <div className="flex justify-center">
+        <SearchBar />
+      </div>
+
+      <div className="btn btn-primary">
       <AddDataButton />
-      
+      </div>
+
       {results.length === 0 ? (
-        <div>No results found for "{searchTerm}".</div>
+        <div className="p-8 text-center bg-base-200 rounded-lg text-base-content">
+          No results found for "{searchTerm}".
+        </div>
       ) : (
-        results.map(license => (
-          <div key={license.id} className="license-result">
-            {/* Manga-Anime Adaptation Table */}
-            <AdaptationTable license={license} />
-            <div className='works-section'>
-              {/* Manga Works Section */}
+        results.map((license) => (
+          <div key={license.id}>
+            {/* Centered Adaptation Table */}
+            <div className="flex justify-center mb-6">
+              <AdaptationTable license={license} />
+            </div>
+
+            {/* Cards for Manga and Anime */}
+            <div className="flex flex-col lg:flex-row gap-6 mt-8 justify-center">
+              {/* Manga Section */}
               {license.mangas.length > 0 && (
-                <div className="manga-section">
-                  <h3>Mangas</h3>
-                  <div className="manga-grid">
-                    {license.mangas.map(manga => (
-                      <MangaInfoCard key={manga.id} manga={manga} />
-                    ))}
-                  </div>
+                <div className="flex-1 lg:w-1/2">
+                  <h3 className="text-xl font-semibold mb-4">Mangas</h3>
+                  {license.mangas.map((manga) => (
+                    <MangaInfoCard key={manga.id} manga={manga} />
+                  ))}
                 </div>
               )}
-              {/* Anime Adaptations Section */}
+
+              {/* Anime Section */}
               {license.animeAdaptations.length > 0 && (
-                <div className="anime-section">
-                  <h3>Animes</h3>
-                  <div className="anime-grid">
-                    {license.animeAdaptations.map(anime => (
-                      <AnimeInfoCard key={anime.id} anime={anime} />
-                    ))}
-                  </div>
+                <div className="flex-1 lg:w-1/2">
+                  <h3 className="text-xl font-semibold mb-4">Animes</h3>
+                  {license.animeAdaptations.map((anime) => (
+                    <AnimeInfoCard key={anime.id} anime={anime} />
+                  ))}
                 </div>
               )}
             </div>
