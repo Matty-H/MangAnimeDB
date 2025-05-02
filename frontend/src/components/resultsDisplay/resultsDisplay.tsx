@@ -64,13 +64,9 @@ const ResultsDisplay: React.FC<ResultsDisplayProps> = ({ searchTerm }) => {
   }
 
   return (
-    <div className="p-6 max-w-screen-xl mx-auto text-base-content">
+    <div className="p-6 max-w-6/9 mx-auto text-base-content justify-center">
       <div className="flex justify-center">
         <SearchBar />
-      </div>
-
-      <div className="btn btn-primary">
-      <AddDataButton />
       </div>
 
       {results.length === 0 ? (
@@ -79,30 +75,31 @@ const ResultsDisplay: React.FC<ResultsDisplayProps> = ({ searchTerm }) => {
         </div>
       ) : (
         results.map((license) => (
-          <div key={license.id}>
-            {/* Centered Adaptation Table */}
-            <div className="flex justify-center mb-6">
+          <div className="" key={license.id}>
               <AdaptationTable license={license} />
-            </div>
+
+              <div className="divider"></div>
 
             {/* Cards for Manga and Anime */}
-            <div className="flex flex-col lg:flex-row gap-6 mt-8 justify-center">
+            <div className="flex flex-col lg:flex-row justify-center">
               {/* Manga Section */}
               {license.mangas.length > 0 && (
                 <div className="flex-1 lg:w-1/2">
-                  <h3 className="text-xl font-semibold mb-4">Mangas</h3>
+                  <h3 className="tab text-xl font-semibold">Mangas</h3>
                   {license.mangas.map((manga) => (
                     <MangaInfoCard key={manga.id} manga={manga} />
                   ))}
                 </div>
               )}
-
+              <div className="divider divider-horizontal"></div>
               {/* Anime Section */}
               {license.animeAdaptations.length > 0 && (
                 <div className="flex-1 lg:w-1/2">
-                  <h3 className="text-xl font-semibold mb-4">Animes</h3>
+                  <h3 className="tab text-xl font-semibold">Animes</h3>
                   {license.animeAdaptations.map((anime) => (
+                    <div className='mb-6'>
                     <AnimeInfoCard key={anime.id} anime={anime} />
+                    </div>
                   ))}
                 </div>
               )}
@@ -110,7 +107,11 @@ const ResultsDisplay: React.FC<ResultsDisplayProps> = ({ searchTerm }) => {
           </div>
         ))
       )}
+      <div className="btn btn-primary btn-circle">
+      <AddDataButton />
+      </div>
     </div>
+    
   );
 };
 

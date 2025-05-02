@@ -16,7 +16,7 @@ const AddDataButton: React.FC = () => {
   return (
     <div className="add-data-container">
       <button className="add-data-button" onClick={openModal}>
-        + Ajouter une entrée
+        +
       </button>
       {isModalOpen && <AddDataModal onClose={closeModal} />}
     </div>

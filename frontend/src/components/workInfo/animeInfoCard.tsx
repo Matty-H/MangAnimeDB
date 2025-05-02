@@ -150,8 +150,9 @@ const AnimeInfoCard: React.FC<AnimeInfoCardProps> = ({ anime }) => {
     <div className="card bg-base-200 shadow-sm w-full">
       <div className="card-body">
         <h2 className="card-title">{anime.title}</h2>
+        <div className="divider m-0"></div>
         
-        <div className="grid grid-cols-1 gap-3">
+        <div className="grid grid-cols-1 gap-1">
           <div className="flex text-sm">
             <div className="font-semibold w-1/4">Studio :</div>
             <div className="italic">{anime.studio}</div>
@@ -162,7 +163,7 @@ const AnimeInfoCard: React.FC<AnimeInfoCardProps> = ({ anime }) => {
           </div>
         </div>
 
-        <div className="card bg-primary shadow-sm mt-2">
+        <div className="card bg-primary shadow-sm mt-1">
           <div className="card-body p-2">
             <div className="flex justify-between w-full gap-2 items-center">
               {gridItems.map((item, index) => (
@@ -176,7 +177,6 @@ const AnimeInfoCard: React.FC<AnimeInfoCardProps> = ({ anime }) => {
         </div>
 
         {anime.seasons && anime.seasons.length > 0 && (
-          <div className="mt-4">
             <ul className="list bg-base-100 rounded-box shadow-md">
               {anime.seasons.map((season) => (
                 <li key={season.id} className="list-row">
@@ -199,11 +199,10 @@ const AnimeInfoCard: React.FC<AnimeInfoCardProps> = ({ anime }) => {
                 </li>
               ))}
             </ul>
-          </div>
         )}
 
         {anime.notes && (
-          <div className="card bg-base-300 shadow-sm mt-4">
+          <div className="card bg-base-300 shadow-sm mt-1">
             <div className="card-body p-3">
               <h3 className="font-bold text-lg">Notes</h3>
               <p className="text-xs">{anime.notes}</p>

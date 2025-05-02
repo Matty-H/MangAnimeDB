@@ -54,6 +54,7 @@ const MangaInfoCard: React.FC<MangaInfoCardProps> = ({ manga }) => {
     <div className="card bg-base-200 shadow-sm w-full">
       <div className="card-body">
         <h2 className="card-title">{manga.title}</h2>
+        <div className="divider m-0"></div>
         
         <div className="flex text-sm">
           <div className="font-semibold w-1/4">

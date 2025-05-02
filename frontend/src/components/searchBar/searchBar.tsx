@@ -131,13 +131,13 @@ function SearchBar({ onSearch = () => {} }: SearchBarProps) {
     >
       <div className="join">
         <input
+          className="input join-item"
           type="text"
           placeholder="Rechercher un manga ou anime..."
           value={searchTerm}
           onChange={handleInputChange}
           onKeyDown={handleKeyDown}
           onClick={(e) => e.stopPropagation()}
-          className="input join-item"
         />
         <button type="submit" className="btn btn-soft btn-warning join-item">
           Rechercher
