@@ -5,12 +5,8 @@ import MangaInfoCard from '../workInfo/mangaInfoCard';
 import AnimeInfoCard from '../workInfo/animeInfoCard';
 import SearchBar from '../searchBar/searchBar';
 import AddDataButton from '../addDataButton/addDataButton';
-import {
-  License,
-  MangaWork,
-  AnimeWork,
-  WorkStatus
-} from '../../types';
+import { License, MangaWork, AnimeWork, WorkStatus } from '../../types';
+import { Search, BookOpen, Film, AlertCircle, Loader2, Plus } from 'lucide-react';
 
 interface ResultsDisplayProps {
   searchTerm: string;
@@ -47,71 +43,82 @@ const ResultsDisplay: React.FC<ResultsDisplayProps> = ({ searchTerm }) => {
     fetchResults();
   }, [searchTerm]);
 
-  if (loading) {
-    return (
-      <div className="p-8 text-center animate-pulse text-base-content">
-        Loading search results for "{searchTerm}"...
-      </div>
-    );
-  }
-
-  if (error) {
-    return (
-      <div className="p-8 text-center bg-base-200 rounded-lg text-error-content border-l-4 border-error">
-        Error: {error}
-      </div>
-    );
-  }
-
   return (
-    <div className="p-6 max-w-6/9 mx-auto text-base-content justify-center">
-      <div className="flex justify-center">
+    <div className="max-w-5/6 mx-auto px-4 py-6">
+      <div className="mb-8">
         <SearchBar />
       </div>
 
-      {results.length === 0 ? (
-        <div className="p-8 text-center bg-base-200 rounded-lg text-base-content">
-          No results found for "{searchTerm}".
+      {loading ? (
+        <div className="bg-base-100 card-border border-base-300 rounded-lg p-8 text-center">
+          <div className="flex items-center justify-center gap-3">
+            <Loader2 size={24} className="animate-spin opacity-70" />
+            <span>Recherche en cours pour "{searchTerm}"...</span>
+          </div>
+        </div>
+      ) : error ? (
+        <div className="bg-base-100 card-border border-error border-l-4 rounded-lg p-6 text-center">
+          <div className="flex items-center justify-center gap-3">
+            <AlertCircle size={24} className="text-error" />
+            <span>{error}</span>
+          </div>
+        </div>
+      ) : results.length === 0 ? (
+        <div className="bg-base-100 card-border border-base-300 rounded-lg p-8 text-center">
+          <div className="flex items-center justify-center gap-3">
+            <Search size={24} className="opacity-50" />
+            <span>Aucun résultat trouvé pour "{searchTerm}".</span>
+          </div>
         </div>
       ) : (
-        results.map((license) => (
-          <div className="" key={license.id}>
+        <div className="space-y-12">
+          {results.map((license) => (
+            <div key={license.id} className="space-y-6">
               <AdaptationTable license={license} />
-
-              <div className="divider"></div>
-
-            {/* Cards for Manga and Anime */}
-            <div className="flex flex-col lg:flex-row justify-center">
-              {/* Manga Section */}
-              {license.mangas.length > 0 && (
-                <div className="flex-1 lg:w-1/2">
-                  <h3 className="tab text-xl font-semibold">Mangas</h3>
-                  {license.mangas.map((manga) => (
-                    <MangaInfoCard key={manga.id} manga={manga} />
-                  ))}
-                </div>
-              )}
-              <div className="divider divider-horizontal"></div>
-              {/* Anime Section */}
-              {license.animeAdaptations.length > 0 && (
-                <div className="flex-1 lg:w-1/2">
-                  <h3 className="tab text-xl font-semibold">Animes</h3>
-                  {license.animeAdaptations.map((anime) => (
-                    <div className='mb-6'>
-                    <AnimeInfoCard key={anime.id} anime={anime} />
+              
+              <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+                {/* Manga Section */}
+                {license.mangas.length > 0 && (
+                  <div className="space-y-6">
+                    <div className="flex items-center gap-2">
+                      <BookOpen size={18} className="opacity-70" />
+                      <h3 className="text-lg font-medium">Mangas</h3>
                     </div>
-                  ))}
-                </div>
-              )}
+                    
+                    <div className="space-y-6">
+                      {license.mangas.map((manga) => (
+                        <MangaInfoCard key={manga.id} manga={manga} />
+                      ))}
+                    </div>
+                  </div>
+                )}
+                {/* Anime Section */}
+                {license.animeAdaptations.length > 0 && (
+                  <div className="space-y-6">
+                    <div className="flex items-center gap-2">
+                      <Film size={18} className="opacity-70" />
+                      <h3 className="text-lg font-medium">Anime</h3>
+                    </div>
+                    
+                    <div className="space-y-6">
+                      {license.animeAdaptations.map((anime) => (
+                        <AnimeInfoCard key={anime.id} anime={anime} />
+                      ))}
+                    </div>
+                  </div>
+                )}
+              </div>
             </div>
-          </div>
-        ))
+          ))}
+        </div>
       )}
-      <div className="btn btn-primary btn-circle">
-      <AddDataButton />
+      
+      <div className="fixed bottom-6 right-6">
+        <button className="btn btn-primary btn-circle shadow-lg">
+          <Plus size={24} />
+        </button>
       </div>
     </div>
-    
   );
 };
 

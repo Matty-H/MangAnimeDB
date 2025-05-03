@@ -56,7 +56,7 @@ MangAnime Link est une application web qui permet aux utilisateurs de rechercher
          onmouseout="this.style.transform='scale(1)'">
   </a>
 
-  <a href="https://www.prisma.io" target="_blank" style="display: inline-block;">
+  <a href="https://tailwindcss.com" target="_blank" style="display: inline-block;">
     <img src="https://raw.githubusercontent.com/marwin1991/profile-technology-icons/refs/heads/main/icons/tailwind_css.png" 
          alt="Tailwind CSS" 
          width="50"
@@ -65,7 +65,7 @@ MangAnime Link est une application web qui permet aux utilisateurs de rechercher
          onmouseout="this.style.transform='scale(1)'">
   </a>
 
-  <a href="https://www.prisma.io" target="_blank" style="display: inline-block;">
+  <a href="https://daisyui.com" target="_blank" style="display: inline-block;">
     <img src="https://camo.githubusercontent.com/cf6b86ab1d68b2e06eb1312b20d25e5754cf860ece54396611768d7fff034c5e/68747470733a2f2f696d672e646169737975692e636f6d2f696d616765732f646169737975692f646169737975692d6c6f676f2d3139322e706e67" 
          alt="Daisy UI" 
          width="50"

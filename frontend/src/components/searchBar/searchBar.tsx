@@ -1,5 +1,6 @@
 import React, { useMemo, useState, FormEvent, ChangeEvent, KeyboardEvent, useEffect } from 'react';
 import { useNavigate } from '@tanstack/react-router';
+import { Search, Loader2 } from 'lucide-react';
 
 interface SearchBarProps {
   onSearch?: (searchTerm: string) => void;
@@ -125,47 +126,63 @@ function SearchBar({ onSearch = () => {} }: SearchBarProps) {
   }, []);
 
   return (
-    <form
-      onSubmit={handleSubmit}
-      autoComplete="off"
-    >
-      <div className="join">
-        <input
-          className="input join-item"
-          type="text"
-          placeholder="Rechercher un manga ou anime..."
-          value={searchTerm}
-          onChange={handleInputChange}
-          onKeyDown={handleKeyDown}
-          onClick={(e) => e.stopPropagation()}
-        />
-        <button type="submit" className="btn btn-soft btn-warning join-item">
-          Rechercher
-        </button>
-      </div>
-  
-      {showSuggestions && filteredSuggestions.length > 0 && (
-        <ul
-          className="menu bg-base-200 rounded-box w-full mt-2"
-          onClick={(e) => e.stopPropagation()}
-        >
-          {filteredSuggestions.map((suggestion, index) => (
-            <li key={suggestion.id} onClick={() => handleSuggestionClick(suggestion)}>
-              <a className={index === activeIndex ? 'bg-base-300 text-warning' : ''}>
-                {suggestion.title}
-              </a>
-            </li>
-          ))}
-        </ul>
-      )}
-  
-      {isLoading && (
-        <p className="loading loading-ring loading-xl mt-2 text-sm text-base-content">Chargement...</p>
-      )}
-    </form>
+    <div className="search-container w-full relative">
+      <form onSubmit={handleSubmit} autoComplete="off" className="w-full">
+        <div className="card bg-base-100 card-border border-base-300 overflow-hidden">
+          <div className="flex">
+            <div className="relative flex-grow">
+              <input
+                className="w-full p-4 pl-10 focus:outline-none"
+                type="text"
+                placeholder="Rechercher un manga ou anime..."
+                value={searchTerm}
+                onChange={handleInputChange}
+                onKeyDown={handleKeyDown}
+                onClick={(e) => e.stopPropagation()}
+              />
+              <div className="absolute left-3 top-1/2 transform -translate-y-1/2 opacity-50">
+                <Search size={18} />
+              </div>
+              {isLoading && (
+                <div className="absolute right-3 top-1/2 transform -translate-y-1/2">
+                  <Loader2 size={18} className="animate-spin opacity-70" />
+                </div>
+              )}
+            </div>
+            <button 
+              type="submit" 
+              className="px-6 py-4 bg-primary text-primary-content font-medium"
+            >
+              Rechercher
+            </button>
+          </div>
+        </div>
+      
+        {showSuggestions && filteredSuggestions.length > 0 && (
+          <div className="absolute z-50 w-full mt-1">
+            <div className="card bg-base-100 card-border border-base-300 overflow-hidden shadow-lg">
+              <ul className="divide-y divide-base-300 divide-dashed">
+                {filteredSuggestions.map((suggestion, index) => (
+                  <li 
+                    key={suggestion.id} 
+                    onClick={() => handleSuggestionClick(suggestion)}
+                    className={`p-3 cursor-pointer hover:bg-base-200 ${
+                      index === activeIndex ? 'bg-base-200' : ''
+                    }`}
+                  >
+                    <div className="flex items-center gap-2">
+                      <Search size={14} className="opacity-60" />
+                      <span>{suggestion.title}</span>
+                    </div>
+                  </li>
+                ))}
+              </ul>
+            </div>
+          </div>
+        )}
+      </form>
+    </div>
   );
-  
-  
 }
 
 export default SearchBar;
