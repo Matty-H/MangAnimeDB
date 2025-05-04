@@ -13,6 +13,7 @@ export enum AnimeFidelity {
 
 export enum RelationType {
   ORIGINAL = 'ORIGINAL',
+  MANGA_ADAPTATION = 'MANGA_ADAPTATION', //TODO AJOUTER A PRISMA LE TYPE
   SEQUEL = 'SEQUEL',
   PREQUEL = 'PREQUEL',
   REMAKE = 'REMAKE',

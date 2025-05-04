@@ -114,9 +114,7 @@ const ResultsDisplay: React.FC<ResultsDisplayProps> = ({ searchTerm }) => {
       )}
       
       <div className="fixed bottom-6 right-6">
-        <button className="btn btn-primary btn-circle shadow-lg">
-          <Plus size={24} />
-        </button>
+        <AddDataButton />
       </div>
     </div>
   );
