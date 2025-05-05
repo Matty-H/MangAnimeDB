@@ -2,12 +2,71 @@
 import express from 'express';
 import type { Router, Request, Response } from 'express';
 import { PrismaClient } from '@prisma/client';
+import mangaRoutes from './mangaRoutes.ts'
 
 const router: Router = express.Router();
 const prisma = new PrismaClient();
 
 // Middleware pour parser le JSON
 router.use(express.json());
+
+// Utiliser les routes de manga
+router.use('/', mangaRoutes);
+
+// AJOUT DE LA ROUTE MANQUANTE - Mettre à jour un manga via la licence
+router.put('/license/:licenseId/manga/:mangaId', async (req: Request, res: Response) => {
+  const { mangaId } = req.params;
+  const { 
+    licenseId, 
+    title, 
+    authors, 
+    volumes, 
+    status, 
+    startDate, 
+    endDate, 
+    publisher 
+  } = req.body;
+
+  const parsedStartDate = startDate ? new Date(startDate) : undefined;
+  const parsedEndDate = endDate ? new Date(endDate) : undefined;
+
+  try {
+    // Vérifier si le manga existe
+    const mangaExists = await prisma.mangaWork.findUnique({
+      where: { id: mangaId }
+    });
+
+    if (!mangaExists) {
+      return res.status(404).json({ error: 'Manga non trouvé' });
+    }
+
+    // Mise à jour du manga
+    const updatedManga = await prisma.mangaWork.update({
+      where: { id: mangaId },
+      data: {
+        licenseId,
+        title,
+        authors,
+        volumes,
+        status,
+        startDate: parsedStartDate,
+        endDate: parsedEndDate,
+        publisher
+      },
+      include: {
+        parts: true
+      }
+    });
+
+    res.json(updatedManga);
+  } catch (error) {
+    console.error('Erreur lors de la mise à jour du manga:', error);
+    res.status(500).json({ 
+      error: 'Erreur serveur', 
+      details: error.message 
+    });
+  }
+});
 
 // GET - Récupérer des suggestions de titres
 router.get('/suggestions', async (req: Request, res: Response) => {
@@ -256,7 +315,7 @@ router.delete('/license/:id', async (req: Request, res: Response) => {
   }
 });
 
-// Route corrigée pour la mise à jour des adaptations
+// Route pour la mise à jour des adaptations
 router.put('/adaptation/:id', async (req: Request, res: Response) => {
   const { id } = req.params;
   const { episodes, fromVolume, toVolume, type } = req.body;
@@ -365,7 +424,5 @@ router.put('/adaptation/:id', async (req: Request, res: Response) => {
     });
   }
 });
-
-
 
 export default router;

@@ -1,4 +1,6 @@
 import React, { useEffect, useState } from "react";
+import { SignedIn, SignedOut, SignInButton, UserButton } from '@clerk/clerk-react'
+
 
 const themes = [
   { name: "light", color: "#FFFFFF" },
@@ -43,23 +45,36 @@ const ThemeSelector = () => {
   }, [selectedTheme]);
 
   return (
-    <div className="absolute top-2 right-2 z-50">
-      <details className="dropdown dropdown-left dropdown-start">
-        <summary className="btn btn-xs italic rounded-lg p-5">Themes</summary>
-        <div className="dropdown-content bg-base-100 border border-base-300 rounded-lg shadow-md p-3 flex gap-2 max-h-sm">
-          {themes.map(({ name, color }) => (
-            <button
-              key={name}
-              onClick={() => setSelectedTheme(name)}
-              title={name}
-              className={`w-5 h-5 rounded-full border ${
-                selectedTheme === name ? "border-black" : "border-gray-300"
-              } hover:opacity-80 cursor-pointer`}
-              style={{ backgroundColor: color }}
-            />
-          ))}
-        </div>
-      </details>
+    <div className="absolute top-2 left-0 right-0 z-50 flex justify-between px-4">
+      {/* Section gauche : Login */}
+      <div>
+        <SignedOut>
+          <SignInButton />
+        </SignedOut>
+        <SignedIn>
+          <UserButton />
+        </SignedIn>
+      </div>
+
+      {/* Section droite : Thème */}
+      <div>
+        <details className="dropdown dropdown-left dropdown-start">
+          <summary className="btn btn-xs italic rounded-lg p-5">Themes</summary>
+          <div className="dropdown-content bg-base-100 border border-base-300 rounded-lg shadow-md p-3 flex gap-2 max-h-sm">
+            {themes.map(({ name, color }) => (
+              <button
+                key={name}
+                onClick={() => setSelectedTheme(name)}
+                title={name}
+                className={`w-5 h-5 rounded-full border ${
+                  selectedTheme === name ? "border-black" : "border-gray-300"
+                } hover:opacity-80 cursor-pointer`}
+                style={{ backgroundColor: color }}
+              />
+            ))}
+          </div>
+        </details>
+      </div>
     </div>
   );
 };

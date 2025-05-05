@@ -1,27 +1,49 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { MangaWork, WorkStatus, MangaPart } from '../../types';
-import { BookOpen, Calendar, BookmarkPlus, Info, Plus, Pencil, Check, X } from 'lucide-react';
+import { BookOpen, Calendar, BookmarkPlus, Info, Plus, Pencil, Check, X, Loader, Trash } from 'lucide-react';
 import Badge from '../ui/badge';
 
 interface MangaInfoCardProps {
   manga?: MangaWork;
   licenseId: string;
   isEmptyTemplate?: boolean;
+  onUpdate?: (updatedManga: MangaWork) => void;
+  onAddManga?: () => void;
 }
 
 const MangaInfoCard: React.FC<MangaInfoCardProps> = ({ 
   manga, 
   licenseId, 
-  isEmptyTemplate = false 
+  isEmptyTemplate = false,
+  onUpdate,
+  onAddManga
 }) => {
   // État pour l'édition principale
   const [isEditing, setIsEditing] = useState(false);
   const [editedManga, setEditedManga] = useState<MangaWork | undefined>(manga);
   const [apiResponse, setApiResponse] = useState<string>('');
+  const [isLoading, setIsLoading] = useState(false);
+  const [error, setError] = useState<string | null>(null);
   
   // États pour l'édition des parties
   const [editingPartId, setEditingPartId] = useState<string | null>(null);
   const [editedParts, setEditedParts] = useState(manga?.parts || []);
+  const [isAddingPart, setIsAddingPart] = useState(false);
+  const [newPart, setNewPart] = useState<Partial<MangaPart>>({
+    title: '',
+    partNumber: 1,
+    startVolume: 1,
+    endVolume: 1,
+    status: WorkStatus.ONGOING
+  });
+  
+  // Réinitialiser les états lorsque le manga change
+  useEffect(() => {
+    setEditedManga(manga);
+    setEditedParts(manga?.parts || []);
+    setApiResponse('');
+    setError(null);
+  }, [manga]);
 
   // Si c'est un template vide ou si manga n'est pas défini
   if (isEmptyTemplate || !manga) {
@@ -35,7 +57,7 @@ const MangaInfoCard: React.FC<MangaInfoCardProps> = ({
         </div>
         <div className="p-8 text-center flex flex-col items-center justify-center text-gray-500">
           <p className="mb-3">Aucun manga trouvé pour cette licence</p>
-          <button className="btn btn-sm btn-outline">
+          <button className="btn btn-sm btn-outline" onClick={onAddManga}>
             <Plus size={16} /> Ajouter un manga
           </button>
         </div>
@@ -77,6 +99,256 @@ const MangaInfoCard: React.FC<MangaInfoCardProps> = ({
       )
     );
   };
+  
+  const handleNewPartFieldChange = (field: string, value: any) => {
+    setNewPart(prev => ({ ...prev, [field]: value }));
+  };
+
+  // Fonction pour sauvegarder les modifications du manga
+  const handleSaveManga = async () => {
+    if (!editedManga) return;
+    
+    setIsLoading(true);
+    setError(null);
+    
+    try {
+      const payload = {
+        licenseId,
+        title: editedManga.title,
+        authors: editedManga.authors,
+        volumes: editedManga.volumes,
+        status: editedManga.status,
+        startDate: editedManga.startDate,
+        endDate: editedManga.endDate,
+        publisher: editedManga.publisher
+      };
+      
+      // Utiliser la route API standard pour mettre à jour un manga
+      const response = await fetch(`/api/manga/${editedManga.id}`, {
+        method: 'PUT',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(payload),
+      });
+      
+      if (!response.ok) {
+        const errorData = await response.json();
+        throw new Error(errorData.error || `Erreur ${response.status}`);
+      }
+      
+      const updatedManga = await response.json();
+      
+      setApiResponse('Manga mis à jour avec succès');
+      setIsEditing(false);
+      setEditedManga(updatedManga);
+      
+      // Appeler le callback si fourni
+      if (onUpdate) {
+        onUpdate(updatedManga);
+      }
+      
+    } catch (err) {
+      setError(err.message || 'Une erreur est survenue lors de la mise à jour');
+      console.error('Erreur lors de la mise à jour du manga:', err);
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  // Fonction pour sauvegarder les modifications d'une partie
+  const handleSavePart = async (partId: string) => {
+    const partToUpdate = editedParts.find(part => part.id === partId);
+    if (!partToUpdate) return;
+    
+    setIsLoading(true);
+    setError(null);
+    
+    try {
+      const payload = {
+        mangaId: manga.id,
+        licenseId,
+        title: partToUpdate.title,
+        partNumber: partToUpdate.partNumber,
+        volumes: partToUpdate.volumes,
+        startVolume: partToUpdate.startVolume,
+        endVolume: partToUpdate.endVolume,
+        status: partToUpdate.status
+      };
+      
+      const response = await fetch(`/api/manga-part/${partId}`, {
+        method: 'PUT',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(payload),
+      });
+      
+      if (!response.ok) {
+        const errorData = await response.json();
+        throw new Error(errorData.error || `Erreur ${response.status}`);
+      }
+      
+      const updatedPart = await response.json();
+      
+      // Mettre à jour la liste des parties
+      setEditedParts(prevParts => 
+        prevParts.map(part => 
+          part.id === partId ? updatedPart : part
+        )
+      );
+      
+      setEditingPartId(null);
+      setApiResponse('Partie mise à jour avec succès');
+      
+      // Mise à jour du manga parent si callback fourni
+      if (onUpdate && manga) {
+        onUpdate({
+          ...manga,
+          parts: editedParts.map(part => part.id === partId ? updatedPart : part)
+        });
+      }
+      
+    } catch (err) {
+      setError(err.message || 'Une erreur est survenue lors de la mise à jour');
+      console.error('Erreur lors de la mise à jour de la partie:', err);
+    } finally {
+      setIsLoading(false);
+    }
+  };
+  
+  // Fonction pour ajouter une nouvelle partie
+  const handleAddPart = async () => {
+    setIsLoading(true);
+    setError(null);
+    
+    try {
+      // Calculer le nombre de volumes de la nouvelle partie
+      const volumes = (newPart.endVolume || 1) - (newPart.startVolume || 1) + 1;
+      
+      const payload = {
+        mangaId: manga.id,
+        licenseId,
+        title: newPart.title,
+        partNumber: newPart.partNumber || 1,
+        startVolume: newPart.startVolume || 1,
+        endVolume: newPart.endVolume || 1,
+        volumes,
+        status: newPart.status || WorkStatus.ONGOING
+      };
+      
+      const response = await fetch('/api/manga-part', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(payload),
+      });
+      
+      if (!response.ok) {
+        const errorData = await response.json();
+        throw new Error(errorData.error || `Erreur ${response.status}`);
+      }
+      
+      const createdPart = await response.json();
+      
+      // Ajouter la nouvelle partie à la liste
+      setEditedParts(prevParts => [...prevParts, createdPart]);
+      
+      // Réinitialiser le formulaire d'ajout
+      setIsAddingPart(false);
+      setNewPart({
+        title: '',
+        partNumber: 1,
+        startVolume: 1,
+        endVolume: 1,
+        status: WorkStatus.ONGOING
+      });
+      
+      setApiResponse('Nouvelle partie ajoutée avec succès');
+      
+      // Mise à jour du manga parent si callback fourni
+      if (onUpdate && manga) {
+        onUpdate({
+          ...manga,
+          parts: [...editedParts, createdPart]
+        });
+      }
+      
+    } catch (err) {
+      setError(err.message || 'Une erreur est survenue lors de l\'ajout');
+      console.error('Erreur lors de l\'ajout de la partie:', err);
+    } finally {
+      setIsLoading(false);
+    }
+  };
+  
+  // Fonction pour supprimer une partie
+  const handleDeletePart = async (partId: string) => {
+    if (!confirm('Êtes-vous sûr de vouloir supprimer cette partie?')) {
+      return;
+    }
+    
+    setIsLoading(true);
+    setError(null);
+    
+    try {
+      const response = await fetch(`/api/manga-part/${partId}`, {
+        method: 'DELETE',
+      });
+      
+      if (!response.ok) {
+        const errorData = await response.json();
+        throw new Error(errorData.error || `Erreur ${response.status}`);
+      }
+      
+      // Supprimer la partie de la liste
+      setEditedParts(prevParts => prevParts.filter(part => part.id !== partId));
+      
+      setApiResponse('Partie supprimée avec succès');
+      
+      // Mise à jour du manga parent si callback fourni
+      if (onUpdate && manga) {
+        onUpdate({
+          ...manga,
+          parts: editedParts.filter(part => part.id !== partId)
+        });
+      }
+      
+    } catch (err) {
+      setError(err.message || 'Une erreur est survenue lors de la suppression');
+      console.error('Erreur lors de la suppression de la partie:', err);
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  // Annuler l'édition
+  const handleCancelEdit = () => {
+    setIsEditing(false);
+    setEditedManga(manga); // Restaurer les valeurs originales
+    setError(null);
+  };
+
+  // Annuler l'édition d'une partie
+  const handleCancelEditPart = () => {
+    setEditingPartId(null);
+    setEditedParts(manga.parts || []); // Restaurer les valeurs originales
+    setError(null);
+  };
+  
+  // Annuler l'ajout d'une partie
+  const handleCancelAddPart = () => {
+    setIsAddingPart(false);
+    setNewPart({
+      title: '',
+      partNumber: 1,
+      startVolume: 1,
+      endVolume: 1,
+      status: WorkStatus.ONGOING
+    });
+    setError(null);
+  };
 
   return (
     <div className="card bg-base-100 card-border border-base-300 overflow-hidden">
@@ -109,10 +381,19 @@ const MangaInfoCard: React.FC<MangaInfoCardProps> = ({
           <div>
             {isEditing ? (
               <div className="flex gap-2">
-                <button className="btn btn-sm btn-success">
-                  <Check size={16} /> Sauvegarder
+                <button 
+                  className="btn btn-sm btn-success" 
+                  onClick={handleSaveManga}
+                  disabled={isLoading}
+                >
+                  {isLoading ? <Loader size={16} className="animate-spin" /> : <Check size={16} />} 
+                  Sauvegarder
                 </button>
-                <button className="btn btn-sm btn-outline" onClick={() => setIsEditing(false)}>
+                <button 
+                  className="btn btn-sm btn-outline" 
+                  onClick={handleCancelEdit}
+                  disabled={isLoading}
+                >
                   <X size={16} /> Annuler
                 </button>
               </div>
@@ -126,6 +407,19 @@ const MangaInfoCard: React.FC<MangaInfoCardProps> = ({
       </div>
       
       <div className="card-body gap-4 p-4">
+        {/* Affichage des messages d'erreur ou de succès */}
+        {error && (
+          <div className="alert alert-error p-2 text-sm">
+            <span>{error}</span>
+          </div>
+        )}
+        
+        {apiResponse && !error && (
+          <div className="alert alert-success p-2 text-sm">
+            <span>{apiResponse}</span>
+          </div>
+        )}
+        
         {isEditing ? (
           <div className="grid grid-cols-2 gap-4">
             <div className="form-control">
@@ -172,7 +466,7 @@ const MangaInfoCard: React.FC<MangaInfoCardProps> = ({
                 type="date"
                 className="input input-sm input-bordered"
                 value={editedManga?.startDate ? new Date(editedManga.startDate).toISOString().split('T')[0] : ''}
-                onChange={(e) => handleFieldChange('startDate', new Date(e.target.value))}
+                onChange={(e) => handleFieldChange('startDate', e.target.value ? new Date(e.target.value) : null)}
               />
             </div>
             
@@ -232,10 +526,110 @@ const MangaInfoCard: React.FC<MangaInfoCardProps> = ({
               </div>
             </div>
 
-            {/* Si des parties du manga existent */}
-            {manga.parts && manga.parts.length > 0 && (
-              <div className="mt-4">
-                <div className="text-sm font-medium mb-2">Parties</div>
+            {/* Gestion des parties du manga */}
+            <div className="mt-4">
+              <div className="flex justify-between items-center mb-2">
+                <div className="text-sm font-medium">Parties</div>
+                <button 
+                  className="btn btn-xs btn-outline"
+                  onClick={() => setIsAddingPart(true)}
+                >
+                  <Plus size={14} /> Ajouter
+                </button>
+              </div>
+              
+              {/* Formulaire d'ajout de partie */}
+              {isAddingPart && (
+                <div className="bg-base-200 rounded-lg p-3 mb-3 border border-base-300">
+                  <div className="form-control mb-2">
+                    <label className="label py-1">
+                      <span className="label-text text-xs">Titre de la partie</span>
+                    </label>
+                    <input
+                      type="text"
+                      className="input input-sm input-bordered"
+                      value={newPart.title || ''}
+                      onChange={(e) => handleNewPartFieldChange('title', e.target.value)}
+                      placeholder="Exemple: Arc Skypiea"
+                    />
+                  </div>
+                  
+                  <div className="grid grid-cols-2 gap-2 mb-2">
+                    <div className="form-control">
+                      <label className="label py-1">
+                        <span className="label-text text-xs">Numéro</span>
+                      </label>
+                      <input
+                        type="number"
+                        className="input input-sm input-bordered"
+                        value={newPart.partNumber || 1}
+                        onChange={(e) => handleNewPartFieldChange('partNumber', parseInt(e.target.value))}
+                      />
+                    </div>
+                    
+                    <div className="form-control">
+                      <label className="label py-1">
+                        <span className="label-text text-xs">Statut</span>
+                      </label>
+                      <select
+                        className="select select-sm select-bordered"
+                        value={newPart.status || WorkStatus.ONGOING}
+                        onChange={(e) => handleNewPartFieldChange('status', e.target.value)}
+                      >
+                        {Object.values(WorkStatus).map(status => (
+                          <option key={status} value={status}>{status}</option>
+                        ))}
+                      </select>
+                    </div>
+                  </div>
+                  
+                  <div className="grid grid-cols-2 gap-2 mb-3">
+                    <div className="form-control">
+                      <label className="label py-1">
+                        <span className="label-text text-xs">Tome début</span>
+                      </label>
+                      <input
+                        type="number"
+                        className="input input-sm input-bordered"
+                        value={newPart.startVolume || 1}
+                        onChange={(e) => handleNewPartFieldChange('startVolume', parseInt(e.target.value))}
+                      />
+                    </div>
+                    
+                    <div className="form-control">
+                      <label className="label py-1">
+                        <span className="label-text text-xs">Tome fin</span>
+                      </label>
+                      <input
+                        type="number"
+                        className="input input-sm input-bordered"
+                        value={newPart.endVolume || 1}
+                        onChange={(e) => handleNewPartFieldChange('endVolume', parseInt(e.target.value))}
+                      />
+                    </div>
+                  </div>
+                  
+                  <div className="flex justify-end gap-2">
+                    <button 
+                      className="btn btn-sm btn-outline"
+                      onClick={handleCancelAddPart}
+                    >
+                      <X size={16} /> Annuler
+                    </button>
+                    <button 
+                      className="btn btn-sm btn-primary"
+                      onClick={handleAddPart}
+                      disabled={isLoading || !newPart.title}
+                    >
+                      {isLoading ? <Loader size={16} className="animate-spin" /> : <Plus size={16} />} 
+                      Ajouter
+                    </button>
+                  </div>
+                </div>
+              )}
+              
+              {/* Liste des parties */}
+              {editedParts.length > 0 ? (
                 <div className="rounded-lg border border-base-300 overflow-hidden">
                   {editedParts.map((part, index) => (
                     <div
@@ -256,16 +650,9 @@ const MangaInfoCard: React.FC<MangaInfoCardProps> = ({
                                 value={part.title}
                                 onChange={(e) => handlePartFieldChange(part.id, 'title', e.target.value)}
                               />
-                              <button className="btn btn-sm btn-success">
-                                <Check size={16} />
-                              </button>
-                              <button className="btn btn-sm btn-outline" onClick={() => setEditingPartId(null)}>
-                                <X size={16} />
-                              </button>
                             </div>
                           </div>
                           
-                          {/* Labels and inputs for start, end, and volumes */}
                           <div className="flex gap-2 mt-2">
                             <div className="flex flex-col">
                               <label htmlFor={`startVolume-${part.id}`} className="text-xs">Début</label>
@@ -292,18 +679,6 @@ const MangaInfoCard: React.FC<MangaInfoCardProps> = ({
                             </div>
 
                             <div className="flex flex-col">
-                              <label htmlFor={`volumes-${part.id}`} className="text-xs">Tomes</label>
-                              <input
-                                id={`volumes-${part.id}`}
-                                type="number"
-                                className="input input-sm input-bordered w-24"
-                                value={part.volumes}
-                                onChange={(e) => handlePartFieldChange(part.id, 'volumes', parseInt(e.target.value))}
-                                placeholder="Tomes"
-                              />
-                            </div>
-
-                            <div className="flex flex-col">
                               <label htmlFor={`status-${part.id}`} className="text-xs">Statut</label>
                               <select
                                 id={`status-${part.id}`}
@@ -317,6 +692,23 @@ const MangaInfoCard: React.FC<MangaInfoCardProps> = ({
                               </select>
                             </div>
                           </div>
+                        </div>
+                        
+                        <div className="flex gap-2">
+                          <button 
+                            className="btn btn-sm btn-success"
+                            onClick={() => handleSavePart(part.id)}
+                            disabled={isLoading}
+                          >
+                            {isLoading ? <Loader size={16} className="animate-spin" /> : <Check size={16} />}
+                          </button>
+                          <button 
+                            className="btn btn-sm btn-outline" 
+                            onClick={handleCancelEditPart}
+                            disabled={isLoading}
+                          >
+                            <X size={16} />
+                          </button>
                         </div>
                       </>
                     ) : (
@@ -335,14 +727,24 @@ const MangaInfoCard: React.FC<MangaInfoCardProps> = ({
                           >
                             <Pencil size={16} />
                           </button>
+                          <button
+                            className="btn btn-sm btn-ghost text-error"
+                            onClick={() => handleDeletePart(part.id)}
+                          >
+                            <Trash size={16} />
+                          </button>
                         </div>
                       </>
                     )}
                     </div>
                   ))}
                 </div>
-              </div>
-            )}
+              ) : (
+                <div className="text-center p-4 text-gray-500 bg-base-200 rounded-lg border border-dashed border-base-300">
+                  Aucune partie ajoutée pour ce manga
+                </div>
+              )}
+            </div>
           </>
         )}
       </div>

@@ -2,9 +2,16 @@ import React from 'react';
 import ReactDOM from 'react-dom/client';
 import { routeTree } from './routeTree.gen';
 import { createRouter, RouterProvider } from '@tanstack/react-router';
+import { ClerkProvider } from '@clerk/clerk-react'
 import Header from './components/ui/header';
 import './style.css';
 
+
+const PUBLISHABLE_KEY = import.meta.env.VITE_PUBLIC_CLERK_PUBLISHABLE_KEY
+
+if (!PUBLISHABLE_KEY) {
+  throw new Error('Add your Clerk Publishable Key to the .env file')
+}
 const router = createRouter({ routeTree });
 
 declare module '@tanstack/react-router' {
@@ -18,8 +25,10 @@ if (rootElement) {
   const root = ReactDOM.createRoot(rootElement);
   root.render(
     <React.StrictMode>
-      <Header />
-      <RouterProvider router={router} />
+      <ClerkProvider publishableKey={PUBLISHABLE_KEY} afterSignOutUrl="/">
+        <Header />
+        <RouterProvider router={router} />
+      </ClerkProvider>
     </React.StrictMode>,
   );
 }

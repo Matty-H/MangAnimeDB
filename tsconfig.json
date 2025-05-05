@@ -1,6 +1,7 @@
 //tsconfig.json
 {
   "files": [],
+  "include": ["src", "vite-env.d.ts", "backend/**/*"],
   "references": [
     { "path": "./frontend/tsconfig.app.json" },
     { "path": "./tsconfig.node.json" },
