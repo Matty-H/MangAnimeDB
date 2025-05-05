@@ -1,5 +1,5 @@
 import React from 'react';
-import { WorkStatus, AnimeFidelity, RelationType } from '../../../types';
+import { WorkStatus, AnimeFidelity, RelationType } from '../../types';
 import { Play, Square, Pause, XCircle, CheckCircle, X, PenTool, Info } from 'lucide-react';
 
 export type BadgeVariant =

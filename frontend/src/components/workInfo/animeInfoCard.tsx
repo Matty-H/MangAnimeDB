@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { AnimeWork, WorkStatus, AnimeFidelity, RelationType, AdaptationType } from '../../types';
 import { Info, Calendar, Tv, Film, BarChart2, Plus, Pencil, Check, X } from 'lucide-react';
-import Badge from './ui/badge';
+import Badge from '../ui/badge';
 
 interface AnimeInfoCardProps {
   anime?: AnimeWork;
@@ -51,53 +51,6 @@ const AnimeInfoCard: React.FC<AnimeInfoCardProps> = ({
     : (anime.status === WorkStatus.ONGOING ? 'présent' : 'N/A');
   const airYears = startYear === endYear ? startYear : `${startYear} - ${endYear}`;
 
-  const handleSaveAnime = async () => {
-    if (!editedAnime) return;
-    
-    try {
-      const res = await fetch(`/api/anime/${anime.id}`, {
-        method: 'PUT',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(editedAnime),
-      });
-
-      const data = await res.json();
-      setApiResponse(JSON.stringify(data, null, 2));
-
-      if (!res.ok) throw new Error(`Erreur: ${res.status}`);
-
-      setIsEditing(false);
-    } catch (err) {
-      console.error('Erreur de mise à jour:', err);
-      setApiResponse(`Erreur: ${err.message}`);
-      alert(`Erreur lors de la sauvegarde: ${err.message}`);
-    }
-  };
-
-  const handleSaveSeason = async (seasonId: string) => {
-    const seasonToUpdate = editedSeasons.find(s => s.id === seasonId);
-    if (!seasonToUpdate) return;
-    
-    try {
-      const res = await fetch(`/api/anime/season/${seasonId}`, {
-        method: 'PUT',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(seasonToUpdate),
-      });
-
-      const data = await res.json();
-      setApiResponse(JSON.stringify(data, null, 2));
-
-      if (!res.ok) throw new Error(`Erreur: ${res.status}`);
-
-      setEditingSeasonId(null);
-    } catch (err) {
-      console.error('Erreur de mise à jour de la saison:', err);
-      setApiResponse(`Erreur: ${err.message}`);
-      alert(`Erreur lors de la sauvegarde de la saison: ${err.message}`);
-    }
-  };
-
   const handleFieldChange = (field: keyof AnimeWork, value: any) => {
     if (!editedAnime) return;
     setEditedAnime({ ...editedAnime, [field]: value });
@@ -144,7 +97,7 @@ const AnimeInfoCard: React.FC<AnimeInfoCardProps> = ({
           <div>
             {isEditing ? (
               <div className="flex gap-2">
-                <button className="btn btn-sm btn-success" onClick={handleSaveAnime}>
+                <button className="btn btn-sm btn-success">
                   <Check size={16} /> Sauvegarder
                 </button>
                 <button className="btn btn-sm btn-outline" onClick={() => setIsEditing(false)}>
@@ -359,9 +312,7 @@ const AnimeInfoCard: React.FC<AnimeInfoCardProps> = ({
                           
                           <div className="col-span-2 mt-2 flex justify-end gap-2">
                             <button 
-                              className="btn btn-sm btn-success" 
-                              onClick={() => handleSaveSeason(season.id)}
-                            >
+                              className="btn btn-sm btn-success">
                               <Check size={16} /> Sauvegarder
                             </button>
                             <button 

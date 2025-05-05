@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { MangaWork, WorkStatus, MangaPart } from '../../types';
 import { BookOpen, Calendar, BookmarkPlus, Info, Plus, Pencil, Check, X } from 'lucide-react';
-import Badge from './ui/badge';
+import Badge from '../ui/badge';
 
 interface MangaInfoCardProps {
   manga?: MangaWork;
@@ -56,53 +56,6 @@ const MangaInfoCard: React.FC<MangaInfoCardProps> = ({
     : (manga.status === WorkStatus.ONGOING ? 'présent' : 'N/A');
   const publicationYears = startYear === endYear ? startYear : `${startYear} - ${endYear}`;
 
-  const handleSaveManga = async () => {
-    if (!editedManga) return;
-    
-    try {
-      const res = await fetch(`/api/manga/${manga.id}`, {
-        method: 'PUT',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(editedManga),
-      });
-
-      const data = await res.json();
-      setApiResponse(JSON.stringify(data, null, 2));
-
-      if (!res.ok) throw new Error(`Erreur: ${res.status}`);
-
-      setIsEditing(false);
-    } catch (err) {
-      console.error('Erreur de mise à jour:', err);
-      setApiResponse(`Erreur: ${err.message}`);
-      alert(`Erreur lors de la sauvegarde: ${err.message}`);
-    }
-  };
-
-  const handleSavePart = async (partId: string) => {
-    const partToUpdate = editedParts.find(p => p.id === partId);
-    if (!partToUpdate) return;
-    
-    try {
-      const res = await fetch(`/api/manga/part/${partId}`, {
-        method: 'PUT',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(partToUpdate),
-      });
-
-      const data = await res.json();
-      setApiResponse(JSON.stringify(data, null, 2));
-
-      if (!res.ok) throw new Error(`Erreur: ${res.status}`);
-
-      setEditingPartId(null);
-    } catch (err) {
-      console.error('Erreur de mise à jour de la partie:', err);
-      setApiResponse(`Erreur: ${err.message}`);
-      alert(`Erreur lors de la sauvegarde de la partie: ${err.message}`);
-    }
-  };
-
   const handleFieldChange = (field: keyof MangaWork, value: any) => {
     if (!editedManga) return;
     setEditedManga({ ...editedManga, [field]: value });
@@ -156,7 +109,7 @@ const MangaInfoCard: React.FC<MangaInfoCardProps> = ({
           <div>
             {isEditing ? (
               <div className="flex gap-2">
-                <button className="btn btn-sm btn-success" onClick={handleSaveManga}>
+                <button className="btn btn-sm btn-success">
                   <Check size={16} /> Sauvegarder
                 </button>
                 <button className="btn btn-sm btn-outline" onClick={() => setIsEditing(false)}>
@@ -333,7 +286,7 @@ const MangaInfoCard: React.FC<MangaInfoCardProps> = ({
                             </div>
                           </div>
                           <div className="flex gap-2 items-start">
-                            <button className="btn btn-sm btn-success" onClick={() => handleSavePart(part.id)}>
+                            <button className="btn btn-sm btn-success">
                               <Check size={16} />
                             </button>
                             <button className="btn btn-sm btn-outline" onClick={() => setEditingPartId(null)}>
