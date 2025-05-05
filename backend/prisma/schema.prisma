@@ -143,6 +143,7 @@ enum WorkStatus {
   COMPLETED
   HIATUS
   UNFINISHED
+  CANCELED
 }
 
 enum AnimeFidelity {
@@ -153,6 +154,7 @@ enum AnimeFidelity {
 
 enum RelationType {
   ORIGINAL
+  MANGA_ADAPTATION
   SEQUEL
   PREQUEL
   REMAKE

@@ -1,14 +1,18 @@
+import { CANCELLED } from "dns";
+
 export enum WorkStatus {
   ONGOING = 'ONGOING',
   COMPLETED = 'COMPLETED',
   HIATUS = 'HIATUS',
-  UNFINISHED = 'UNFINISHED'
+  UNFINISHED = 'UNFINISHED',
+  CANCELED = 'CANCELED'
 }
 
 export enum AnimeFidelity {
   FAITHFUL = 'FAITHFUL',
   PARTIAL = 'PARTIAL',
-  ANIME_ORIGINAL = 'ANIME_ORIGINAL'
+  ANIME_ORIGINAL = 'ANIME_ORIGINAL',
+  CANCELED = 'CANCELED'
 }
 
 export enum RelationType {

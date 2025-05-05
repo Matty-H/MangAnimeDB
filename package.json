@@ -30,6 +30,7 @@
   "dependencies": {
     "@prisma/client": "^6.6.0",
     "@tailwindcss/vite": "^4.1.5",
+    "@tanstack/react-form": "^1.9.0",
     "@tanstack/react-router": "^1.116.0",
     "axios": "^1.8.4",
     "cors": "^2.8.5",
@@ -43,7 +44,8 @@
     "react": "^19.0.0",
     "react-dom": "^19.0.0",
     "recharts": "^2.15.2",
-    "tailwindcss": "^4.1.5"
+    "tailwindcss": "^4.1.5",
+    "zod": "^3.24.3"
   },
   "devDependencies": {
     "@eslint/js": "^9.21.0",

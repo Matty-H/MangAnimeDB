@@ -6,7 +6,7 @@ import AnimeInfoCard from '../workInfo/animeInfoCard';
 import SearchBar from '../searchBar/searchBar';
 import AddDataButton from '../addDataButton/addDataButton';
 import { License, MangaWork, AnimeWork, WorkStatus } from '../../types';
-import { Search, BookOpen, Film, AlertCircle, Loader2, Plus } from 'lucide-react';
+import { Search, AlertCircle, Loader2 } from 'lucide-react';
 
 interface ResultsDisplayProps {
   searchTerm: string;
@@ -77,35 +77,26 @@ const ResultsDisplay: React.FC<ResultsDisplayProps> = ({ searchTerm }) => {
               <AdaptationTable license={license} />
               
               <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
-                {/* Manga Section */}
-                {license.mangas.length > 0 && (
+                {/* Manga Section - utilisant le composant MangaInfoCard avec isEmptyTemplate si nécessaire */}
+                {license.mangas && license.mangas.length > 0 ? (
                   <div className="space-y-6">
-                    <div className="flex items-center gap-2">
-                      <BookOpen size={18} className="opacity-70" />
-                      <h3 className="text-lg font-medium">Mangas</h3>
-                    </div>
-                    
-                    <div className="space-y-6">
-                      {license.mangas.map((manga) => (
-                        <MangaInfoCard key={manga.id} manga={manga} />
-                      ))}
-                    </div>
+                    {license.mangas.map((manga) => (
+                      <MangaInfoCard key={manga.id} manga={manga} licenseId={license.id} />
+                    ))}
                   </div>
+                ) : (
+                  <MangaInfoCard licenseId={license.id} isEmptyTemplate={true} />
                 )}
-                {/* Anime Section */}
-                {license.animeAdaptations.length > 0 && (
+                
+                {/* Anime Section - utilisant le composant AnimeInfoCard avec isEmptyTemplate si nécessaire */}
+                {license.animeAdaptations && license.animeAdaptations.length > 0 ? (
                   <div className="space-y-6">
-                    <div className="flex items-center gap-2">
-                      <Film size={18} className="opacity-70" />
-                      <h3 className="text-lg font-medium">Anime</h3>
-                    </div>
-                    
-                    <div className="space-y-6">
-                      {license.animeAdaptations.map((anime) => (
-                        <AnimeInfoCard key={anime.id} anime={anime} />
-                      ))}
-                    </div>
+                    {license.animeAdaptations.map((anime) => (
+                      <AnimeInfoCard key={anime.id} anime={anime} licenseId={license.id} />
+                    ))}
                   </div>
+                ) : (
+                  <AnimeInfoCard licenseId={license.id} isEmptyTemplate={true} />
                 )}
               </div>
             </div>

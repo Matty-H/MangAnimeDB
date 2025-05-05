@@ -13,50 +13,72 @@ interface License {
 
 type EntityType = 'license' | 'manga' | 'anime';
 
-interface FormData {
-  license: { title: string; externalId: string };
-  manga: {
-    licenseId: string;
-    title: string;
-    authors: string;
-    volumes: number;
-    status: WorkStatus;
-    startDate: string;
-    endDate: string;
-    isOneShot: boolean;
-    externalId: string;
-  };
-  anime: {
-    licenseId: string;
-    title: string;
-    studio: string;
-    episodes: number;
-    status: WorkStatus;
-    startDate: string;
-    endDate: string;
-    fidelity: AnimeFidelity;
-    relationType: RelationType;
-    notes: string;
-    isMovie: boolean;
-    externalId: string;
-  };
+// Définition des interfaces spécifiques pour chaque type d'entité
+interface LicenseFormData {
+  title: string;
+  externalId: string;
+}
+
+interface MangaFormData {
+  licenseId: string;
+  title: string;
+  authors: string;
+  volumes: number;
+  status: WorkStatus;
+  startDate: string;
+  endDate: string;
+  isOneShot: boolean;
+  externalId: string;
+}
+
+interface AnimeFormData {
+  licenseId: string;
+  title: string;
+  studio: string;
+  episodes: number;
+  status: WorkStatus;
+  startDate: string;
+  endDate: string;
+  fidelity: AnimeFidelity;
+  relationType: RelationType;
+  notes: string;
+  isMovie: boolean;
+  externalId: string;
 }
 
 const AddDataModal: React.FC<AddDataModalProps> = ({ onClose }) => {
   const [entityType, setEntityType] = useState<EntityType>('license');
   const [licenses, setLicenses] = useState<License[]>([]);
-  const [formData, setFormData] = useState<FormData>({
-    license: { title: '', externalId: '' },
-    manga: {
-      licenseId: '', title: '', authors: '', volumes: 1, status: WorkStatus.ONGOING,
-      startDate: '', endDate: '', isOneShot: false, externalId: ''
-    },
-    anime: {
-      licenseId: '', title: '', studio: '', episodes: 1, status: WorkStatus.ONGOING,
-      startDate: '', endDate: '', fidelity: AnimeFidelity.FAITHFUL,
-      relationType: RelationType.ORIGINAL, notes: '', isMovie: false, externalId: ''
-    }
+  const [licenseData, setLicenseData] = useState<LicenseFormData>({
+    title: '',
+    externalId: ''
   });
+  const [mangaData, setMangaData] = useState<MangaFormData>({
+    licenseId: '',
+    title: '',
+    authors: '',
+    volumes: 1,
+    status: WorkStatus.ONGOING,
+    startDate: '',
+    endDate: '',
+    isOneShot: false,
+    externalId: ''
+  });
+  const [animeData, setAnimeData] = useState<AnimeFormData>({
+    licenseId: '',
+    title: '',
+    studio: '',
+    episodes: 1,
+    status: WorkStatus.ONGOING,
+    startDate: '',
+    endDate: '',
+    fidelity: AnimeFidelity.FAITHFUL,
+    relationType: RelationType.ORIGINAL,
+    notes: '',
+    isMovie: false,
+    externalId: ''
+  });
+  
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [success, setSuccess] = useState(false);
@@ -82,39 +104,57 @@ const AddDataModal: React.FC<AddDataModalProps> = ({ onClose }) => {
     fetchLicenses();
   }, []);
 
-  const handleInputChange = (section: string, field: string, value: any) => {
-    setFormData((prev) => ({
-      ...prev,
-      [section]: {
-        ...prev[section as keyof FormData],
-        [field]: value,
-      },
-    }));
+  // Gestionnaires de modifications spécifiques à chaque type d'entité
+  const handleLicenseChange = (field: keyof LicenseFormData, value: any) => {
+    setLicenseData(prev => ({ ...prev, [field]: value }));
+  };
+
+  const handleMangaChange = (field: keyof MangaFormData, value: any) => {
+    setMangaData(prev => ({ ...prev, [field]: value }));
+  };
+
+  const handleAnimeChange = (field: keyof AnimeFormData, value: any) => {
+    setAnimeData(prev => ({ ...prev, [field]: value }));
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setIsSubmitting(true);
     setError(null);
+    
     try {
       let dataToSubmit;
-      if (entityType === 'manga') {
-        const { authors, ...rest } = formData.manga;
-        dataToSubmit = {
-          ...rest,
-          authors: authors.split(',').map((a) => a.trim())
-        };
-      } else if (entityType === 'anime') {
-        dataToSubmit = formData.anime;
-      } else {
-        dataToSubmit = formData.license;
+      let endpoint = `/api/${entityType}`;
+      
+      // Préparation des données spécifiques à chaque type d'entité
+      switch (entityType) {
+        case 'license':
+          dataToSubmit = licenseData;
+          break;
+          
+        case 'manga':
+          dataToSubmit = {
+            ...mangaData,
+            authors: mangaData.authors.split(',').map((a) => a.trim())
+          };
+          break;
+          
+        case 'anime':
+          dataToSubmit = animeData;
+          break;
       }
-      const response = await fetch(`/api/${entityType}`, {
+
+      const response = await fetch(endpoint, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(dataToSubmit),
       });
-      if (!response.ok) throw new Error(`Erreur: ${response.statusText}`);
+      
+      if (!response.ok) {
+        const errorData = await response.json().catch(() => null);
+        throw new Error(errorData?.message || `Erreur: ${response.statusText}`);
+      }
+      
       setSuccess(true);
       setTimeout(() => closeModal(), 2000);
     } catch (err) {
@@ -172,7 +212,7 @@ const AddDataModal: React.FC<AddDataModalProps> = ({ onClose }) => {
 
   return (
     <dialog id="add_data_modal" className="modal">
-      <div className="modal-box max-w-2xl p-0 overflow-hidden">
+      <div className="modal-box w-full max-w-2xl max-h-screen overflow-y-auto p-0">
         <div className="border-base-300 bg-base-200 border-b border-dashed">
           <div className="flex items-center justify-between p-4">
             <h3 className="text-lg font-medium">Ajouter une nouvelle entrée</h3>
@@ -219,27 +259,36 @@ const AddDataModal: React.FC<AddDataModalProps> = ({ onClose }) => {
           )}
 
           <form onSubmit={handleSubmit} className="space-y-4">
+            {/* Formulaire pour License */}
             {entityType === 'license' && (
               <div className="form-control">
                 <label className="text-sm font-medium mb-1">Titre</label>
                 <input 
                   type="text" 
-                  value={formData.license.title} 
-                  onChange={(e) => handleInputChange('license', 'title', e.target.value)} 
+                  value={licenseData.title} 
+                  onChange={(e) => handleLicenseChange('title', e.target.value)} 
                   className="input input-bordered w-full rounded-md" 
                   required 
+                />
+                <label className="text-sm font-medium mb-1 mt-4">Identifiant externe</label>
+                <input 
+                  type="text" 
+                  value={licenseData.externalId} 
+                  onChange={(e) => handleLicenseChange('externalId', e.target.value)} 
+                  className="input input-bordered w-full rounded-md" 
                 />
               </div>
             )}
 
+            {/* Formulaire pour Manga */}
             {entityType === 'manga' && (
               <>
                 <div className="form-control">
                   <label className="text-sm font-medium mb-1">Licence</label>
                   <input 
                     list="license-options" 
-                    value={formData.manga.licenseId} 
-                    onChange={(e) => handleInputChange('manga', 'licenseId', e.target.value)} 
+                    value={mangaData.licenseId} 
+                    onChange={(e) => handleMangaChange('licenseId', e.target.value)} 
                     className="input input-bordered w-full rounded-md" 
                     required 
                   />
@@ -252,8 +301,8 @@ const AddDataModal: React.FC<AddDataModalProps> = ({ onClose }) => {
                   <label className="text-sm font-medium mb-1">Titre</label>
                   <input 
                     type="text" 
-                    value={formData.manga.title} 
-                    onChange={(e) => handleInputChange('manga', 'title', e.target.value)} 
+                    value={mangaData.title} 
+                    onChange={(e) => handleMangaChange('title', e.target.value)} 
                     className="input input-bordered w-full rounded-md" 
                     required 
                   />
@@ -263,8 +312,8 @@ const AddDataModal: React.FC<AddDataModalProps> = ({ onClose }) => {
                   <label className="text-sm font-medium mb-1">Auteurs</label>
                   <input 
                     type="text" 
-                    value={formData.manga.authors} 
-                    onChange={(e) => handleInputChange('manga', 'authors', e.target.value)} 
+                    value={mangaData.authors} 
+                    onChange={(e) => handleMangaChange('authors', e.target.value)} 
                     className="input input-bordered w-full rounded-md" 
                     required 
                     placeholder="Séparés par des virgules"
@@ -277,25 +326,25 @@ const AddDataModal: React.FC<AddDataModalProps> = ({ onClose }) => {
                     <input 
                       type="number" 
                       min={1} 
-                      value={formData.manga.volumes} 
-                      onChange={(e) => handleInputChange('manga', 'volumes', parseInt(e.target.value))} 
+                      value={mangaData.volumes} 
+                      onChange={(e) => handleMangaChange('volumes', parseInt(e.target.value))} 
                       className="input input-bordered w-full rounded-md" 
                     />
                   </div>
                   <label className="flex items-center gap-2 cursor-pointer">
                     <input 
                       type="checkbox" 
-                      checked={formData.manga.isOneShot} 
-                      disabled={formData.manga.volumes > 1} 
-                      onChange={(e) => handleInputChange('manga', 'isOneShot', e.target.checked)} 
+                      checked={mangaData.isOneShot} 
+                      disabled={mangaData.volumes > 1} 
+                      onChange={(e) => handleMangaChange('isOneShot', e.target.checked)} 
                       className="checkbox checkbox-sm" 
                     />
                     <span className="text-sm">One shot</span>
                   </label>
                 </div>
 
-                {renderRadioOptions("Statut", Object.values(WorkStatus), formData.manga.status, 
-                  (val) => handleInputChange('manga', 'status', val))}
+                {renderRadioOptions("Statut", Object.values(WorkStatus), mangaData.status, 
+                  (val) => handleMangaChange('status', val))}
 
                 <div className="grid grid-cols-2 gap-4">
                   <div className="form-control">
@@ -304,8 +353,8 @@ const AddDataModal: React.FC<AddDataModalProps> = ({ onClose }) => {
                       type="number" 
                       min={1900} 
                       max={2100} 
-                      value={formData.manga.startDate} 
-                      onChange={(e) => handleInputChange('manga', 'startDate', e.target.value)} 
+                      value={mangaData.startDate} 
+                      onChange={(e) => handleMangaChange('startDate', e.target.value)} 
                       className="input input-bordered w-full rounded-md" 
                     />
                   </div>
@@ -315,23 +364,34 @@ const AddDataModal: React.FC<AddDataModalProps> = ({ onClose }) => {
                       type="number" 
                       min={1900} 
                       max={2100} 
-                      value={formData.manga.endDate} 
-                      onChange={(e) => handleInputChange('manga', 'endDate', e.target.value)} 
+                      value={mangaData.endDate} 
+                      onChange={(e) => handleMangaChange('endDate', e.target.value)} 
                       className="input input-bordered w-full rounded-md" 
                     />
                   </div>
                 </div>
+                
+                <div className="form-control">
+                  <label className="text-sm font-medium mb-1">Identifiant externe</label>
+                  <input 
+                    type="text" 
+                    value={mangaData.externalId} 
+                    onChange={(e) => handleMangaChange('externalId', e.target.value)} 
+                    className="input input-bordered w-full rounded-md" 
+                  />
+                </div>
               </>
             )}
 
+            {/* Formulaire pour Anime */}
             {entityType === 'anime' && (
               <>
                 <div className="form-control">
                   <label className="text-sm font-medium mb-1">Licence</label>
                   <input 
                     list="license-options" 
-                    value={formData.anime.licenseId} 
-                    onChange={(e) => handleInputChange('anime', 'licenseId', e.target.value)} 
+                    value={animeData.licenseId} 
+                    onChange={(e) => handleAnimeChange('licenseId', e.target.value)} 
                     className="input input-bordered w-full rounded-md" 
                     required 
                   />
@@ -344,8 +404,8 @@ const AddDataModal: React.FC<AddDataModalProps> = ({ onClose }) => {
                   <label className="text-sm font-medium mb-1">Titre</label>
                   <input 
                     type="text" 
-                    value={formData.anime.title} 
-                    onChange={(e) => handleInputChange('anime', 'title', e.target.value)} 
+                    value={animeData.title} 
+                    onChange={(e) => handleAnimeChange('title', e.target.value)} 
                     className="input input-bordered w-full rounded-md" 
                     required 
                   />
@@ -355,8 +415,8 @@ const AddDataModal: React.FC<AddDataModalProps> = ({ onClose }) => {
                   <label className="text-sm font-medium mb-1">Studio</label>
                   <input 
                     type="text" 
-                    value={formData.anime.studio} 
-                    onChange={(e) => handleInputChange('anime', 'studio', e.target.value)} 
+                    value={animeData.studio} 
+                    onChange={(e) => handleAnimeChange('studio', e.target.value)} 
                     className="input input-bordered w-full rounded-md" 
                     required 
                   />
@@ -368,31 +428,31 @@ const AddDataModal: React.FC<AddDataModalProps> = ({ onClose }) => {
                     <input 
                       type="number" 
                       min={1} 
-                      value={formData.anime.episodes} 
-                      onChange={(e) => handleInputChange('anime', 'episodes', parseInt(e.target.value))} 
+                      value={animeData.episodes} 
+                      onChange={(e) => handleAnimeChange('episodes', parseInt(e.target.value))} 
                       className="input input-bordered w-full rounded-md" 
                     />
                   </div>
                   <label className="flex items-center gap-2 cursor-pointer">
                     <input 
                       type="checkbox" 
-                      checked={formData.anime.isMovie} 
-                      disabled={formData.anime.episodes > 1} 
-                      onChange={(e) => handleInputChange('anime', 'isMovie', e.target.checked)} 
+                      checked={animeData.isMovie} 
+                      disabled={animeData.episodes > 1} 
+                      onChange={(e) => handleAnimeChange('isMovie', e.target.checked)} 
                       className="checkbox checkbox-sm" 
                     />
                     <span className="text-sm">Film</span>
                   </label>
                 </div>
 
-                {renderRadioOptions("Statut", Object.values(WorkStatus), formData.anime.status, 
-                  (val) => handleInputChange('anime', 'status', val))}
+                {renderRadioOptions("Statut", Object.values(WorkStatus), animeData.status, 
+                  (val) => handleAnimeChange('status', val))}
 
-                {renderRadioOptions("Fidélité", Object.values(AnimeFidelity), formData.anime.fidelity, 
-                  (val) => handleInputChange('anime', 'fidelity', val))}
+                {renderRadioOptions("Fidélité", Object.values(AnimeFidelity), animeData.fidelity, 
+                  (val) => handleAnimeChange('fidelity', val))}
 
                 {renderRadioOptions("Type de relation", [...Object.values(RelationType)], 
-                  formData.anime.relationType, (val) => handleInputChange('anime', 'relationType', val))}
+                  animeData.relationType, (val) => handleAnimeChange('relationType', val))}
 
                 <div className="grid grid-cols-2 gap-4">
                   <div className="form-control">
@@ -401,8 +461,8 @@ const AddDataModal: React.FC<AddDataModalProps> = ({ onClose }) => {
                       type="number" 
                       min={1900} 
                       max={2100} 
-                      value={formData.anime.startDate} 
-                      onChange={(e) => handleInputChange('anime', 'startDate', e.target.value)} 
+                      value={animeData.startDate} 
+                      onChange={(e) => handleAnimeChange('startDate', e.target.value)} 
                       className="input input-bordered w-full rounded-md" 
                     />
                   </div>
@@ -412,8 +472,8 @@ const AddDataModal: React.FC<AddDataModalProps> = ({ onClose }) => {
                       type="number" 
                       min={1900} 
                       max={2100} 
-                      value={formData.anime.endDate} 
-                      onChange={(e) => handleInputChange('anime', 'endDate', e.target.value)} 
+                      value={animeData.endDate} 
+                      onChange={(e) => handleAnimeChange('endDate', e.target.value)} 
                       className="input input-bordered w-full rounded-md" 
                     />
                   </div>
@@ -423,9 +483,19 @@ const AddDataModal: React.FC<AddDataModalProps> = ({ onClose }) => {
                   <label className="text-sm font-medium mb-1">Notes</label>
                   <textarea 
                     className="textarea textarea-bordered w-full rounded-md" 
-                    value={formData.anime.notes} 
-                    onChange={(e) => handleInputChange('anime', 'notes', e.target.value)} 
+                    value={animeData.notes} 
+                    onChange={(e) => handleAnimeChange('notes', e.target.value)} 
                     rows={3}
+                  />
+                </div>
+                
+                <div className="form-control">
+                  <label className="text-sm font-medium mb-1">Identifiant externe</label>
+                  <input 
+                    type="text" 
+                    value={animeData.externalId} 
+                    onChange={(e) => handleAnimeChange('externalId', e.target.value)} 
+                    className="input input-bordered w-full rounded-md" 
                   />
                 </div>
               </>
