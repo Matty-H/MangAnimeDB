@@ -108,15 +108,26 @@ const AdaptationTable: React.FC<AdaptationTableProps> = ({ license }) => {
           </div>
 
           <div>
-            {isEditing ? (
+          {isEditing ? (
+            <div className="flex gap-2">
               <button className="btn btn-sm btn-success" onClick={handleSaveTitle}>
                 <Check size={16} /> Sauvegarder
               </button>
-            ) : (
-              <button className="btn btn-sm btn-outline" onClick={() => setIsEditing(true)}>
-                <Pencil size={16} /> Éditer
+              <button
+                className="btn btn-sm btn-ghost"
+                onClick={() => {
+                  setEditedTitle(currentTitle);
+                  setIsEditing(false);
+                }}
+              >
+                Annuler
               </button>
-            )}
+            </div>
+          ) : (
+            <button className="btn btn-sm btn-outline" onClick={() => setIsEditing(true)}>
+              <Pencil size={16} /> Éditer
+            </button>
+        )}
           </div>
         </div>
       </div>
@@ -182,7 +193,7 @@ const AdaptationTable: React.FC<AdaptationTableProps> = ({ license }) => {
                       {isRowEditing ? (
                         <input
                           type="number"
-                          className="input input-sm w-full text-center"
+                          className="input input-sm w-12 text-center"
                           value={episodes}
                           onChange={(e) => setEpisodes(Number(e.target.value))}
                         />
@@ -196,14 +207,14 @@ const AdaptationTable: React.FC<AdaptationTableProps> = ({ license }) => {
                         <>
                           <input
                             type="number"
-                            className="input input-sm w-16 text-center"
+                            className="input input-sm w-14 text-center"
                             value={fromVolume}
                             onChange={(e) => setFromVolume(e.target.value)}
                           />
                           <span className="mx-1">-</span>
                           <input
                             type="number"
-                            className="input input-sm w-16 text-center"
+                            className="input input-sm w-14 text-center"
                             value={toVolume}
                             onChange={(e) => setToVolume(e.target.value)}
                           />
@@ -224,15 +235,28 @@ const AdaptationTable: React.FC<AdaptationTableProps> = ({ license }) => {
                     </div>
 
                     <div className="ml-3">
-                      {isRowEditing ? (
+                    {isRowEditing ? (
+                      <div className="flex gap-2">
                         <button className="btn btn-sm btn-success" onClick={handleSaveRow}>
                           <Check size={16} />
                         </button>
-                      ) : (
-                        <button className="btn btn-sm btn-outline" onClick={() => setIsRowEditing(true)}>
-                          <Pencil size={16} />
+                        <button
+                          className="btn btn-sm btn-ghost"
+                          onClick={() => {
+                            setEpisodes(row.episodes);
+                            setFromVolume(row.fromVolume ?? '');
+                            setToVolume(row.toVolume ?? '');
+                            setIsRowEditing(false);
+                          }}
+                        >
+                          Annuler
                         </button>
-                      )}
+                      </div>
+                    ) : (
+                      <button className="btn btn-sm btn-outline" onClick={() => setIsRowEditing(true)}>
+                        <Pencil size={16} />
+                      </button>
+                  )}
                     </div>
 
                     {/* Zone de réponse API pour débogage */}

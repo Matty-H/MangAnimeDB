@@ -244,37 +244,69 @@ const MangaInfoCard: React.FC<MangaInfoCardProps> = ({
                         index < editedParts.length - 1 ? 'border-b border-base-300 border-dashed' : ''
                       }`}
                     >
-                      {editingPartId === part.id ? (
-                        <>
-                          <div className="flex flex-col gap-1 grow">
-                            <input
-                              className="input input-sm input-bordered w-full"
-                              value={part.title}
-                              onChange={(e) => handlePartFieldChange(part.id, 'title', e.target.value)}
-                            />
-                            <div className="flex gap-2">
+                     {editingPartId === part.id ? (
+                      <>
+                        <div className="flex flex-col gap-1 grow">
+                          <div className="flex flex-col">
+                            <label htmlFor={`title-${part.id}`} className="text-xs">Titre</label>
+                            <div className="flex items-center gap-1">
                               <input
+                                id={`title-${part.id}`}
+                                className="input input-sm input-bordered w-full max-w-xs"
+                                value={part.title}
+                                onChange={(e) => handlePartFieldChange(part.id, 'title', e.target.value)}
+                              />
+                              <button className="btn btn-sm btn-success">
+                                <Check size={16} />
+                              </button>
+                              <button className="btn btn-sm btn-outline" onClick={() => setEditingPartId(null)}>
+                                <X size={16} />
+                              </button>
+                            </div>
+                          </div>
+                          
+                          {/* Labels and inputs for start, end, and volumes */}
+                          <div className="flex gap-2 mt-2">
+                            <div className="flex flex-col">
+                              <label htmlFor={`startVolume-${part.id}`} className="text-xs">Début</label>
+                              <input
+                                id={`startVolume-${part.id}`}
                                 type="number"
                                 className="input input-sm input-bordered w-24"
                                 value={part.startVolume}
                                 onChange={(e) => handlePartFieldChange(part.id, 'startVolume', parseInt(e.target.value))}
                                 placeholder="Début"
                               />
+                            </div>
+
+                            <div className="flex flex-col">
+                              <label htmlFor={`endVolume-${part.id}`} className="text-xs">Fin</label>
                               <input
+                                id={`endVolume-${part.id}`}
                                 type="number"
                                 className="input input-sm input-bordered w-24"
                                 value={part.endVolume}
                                 onChange={(e) => handlePartFieldChange(part.id, 'endVolume', parseInt(e.target.value))}
                                 placeholder="Fin"
                               />
+                            </div>
+
+                            <div className="flex flex-col">
+                              <label htmlFor={`volumes-${part.id}`} className="text-xs">Tomes</label>
                               <input
+                                id={`volumes-${part.id}`}
                                 type="number"
                                 className="input input-sm input-bordered w-24"
                                 value={part.volumes}
                                 onChange={(e) => handlePartFieldChange(part.id, 'volumes', parseInt(e.target.value))}
                                 placeholder="Tomes"
                               />
+                            </div>
+
+                            <div className="flex flex-col">
+                              <label htmlFor={`status-${part.id}`} className="text-xs">Statut</label>
                               <select
+                                id={`status-${part.id}`}
                                 className="select select-sm select-bordered"
                                 value={part.status}
                                 onChange={(e) => handlePartFieldChange(part.id, 'status', e.target.value)}
@@ -285,34 +317,27 @@ const MangaInfoCard: React.FC<MangaInfoCardProps> = ({
                               </select>
                             </div>
                           </div>
-                          <div className="flex gap-2 items-start">
-                            <button className="btn btn-sm btn-success">
-                              <Check size={16} />
-                            </button>
-                            <button className="btn btn-sm btn-outline" onClick={() => setEditingPartId(null)}>
-                              <X size={16} />
-                            </button>
+                        </div>
+                      </>
+                    ) : (
+                      <>
+                        <div>
+                          <div className="font-medium">{part.title}</div>
+                          <div className="text-xs opacity-60">
+                            Tomes {part.startVolume}-{part.endVolume} ({part.volumes} tomes)
                           </div>
-                        </>
-                      ) : (
-                        <>
-                          <div>
-                            <div className="font-medium">{part.title}</div>
-                            <div className="text-xs opacity-60">
-                              Tomes {part.startVolume}-{part.endVolume} ({part.volumes} tomes)
-                            </div>
-                          </div>
-                          <div className="flex gap-2 items-center">
-                            <Badge contentType="status" value={part.status} size="sm" />
-                            <button
-                              className="btn btn-sm btn-ghost"
-                              onClick={() => setEditingPartId(part.id)}
-                            >
-                              <Pencil size={16} />
-                            </button>
-                          </div>
-                        </>
-                      )}
+                        </div>
+                        <div className="flex gap-2 items-center">
+                          <Badge contentType="status" value={part.status} size="sm" />
+                          <button
+                            className="btn btn-sm btn-ghost"
+                            onClick={() => setEditingPartId(part.id)}
+                          >
+                            <Pencil size={16} />
+                          </button>
+                        </div>
+                      </>
+                    )}
                     </div>
                   ))}
                 </div>

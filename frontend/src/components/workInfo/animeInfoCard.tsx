@@ -211,7 +211,7 @@ const AnimeInfoCard: React.FC<AnimeInfoCardProps> = ({
               <div className="flex items-center gap-2">
                 <Tv size={16} className="opacity-40" />
                 <span>
-                  {seasonCount} Saison{seasonCount !== 1 ? 's' : ''} • {totalEpisodes} Épisode{totalEpisodes !== 1 ? 's' : ''}
+                  {seasonCount === 0 ? 'Saison unique' : `${seasonCount} Saison${seasonCount > 1 ? 's' : ''}`} • {totalEpisodes} Épisode{totalEpisodes !== 1 ? 's' : ''}
                 </span>
               </div>
               
