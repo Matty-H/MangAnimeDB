@@ -1,7 +1,7 @@
 // backend/apiServer.ts
 import express from 'express';
 import type { Express } from 'express';
-import searchRoutes from './api/endPoint.ts';
+import searchRoutes from './api/endPoint';
 
 const app: Express = express();
 const PORT = 3000;

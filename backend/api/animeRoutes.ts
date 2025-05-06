@@ -10,7 +10,7 @@ const prisma = new PrismaClient();
 router.use(express.json());
 
 // GET - Récupérer un anime par ID
-router.get('/anime/:id', async (req: Request, res: Response) => {
+router.get('/anime/:id', async (req: Request, res: Response): Promise<void> => {
   const { id } = req.params;
   
   try {
@@ -22,7 +22,7 @@ router.get('/anime/:id', async (req: Request, res: Response) => {
     });
     
     if (!anime) {
-      res.status(404).json({ error: 'Anime non trouvé' })
+      res.status(404).json({ error: 'Anime non trouvé' });
       return;
     }
     
@@ -34,62 +34,75 @@ router.get('/anime/:id', async (req: Request, res: Response) => {
 });
 
 // PUT - Mettre à jour un anime
-router.put('/anime/:id', async (req: Request, res: Response) => {
+router.put('/anime/:id', async (req: Request, res: Response): Promise<void> => {
   const { id } = req.params;
-  const { 
-    licenseId, 
-    title, 
-    studio, 
-    startDate, 
-    endDate, 
+  const {
+    licenseId,
+    title,
+    studio,
+    adaptationType,
+    episodes,
     status,
-    totalEpisodes,
-    notes
+    fidelity,
+    relationType,
+    startDate,
+    endDate,
+    notes,
+    duration
   } = req.body;
-
+  
   const parsedStartDate = startDate ? new Date(startDate) : undefined;
   const parsedEndDate = endDate ? new Date(endDate) : undefined;
-
+  
   try {
     // Vérifier si l'anime existe
     const animeExists = await prisma.animeAdaptation.findUnique({
       where: { id }
     });
-
+    
     if (!animeExists) {
-      return res.status(404).json({ error: 'Anime non trouvé' });
+      res.status(404).json({ error: 'Anime non trouvé' });
+      return;
     }
-
+    
+    // Construction de l'objet data avec seulement les champs fournis
+    const updateData: any = {};
+    if (licenseId !== undefined) updateData.licenseId = licenseId;
+    if (title !== undefined) updateData.title = title;
+    if (studio !== undefined) updateData.studio = studio;
+    if (adaptationType !== undefined) updateData.adaptationType = adaptationType;
+    if (episodes !== undefined) updateData.episodes = episodes;
+    if (status !== undefined) updateData.status = status;
+    if (fidelity !== undefined) updateData.fidelity = fidelity;
+    if (relationType !== undefined) updateData.relationType = relationType;
+    if (parsedStartDate !== undefined) updateData.startDate = parsedStartDate;
+    if (parsedEndDate !== undefined) updateData.endDate = parsedEndDate;
+    if (notes !== undefined) updateData.notes = notes;
+    if (duration !== undefined) updateData.duration = duration;
+    
     // Mise à jour de l'anime
     const updatedAnime = await prisma.animeAdaptation.update({
       where: { id },
-      data: {
-        licenseId,
-        title,
-        studio,
-        startDate: parsedStartDate,
-        endDate: parsedEndDate,
-        status,
-        totalEpisodes,
-        notes
-      },
+      data: updateData,
       include: {
         seasons: true
       }
     });
-
+    
     res.json(updatedAnime);
-  } catch (error) {
+    return;
+  } catch (error: any) {
     console.error('Erreur lors de la mise à jour de l\'anime:', error);
-    res.status(500).json({ 
-      error: 'Erreur serveur', 
-      details: error.message 
+    res.status(500).json({
+      error: 'Erreur serveur',
+      details: error.message
     });
+    return;
   }
 });
 
 // Modification de la route pour gérer correctement les episodes et fidelity
-router.put('/anime-season/:id', async (req: Request, res: Response) => {
+router.put('/anime-season/:id', async (req: Request, res: Response): Promise<void> => {
     const { id } = req.params;
     
     try {
@@ -122,7 +135,8 @@ router.put('/anime-season/:id', async (req: Request, res: Response) => {
       });
   
       if (!seasonExists) {
-        return res.status(404).json({ error: 'Saison d\'anime non trouvée' });
+        res.status(404).json({ error: 'Saison d\'anime non trouvée' });
+        return;
       }
   
       // Préparation des données pour la mise à jour
@@ -143,11 +157,12 @@ router.put('/anime-season/:id', async (req: Request, res: Response) => {
         
         // Vérification que la conversion a réussi
         if (isNaN(updateData.episodes)) {
-          return res.status(400).json({
+          res.status(400).json({
             error: 'Valeur invalide pour episodes',
             received: episodes,
             type: typeof episodes
           });
+          return;
         }
       }
       
@@ -157,11 +172,12 @@ router.put('/anime-season/:id', async (req: Request, res: Response) => {
         const validFidelities = ['FAITHFUL', 'PARTIAL', 'ANIME_ORIGINAL'];
         
         if (!validFidelities.includes(String(fidelity))) {
-          return res.status(400).json({
+          res.status(400).json({
             error: 'Valeur de fidélité invalide',
             received: fidelity,
             validValues: validFidelities
           });
+          return;
         }
         
         updateData.fidelity = String(fidelity);
@@ -193,7 +209,7 @@ router.put('/anime-season/:id', async (req: Request, res: Response) => {
       console.log('Saison mise à jour:', updatedSeason);
       res.json(updatedSeason);
       
-    } catch (error) {
+    } catch (error:any) {
       console.error('Erreur lors de la mise à jour de la saison:', error);
       res.status(500).json({ 
         error: 'Erreur serveur', 
@@ -201,10 +217,10 @@ router.put('/anime-season/:id', async (req: Request, res: Response) => {
         stack: process.env.NODE_ENV === 'development' ? error.stack : undefined
       });
     }
-  });
+});
 
 // DELETE - Supprimer une saison d'anime
-router.delete('/anime-season/:id', async (req: Request, res: Response) => {
+router.delete('/anime-season/:id', async (req: Request, res: Response): Promise<void> => {
   const { id } = req.params;
 
   try {
@@ -214,7 +230,8 @@ router.delete('/anime-season/:id', async (req: Request, res: Response) => {
     });
 
     if (!seasonExists) {
-      return res.status(404).json({ error: 'Saison d\'anime non trouvée' });
+      res.status(404).json({ error: 'Saison d\'anime non trouvée' });
+      return;
     }
 
     // Suppression de la saison
@@ -223,7 +240,7 @@ router.delete('/anime-season/:id', async (req: Request, res: Response) => {
     });
 
     res.json(deletedSeason);
-  } catch (error) {
+  } catch (error:any) {
     console.error('Erreur lors de la suppression de la saison:', error);
     res.status(500).json({ 
       error: 'Erreur serveur', 
@@ -233,7 +250,7 @@ router.delete('/anime-season/:id', async (req: Request, res: Response) => {
 });
 
 // POST - Ajouter une nouvelle saison à un anime
-router.post('/anime-season', async (req: Request, res: Response) => {
+router.post('/anime-season', async (req: Request, res: Response): Promise<void> => {
   const { 
     animeAdaptationId,
     seasonNumber,
@@ -246,7 +263,8 @@ router.post('/anime-season', async (req: Request, res: Response) => {
 
   // Validation des données requises
   if (!animeAdaptationId) {
-    return res.status(400).json({ error: 'Le champ animeAdaptationId est requis' });
+    res.status(400).json({ error: 'Le champ animeAdaptationId est requis' });
+    return;
   }
 
   try {
@@ -256,7 +274,8 @@ router.post('/anime-season', async (req: Request, res: Response) => {
     });
 
     if (!animeExists) {
-      return res.status(404).json({ error: 'Anime non trouvé' });
+      res.status(404).json({ error: 'Anime non trouvé' });
+      return;
     }
 
     // Création de la saison
@@ -273,7 +292,7 @@ router.post('/anime-season', async (req: Request, res: Response) => {
     });
 
     res.status(201).json(newSeason);
-  } catch (error) {
+  } catch (error:any) {
     console.error('Erreur lors de la création de la saison:', error);
     res.status(500).json({ 
       error: 'Erreur serveur', 

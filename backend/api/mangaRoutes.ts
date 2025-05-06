@@ -10,7 +10,7 @@ const prisma = new PrismaClient();
 router.use(express.json());
 
 // GET - Récupérer un manga par ID
-router.get('/manga/:id', async (req: Request, res: Response) => {
+router.get('/manga/:id', async (req: Request, res: Response): Promise<void> => {
   const { id } = req.params;
   
   try {
@@ -22,18 +22,21 @@ router.get('/manga/:id', async (req: Request, res: Response) => {
     });
     
     if (!manga) {
-      return res.status(404).json({ error: 'Manga non trouvé' });
+      res.status(404).json({ error: 'Manga non trouvé' });
+      return;
     }
     
     res.json(manga);
+    return;
   } catch (error) {
     console.error('Erreur lors de la récupération du manga:', error);
     res.status(500).json({ error: 'Erreur serveur' });
+    return;
   }
 });
 
 // PUT - Mettre à jour un manga
-router.put('/manga/:id', async (req: Request, res: Response) => {
+router.put('/manga/:id', async (req: Request, res: Response): Promise<void> => {
   const { id } = req.params;
   const { 
     licenseId, 
@@ -56,7 +59,8 @@ router.put('/manga/:id', async (req: Request, res: Response) => {
     });
 
     if (!mangaExists) {
-      return res.status(404).json({ error: 'Manga non trouvé' });
+      res.status(404).json({ error: 'Manga non trouvé' });
+      return;
     }
 
     // Mise à jour du manga
@@ -78,17 +82,19 @@ router.put('/manga/:id', async (req: Request, res: Response) => {
     });
 
     res.json(updatedManga);
-  } catch (error) {
+    return;
+  } catch (error:any) {
     console.error('Erreur lors de la mise à jour du manga:', error);
     res.status(500).json({ 
       error: 'Erreur serveur', 
       details: error.message 
     });
+    return;
   }
 });
 
 // PUT - Mettre à jour une partie de manga
-router.put('/manga-part/:id', async (req: Request, res: Response) => {
+router.put('/manga-part/:id', async (req: Request, res: Response): Promise<void> => {
   const { id } = req.params;
   const { 
     mangaId,
@@ -108,7 +114,8 @@ router.put('/manga-part/:id', async (req: Request, res: Response) => {
     });
 
     if (!partExists) {
-      return res.status(404).json({ error: 'Partie de manga non trouvée' });
+      res.status(404).json({ error: 'Partie de manga non trouvée' });
+      return;
     }
 
     // Calculer le nombre de volumes si on a modifié les bornes
@@ -132,17 +139,19 @@ router.put('/manga-part/:id', async (req: Request, res: Response) => {
     });
 
     res.json(updatedPart);
-  } catch (error) {
+    return;
+  } catch (error:any) {
     console.error('Erreur lors de la mise à jour de la partie:', error);
     res.status(500).json({ 
       error: 'Erreur serveur', 
       details: error.message 
     });
+    return;
   }
 });
 
 // DELETE - Supprimer une partie de manga
-router.delete('/manga-part/:id', async (req: Request, res: Response) => {
+router.delete('/manga-part/:id', async (req: Request, res: Response): Promise<void> => {
   const { id } = req.params;
 
   try {
@@ -152,7 +161,8 @@ router.delete('/manga-part/:id', async (req: Request, res: Response) => {
     });
 
     if (!partExists) {
-      return res.status(404).json({ error: 'Partie de manga non trouvée' });
+      res.status(404).json({ error: 'Partie de manga non trouvée' });
+      return;
     }
 
     // Suppression de la partie
@@ -161,17 +171,19 @@ router.delete('/manga-part/:id', async (req: Request, res: Response) => {
     });
 
     res.json(deletedPart);
-  } catch (error) {
+    return;
+  } catch (error:any) {
     console.error('Erreur lors de la suppression de la partie:', error);
     res.status(500).json({ 
       error: 'Erreur serveur', 
       details: error.message 
     });
+    return;
   }
 });
 
 // POST - Ajouter une nouvelle partie à un manga
-router.post('/manga-part', async (req: Request, res: Response) => {
+router.post('/manga-part', async (req: Request, res: Response): Promise<void> => {
   const { 
     mangaId,
     licenseId,
@@ -184,7 +196,8 @@ router.post('/manga-part', async (req: Request, res: Response) => {
 
   // Validation des données requises
   if (!mangaId || !licenseId || !title) {
-    return res.status(400).json({ error: 'Les champs mangaId, licenseId et title sont requis' });
+    res.status(400).json({ error: 'Les champs mangaId, licenseId et title sont requis' });
+    return;
   }
 
   try {
@@ -206,12 +219,14 @@ router.post('/manga-part', async (req: Request, res: Response) => {
     });
 
     res.status(201).json(newPart);
-  } catch (error) {
+    return;
+  } catch (error:any) {
     console.error('Erreur lors de la création de la partie:', error);
     res.status(500).json({ 
       error: 'Erreur serveur', 
       details: error.message 
     });
+    return;
   }
 });
 
