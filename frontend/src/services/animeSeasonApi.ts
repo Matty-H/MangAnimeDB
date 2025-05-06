@@ -1,3 +1,4 @@
+//frontend/src/services/animeSeasonApi.ts
 import { Season } from '../components/cardAnime/AnimeSeasonManager';
 
 /**

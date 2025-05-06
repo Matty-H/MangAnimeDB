@@ -24,7 +24,7 @@ function SearchBar({ onSearch = () => {} }: SearchBarProps) {
 
     setIsLoading(true);
     try {
-      const response = await fetch(`/api/suggestions?query=${encodeURIComponent(input)}`);
+      const response = await fetch(`/api/search/suggestions?query=${encodeURIComponent(input)}`);
       if (!response.ok) {
         throw new Error('Failed to fetch suggestions');
       }

@@ -1,3 +1,4 @@
+//frontend/src/services/animeApi.ts
 import { AnimeWork } from '../types';
 
 /**

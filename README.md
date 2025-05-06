@@ -1,8 +1,18 @@
-# 📚 MangAnime Link
+# 📚 Anime & Manga Library Backend
 
-MangAnime Link est une application web qui permet aux utilisateurs de rechercher des mangas et des animes via une barre de recherche dynamique avec autocomplétion. Elle offre une navigation fluide vers des pages détaillées basées sur les résultats sélectionnés.
+Backend Node.js/Express pour la gestion d'œuvres **manga** et **anime**, avec Prisma et une base PostgreSQL.
 
-## 🛠 Technologies utilisées
+---
+
+## 🚀 Features
+
+- 📖 Gestion des **mangas**, **parties de manga**, **animes** et **saisons**
+- 🔗 Relations riches : licences, adaptations, fidélité, types
+- 🔍 Recherche détaillée et suggestions
+- 🧱 Base de données Prisma + PostgreSQL
+- 🔧 API REST modulaire et maintenable
+
+---
 
 <div style="display: flex; justify-content: space-evenly; align-items: center; flex-wrap: wrap; gap: 20px; padding: 1px; background: #f5f5f5; border-radius: 8px;">
   <a href="https://vite.dev/$0" target="_blank" style="display: inline-block;">
@@ -75,85 +85,44 @@ MangAnime Link est une application web qui permet aux utilisateurs de rechercher
   </a>
 </div>
 
-## 🚀 Fonctionnalités
+## 🧾 Documentation
 
-- 🔎 Barre de recherche intelligente avec suggestions en temps réel
-- ⌨️ Navigation clavier dans les suggestions
-- ⚡️ Déclenchement de la recherche au clic ou avec la touche "Entrée"
-- 🌐 Intégration avec un backend API pour récupérer dynamiquement les résultats (endpoint `/api/suggestions`)
-- 🧭 Navigation vers les pages de résultats via React Router
+- 📘 [Documentation des API REST](docs/API.md)  
+  Détaille les endpoints, méthodes HTTP, et paramètres.
 
----
-
-## 🧰 Stack technique
-
-- **Frontend :**
-  - [React](https://reactjs.org/)
-  - [TypeScript](https://www.typescriptlang.org/)
-  - [@tanstack/react-router](https://tanstack.com/router/latest)
-  
-- **Backend :**
-  - [Prisma](https://www.prisma.io/) côté serveur
-  - Serveur Express
+- 🗃️ [Modèle de base de données Prisma](docs/schema.md)  
+  Décrit les modèles, relations et types énumérés.
 
 ---
 
-## 🗂️ Structure de la base de données Prisma
+## ⚙️ Technologies utilisées
 
-Voici un aperçu de la structure de la base de données Prisma utilisée dans le projet. La base de données est modélisée avec Prisma pour gérer les données des mangas et des animes.
+- **Node.js** + **Express**
+- **Prisma ORM**
+- **PostgreSQL**
+- **ESModules**
+- **UUID/CUID IDs**
+- **JSON body parsing**
+- **Middleware personnalisé**
 
-![Structure de la base de données](https://github.com/Matty-H/MangAnimeDB/blob/main/devtools/prisma-editor.vercel.app.png)
-
-
-## 🛠️ Installation
-
-### 1. Cloner le dépôt
-
-```bash
-git clone https://github.com/ton-utilisateur/manganime-link.git
-cd manganime-link/frontend
-```
-
-```bash
-npm install
-```
-
-### 2. Initialiser un base de donnée PostegreSQL + Prisma
-WIP
-
-### 3. Lancer le projet
-
-#### Lancer le projet (Vite + Express)
-```bash
-npm run dev
-```
-
-#### Lancer le projet (Vite + Express + Prisma Studio)
-```bash
-npm run fulldev
-```
 ---
 
-##### Lancer uniquement le Frontend
-```bash
-npm run dev:client
-```
-##### Lancer uniquement le Backend
-```bash
-npm run dev:server
-```
+## 🛠️ Setup local
 
-##### Lancer uniquement Prisma Studio
-```bash
-npm run dev:db
-```
+1. Cloner le repo
+2. Installer les dépendances :
+   ```bash npm install```
+3. Configurer la base de données via .env :
+  ```DATABASE_URL=postgresql://user:pass@localhost:5432/dbname```
+4. Appliquer le schéma :
+  ```npx prisma db push```
+5. Lancer le serveur :
+  ```npm run dev```
 
-### 4. REST API
-```bash
-GET /api/uggestions?query={manga_anime_name}
-```
+## 🧪 Tester l'API
 
-```bash
-GET /api/detailed?query={manga_anime_name}
-```
-```
+Utilise Postman ou Insomnia avec les routes décrites dans docs/API.md.
+
+## 📄 Licence
+
+MIT — libre à l'usage, modification et distribution.
