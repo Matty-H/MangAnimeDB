@@ -8,6 +8,8 @@
     { "path": "./tsconfig.server.json" }
   ],
   "compilerOptions": {
+    "composite": true,
+    "noEmit": false,
     "jsx": "react-jsx",
     "moduleResolution": "Bundler",
     "esModuleInterop": true,

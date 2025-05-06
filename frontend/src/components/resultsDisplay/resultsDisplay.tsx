@@ -1,8 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import { searchDetailed } from '../../services/apiService';
-import AdaptationTable from '../adaptationTable/adaptationTable';
-import MangaInfoCard from '../workInfo/mangaInfoCard';
-import AnimeInfoCard from '../workInfo/animeInfoCard';
+import AdaptationTable from '../adaptationTable/AdaptationTable';
+import MangaInfoCard from '../cardManga/MangaInfoCard';
+import AnimeInfoCard from '../cardAnime/AnimeInfoCard';
 import SearchBar from '../searchBar/searchBar';
 import AddDataButton from '../addDataButton/addDataButton';
 import { License, MangaWork, AnimeWork, WorkStatus } from '../../types';

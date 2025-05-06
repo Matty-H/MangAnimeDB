@@ -3,6 +3,7 @@ import express from 'express';
 import type { Router, Request, Response } from 'express';
 import { PrismaClient } from '@prisma/client';
 import mangaRoutes from './mangaRoutes.ts'
+import animeRoutes from './animeRoutes.ts'
 
 const router: Router = express.Router();
 const prisma = new PrismaClient();
@@ -12,6 +13,7 @@ router.use(express.json());
 
 // Utiliser les routes de manga
 router.use('/', mangaRoutes);
+router.use('/', animeRoutes);
 
 // AJOUT DE LA ROUTE MANQUANTE - Mettre à jour un manga via la licence
 router.put('/license/:licenseId/manga/:mangaId', async (req: Request, res: Response) => {
