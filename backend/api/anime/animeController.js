@@ -146,6 +146,44 @@ export const updateAnime = async (req, res) => {
   }
 };
 
+// Supprimer un anime
+export const deleteAnime = async (req, res) => {
+  const { id } = req.params;
+
+  try {
+    // Vérifier si l'anime existe
+    const animeExists = await prisma.animeAdaptation.findUnique({
+      where: { id },
+      include: { seasons: true }
+    });
+
+    if (!animeExists) {
+      res.status(404).json({ error: 'Anime non trouvé' });
+      return;
+    }
+
+    // Supprimer d'abord toutes les saisons associées
+    if (animeExists.seasons.length > 0) {
+      await prisma.animeSeason.deleteMany({
+        where: { animeAdaptationId: id }
+      });
+    }
+
+    // Supprimer l'anime
+    const deletedAnime = await prisma.animeAdaptation.delete({
+      where: { id }
+    });
+
+    res.json(deletedAnime);
+  } catch (error) {
+    console.error('Erreur lors de la suppression de l\'anime:', error);
+    res.status(500).json({ 
+      error: 'Erreur serveur', 
+      details: error.message 
+    });
+  }
+};
+
 // Mettre à jour une saison d'anime
 export const updateAnimeSeason = async (req, res) => {
   const { id } = req.params;

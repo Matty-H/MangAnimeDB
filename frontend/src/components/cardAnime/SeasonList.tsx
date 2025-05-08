@@ -1,3 +1,4 @@
+//frontend/src/components/cardAnime/EmptyAnimeCard.tsx
 import React from 'react';
 import { Season } from './AnimeSeasonManager';
 import SeasonItem from './SeasonItem';

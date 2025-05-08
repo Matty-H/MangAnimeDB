@@ -1,4 +1,4 @@
-//frontend/src/services/animeSeasonApi.ts
+// frontend/src/services/animeSeasonApi.ts
 import { Season } from '../components/cardAnime/AnimeSeasonManager';
 
 /**
@@ -9,10 +9,14 @@ export const AnimeSeasonAPI = {
    * Récupère toutes les saisons d'un anime
    */
   getSeasons: async (animeId: string): Promise<Season[]> => {
-    const response = await fetch(`/api/anime-season?animeId=${animeId}`);
+    const response = await fetch(`/api/anime/${animeId}/seasons`);
+    
     if (!response.ok) {
-      throw new Error(`Erreur lors de la récupération des saisons: ${response.status}`);
+      const errorData = await response.json().catch(() => null);
+      const errorMessage = errorData?.error || `Erreur lors de la récupération des saisons: ${response.status}`;
+      throw new Error(errorMessage);
     }
+    
     return response.json();
   },
 
@@ -20,7 +24,7 @@ export const AnimeSeasonAPI = {
    * Crée une nouvelle saison
    */
   createSeason: async (season: Partial<Season>): Promise<Season> => {
-    const response = await fetch('/api/anime-season', {
+    const response = await fetch('/api/anime/season', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -29,7 +33,10 @@ export const AnimeSeasonAPI = {
     });
     
     if (!response.ok) {
-      throw new Error(`Erreur lors de la création de la saison: ${response.status}`);
+      // Tenter de récupérer les détails de l'erreur si disponibles
+      const errorData = await response.json().catch(() => null);
+      const errorMessage = errorData?.error || `Erreur lors de la création de la saison: ${response.status}`;
+      throw new Error(errorMessage);
     }
     
     return response.json();
@@ -39,7 +46,7 @@ export const AnimeSeasonAPI = {
    * Met à jour une saison existante
    */
   updateSeason: async (seasonId: string, season: Partial<Season>): Promise<Season> => {
-    const response = await fetch(`/api/anime-season/${seasonId}`, {
+    const response = await fetch(`/api/anime/season/${seasonId}`, {
       method: 'PUT',
       headers: {
         'Content-Type': 'application/json',
@@ -48,7 +55,9 @@ export const AnimeSeasonAPI = {
     });
     
     if (!response.ok) {
-      throw new Error(`Erreur lors de la mise à jour de la saison: ${response.status}`);
+      const errorData = await response.json().catch(() => null);
+      const errorMessage = errorData?.error || `Erreur lors de la mise à jour de la saison: ${response.status}`;
+      throw new Error(errorMessage);
     }
     
     return response.json();
@@ -58,12 +67,14 @@ export const AnimeSeasonAPI = {
    * Supprime une saison
    */
   deleteSeason: async (seasonId: string): Promise<Season> => {
-    const response = await fetch(`/api/anime-season/${seasonId}`, {
+    const response = await fetch(`/api/anime/season/${seasonId}`, {
       method: 'DELETE',
     });
     
     if (!response.ok) {
-      throw new Error(`Erreur lors de la suppression de la saison: ${response.status}`);
+      const errorData = await response.json().catch(() => null);
+      const errorMessage = errorData?.error || `Erreur lors de la suppression de la saison: ${response.status}`;
+      throw new Error(errorMessage);
     }
     
     return response.json();

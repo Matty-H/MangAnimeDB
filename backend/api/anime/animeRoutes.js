@@ -4,6 +4,7 @@ import {
   createAnime, 
   getAnimeById, 
   updateAnime, 
+  deleteAnime,
   updateAnimeSeason, 
   deleteAnimeSeason, 
   createAnimeSeason 
@@ -18,6 +19,7 @@ router.use(express.json());
 router.post('/', createAnime);
 router.get('/:id', getAnimeById);
 router.put('/:id', updateAnime);
+router.delete('/:id', deleteAnime);
 
 // Routes pour les saisons d'anime
 router.post('/season', createAnimeSeason);

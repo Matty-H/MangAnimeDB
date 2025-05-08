@@ -1,4 +1,4 @@
-// AnimeDisplayInfo.jsx
+// frontend/src/components/cardAnime/AnimeDisplayInfo.tsx
 import React from 'react';
 import { Tv, Calendar, Info } from 'lucide-react';
 import Badge from '../ui/badge';

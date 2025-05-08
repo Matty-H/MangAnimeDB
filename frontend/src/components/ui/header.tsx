@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { SignedIn, SignedOut, SignInButton, UserButton } from '@clerk/clerk-react'
+import ApiTester from "../../../../devtools/ApiTester";
 
 
 const themes = [
@@ -55,6 +56,8 @@ const ThemeSelector = () => {
           <UserButton />
         </SignedIn>
       </div>
+
+      {/* <div><ApiTester /></div> */}
 
       {/* Section droite : Thème */}
       <div>

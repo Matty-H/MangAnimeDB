@@ -1,3 +1,4 @@
+//frontend/src/components/cardAnime/AnimeSeasonManager.tsx
 import React, { useState, useEffect } from 'react';
 import { Plus } from 'lucide-react';
 import SeasonForm from './SeasonForm';

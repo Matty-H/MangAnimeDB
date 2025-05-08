@@ -23,6 +23,7 @@ http://localhost:3000/api
 | POST    | `/anime`     | Crée un nouvel anime                |
 | GET     | `/anime/:id` | Récupère un anime par ID           |
 | PUT     | `/anime/:id` | Met à jour un anime existant       |
+| DELETE  | `/anime/:id` | Supprime un anime existant         |
 
 ### 🔸 Saisons d’anime
 

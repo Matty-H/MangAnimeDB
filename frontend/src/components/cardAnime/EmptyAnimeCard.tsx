@@ -1,8 +1,12 @@
-// EmptyAnimeCard.jsx
+// frontend/src/components/cardAnime/EmptyAnimeCard.tsx
 import React from 'react';
 import { Film, Plus } from 'lucide-react';
 
-const EmptyAnimeCard = ({ onAddAnime }) => {
+interface EmptyAnimeCardProps {
+  onAddAnime: () => void;
+}
+
+const EmptyAnimeCard: React.FC<EmptyAnimeCardProps> = ({ onAddAnime }) => {
   return (
     <div className="card bg-base-100 card-border border-base-300 overflow-hidden">
       <div className="border-base-300 bg-base-200 border-b border-dashed">
