@@ -1,4 +1,4 @@
-// MangaPartsManager.tsx
+//frontend/src/components/cardManga/MangaPartsManager.tsx
 import React, { useState, useEffect } from 'react';
 import { MangaWork, WorkStatus, MangaPart } from '../../types';
 import { Plus, Pencil, Check, X, Loader, Trash } from 'lucide-react';

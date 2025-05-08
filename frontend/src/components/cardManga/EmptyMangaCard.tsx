@@ -1,4 +1,4 @@
-// components/manga/EmptyMangaCard.tsx
+//frontend/src/components/cardManga/MangaPartsManager.tsx
 import React from 'react';
 import { BookOpen, Plus } from 'lucide-react';
 

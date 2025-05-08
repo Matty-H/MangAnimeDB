@@ -8,6 +8,7 @@ import EmptyMangaCard from './EmptyMangaCard';
 import { ErrorAlert } from '../ui/ErrorAlert';
 import { SuccessAlert } from '../ui/SuccessAlert';
 import ApiResponseDisplay from '../ui/ApiResponseDisplay';
+import { animeService } from '../../services';
 
 interface MangaInfoCardProps {
   manga?: MangaWork;
@@ -41,7 +42,7 @@ const MangaInfoCard: React.FC<MangaInfoCardProps> = ({
   }, [manga]);
 
   if (isEmptyTemplate || !manga) {
-    return <EmptyMangaCard onAddManga={onAddManga} />;
+    return <EmptyMangaCard onAddManga={handleAddManga} />;
   }
 
   const handleFieldChange = (field: keyof MangaWork, value: any) => {
@@ -54,6 +55,60 @@ const MangaInfoCard: React.FC<MangaInfoCardProps> = ({
     const authors = authorsString.split(',').map(a => a.trim()).filter(Boolean);
     setEditedManga({ ...editedManga, authors });
   };
+
+  // Fonction pour gérer l'ajout d'un manga
+  async function handleAddManga() {
+    setIsLoading(true);
+    setError(null);
+    setApiResponseData(null);
+
+    try {
+      // Création d'un nouveau manga à partir de la licence
+      const newMangaData = {
+        licenseId: licenseId,
+        title: 'Nouveau manga',         // Titre par défaut
+        authors: [],                    // Tableau vide d'auteurs
+        volumes: 0,                     // Nombre de volumes à 0 par défaut
+        status: 'ONGOING',              // Statut par défaut
+        startDate: null,                // Pas de date de début
+        endDate: null,                  // Pas de date de fin
+        publisher: ''                   // Éditeur vide par défaut
+      };
+
+      console.log('Données envoyées à l\'API:', newMangaData);
+
+      // Appel à l'API pour créer un manga
+      const response = await fetch('/api/manga', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(newMangaData),
+      });
+
+      const responseData = await response.json();
+      setApiResponseData(responseData);
+      console.log('Réponse de l\'API:', responseData);
+
+      if (!response.ok) {
+        throw new Error(responseData.error || `Erreur ${response.status}`);
+      }
+
+      setApiResponse('Manga ajouté avec succès');
+      setShowAlert(true);
+
+      // Si le callback externe existe, on l'appelle
+      if (onAddManga) onAddManga();
+
+      // Si une mise à jour des données est nécessaire, on peut appeler onUpdate avec les données du manga créé
+      if (onUpdate) onUpdate(responseData);
+
+    } catch (err: any) {
+      setError(err.message || 'Une erreur est survenue lors de l\'ajout du manga');
+      setShowAlert(true);
+      console.error('Erreur lors de l\'ajout du manga:', err);
+    } finally {
+      setIsLoading(false);
+    }
+  }
 
   const handleSaveManga = async () => {
     if (!editedManga) return;

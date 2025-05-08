@@ -1,4 +1,4 @@
-// components/manga/MangaInfo.tsx
+//frontend/src/components/cardManga/MangaPartsManager.tsx
 import React from 'react';
 import { MangaWork } from '../../types';
 import { BookCopy, Calendar, Pen } from 'lucide-react';

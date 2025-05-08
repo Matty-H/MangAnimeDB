@@ -1,4 +1,4 @@
-// components/manga/MangaEditForm.tsx
+//frontend/src/components/cardManga/MangaPartsManager.tsx
 import React from 'react';
 import { MangaWork, WorkStatus } from '../../types';
 

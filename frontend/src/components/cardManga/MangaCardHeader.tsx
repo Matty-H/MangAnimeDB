@@ -1,4 +1,4 @@
-// components/manga/MangaHeader.tsx
+//frontend/src/components/cardManga/MangaPartsManager.tsx
 import React from 'react';
 import { Pencil, Check, X, Loader } from 'lucide-react';
 

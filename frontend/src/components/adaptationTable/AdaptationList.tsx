@@ -1,6 +1,5 @@
 // AdaptationList.tsx
 import React from 'react';
-import { Plus } from 'lucide-react';
 import AdaptationRow from './AdaptationRow';
 import { AdaptationListProps } from './AdaptationTable';
 
@@ -28,10 +27,7 @@ const AdaptationList: React.FC<AdaptationListProps> = ({ adaptationRows }) => {
         ))
       ) : (
         <div className="p-6 text-center flex flex-col items-center justify-center text-gray-500">
-          <p className="mb-3">Aucune adaptation trouvée pour cette licence</p>
-          <button className="btn btn-sm btn-outline">
-            <Plus size={16} /> Ajouter une adaptation
-          </button>
+          <p className="mb-3">Aucune adaptation trouvée pour cette licence, ajouter un anime et un manga pour créer le tableau</p>
         </div>
       )}
     </div>

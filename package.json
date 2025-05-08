@@ -8,9 +8,11 @@
   },
   "scripts": {
     "dev:client": "vite",
+    "dev:net": "vite --host",
     "dev:server": "node backend/apiServer.js",
     "dev:db": "npx prisma studio --schema=backend/prisma/schema.prisma",
     "dev": "concurrently \"npm run dev:client\" \"npm run dev:server\"",
+    "net": "concurrently \"npm run dev:net\" \"npm run dev:server\"",
     "fulldev": "concurrently \"npm run dev:client\" \"npm run dev:server\" \"npm run dev:db\"",
     "build": "tsc -b && vite build",
     "lint": "eslint .",

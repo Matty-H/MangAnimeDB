@@ -2,7 +2,7 @@
 import prisma from '../../prisma/client.js';
 
 // Récupérer toutes les licences
-export const getAllLicenses = async (res) => {
+export const getAllLicenses = async (req, res) => {
   try {
     const licenses = await prisma.license.findMany({
       select: {
@@ -13,13 +13,19 @@ export const getAllLicenses = async (res) => {
         title: 'asc'
       }
     });
-    
+
+    // Si aucune licence n'est trouvée, renvoyer une réponse appropriée
+    if (!licenses || licenses.length === 0) {
+      return res.status(404).json({ error: 'No licenses found' });
+    }
+
     res.json(licenses);
   } catch (error) {
     console.error('Error fetching licenses:', error);
     res.status(500).json({ error: 'Server error' });
   }
 };
+
 
 // Ajouter une nouvelle licence
 export const createLicense = async (req, res) => {
