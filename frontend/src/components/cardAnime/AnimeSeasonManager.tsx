@@ -3,7 +3,7 @@ import React, { useState, useEffect } from 'react';
 import { Plus } from 'lucide-react';
 import SeasonForm from './SeasonForm';
 import SeasonList from './SeasonList';
-import { AnimeSeasonAPI } from '../../services/animeSeasonApi.ts';
+import { animeSeasonService } from '../../services';
 import ApiResponseDisplay from '../ui/ApiResponseDisplay';
 import { ErrorAlert } from '../ui/ErrorAlert';
 import { SuccessAlert } from '../ui/SuccessAlert';
@@ -60,7 +60,7 @@ const AnimeSeasonManager: React.FC<AnimeSeasonManagerProps> = ({
       const fetchSeasons = async () => {
         setIsLoading(true);
         try {
-          const seasons = await AnimeSeasonAPI.getSeasons(anime.id);
+          const seasons = await animeSeasonService.getSeasons(anime.id);
           setEditedSeasons(seasons);
         } catch (err: any) {
           console.error('Erreur lors du chargement des saisons:', err);
@@ -92,7 +92,7 @@ const AnimeSeasonManager: React.FC<AnimeSeasonManagerProps> = ({
     setApiResponseData(null);
     
     try {
-      const returnedSeason = await AnimeSeasonAPI.updateSeason(updatedSeason.id, updatedSeason);
+      const returnedSeason = await animeSeasonService.updateSeason(updatedSeason.id, updatedSeason);
       
       // Mettre à jour les données de réponse API
       setApiResponseData(returnedSeason);
@@ -135,7 +135,7 @@ const AnimeSeasonManager: React.FC<AnimeSeasonManagerProps> = ({
         animeAdaptationId: anime.id
       };
       
-      const createdSeason = await AnimeSeasonAPI.createSeason(seasonToCreate);
+      const createdSeason = await animeSeasonService.createSeason(seasonToCreate);
       
       // Mettre à jour les données de réponse API
       setApiResponseData(createdSeason);
@@ -172,7 +172,7 @@ const AnimeSeasonManager: React.FC<AnimeSeasonManagerProps> = ({
     setApiResponseData(null);
     
     try {
-      const deletedSeason = await AnimeSeasonAPI.deleteSeason(seasonId);
+      const deletedSeason = await animeSeasonService.deleteSeason(seasonId);
       
       // Mettre à jour les données de réponse API
       setApiResponseData(deletedSeason);

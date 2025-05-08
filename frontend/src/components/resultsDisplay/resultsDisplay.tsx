@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { searchDetailed } from '../../services/apiService';
+import { searchService } from '../../services';
 import AdaptationTable from '../adaptationTable/AdaptationTable';
 import MangaInfoCard from '../cardManga/MangaInfoCard';
 import AnimeInfoCard from '../cardAnime/AnimeInfoCard';
@@ -24,7 +24,8 @@ const ResultsDisplay: React.FC<ResultsDisplayProps> = ({ searchTerm }) => {
         setError(null);
         if (searchTerm) {
           console.log(`Fetching results for: ${searchTerm}`);
-          const data = await searchDetailed(searchTerm);
+          // Utiliser la méthode searchDetailed au lieu d'appeler directement le service
+          const data = await searchService.searchDetailed(searchTerm);
           console.log('Search results received:', data);
           setResults(data);
         } else {
