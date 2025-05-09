@@ -1,5 +1,5 @@
 import React from 'react';
-import { Pencil, Check, X, Loader } from 'lucide-react';
+import { Pencil, Check, X, Loader, BookOpen } from 'lucide-react';
 import { useEditMode } from '../ui/EditModeContext';
 
 interface MangaHeaderProps {
@@ -31,6 +31,7 @@ const MangaHeader: React.FC<MangaHeaderProps> = ({
   return (
     <div className="border-base-300 bg-base-200 border-b border-dashed">
       <div className="flex items-center gap-2 p-4">
+      <BookOpen size={18} className="opacity-70" />
         <div className="grow">
           <div className="flex items-center justify-between">
             {isEditing ? (

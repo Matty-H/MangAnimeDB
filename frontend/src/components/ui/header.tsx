@@ -41,7 +41,7 @@ const Header = () => {
     return localStorage.getItem("selectedTheme") || "light";
   });
   
-  const { isEditMode, toggleEditMode, toggleDebugMode } = useEditMode();
+  const { isEditMode, toggleEditMode } = useEditMode();
   const { user, isLoaded } = useUser();
   const [isAdmin, setIsAdmin] = useState(false);
   const [isAdminLoading, setIsAdminLoading] = useState(true);
@@ -73,8 +73,28 @@ const Header = () => {
   // Fonction pour gérer le basculement du mode d'édition
   const handleEditToggle = () => {
     toggleEditMode();
-    toggleDebugMode();
   };
+  
+  // Effet pour gérer le raccourci clavier Ctrl+E
+  useEffect(() => {
+    const handleKeyDown = (event) => {
+      // Vérifier si l'utilisateur est admin et si la combinaison est Ctrl+E
+      if (isAdmin && event.ctrlKey && event.key === 'e') {
+        // Empêcher le comportement par défaut du navigateur (par exemple, ouvrir la recherche dans certains navigateurs)
+        event.preventDefault();
+        // Basculer le mode édition
+        toggleEditMode();
+      }
+    };
+
+    // Ajouter l'écouteur d'événement
+    document.addEventListener('keydown', handleKeyDown);
+
+    // Nettoyer l'écouteur d'événement lors du démontage du composant
+    return () => {
+      document.removeEventListener('keydown', handleKeyDown);
+    };
+  }, [toggleEditMode, isAdmin]);
   
   useEffect(() => {
     document.documentElement.setAttribute("data-theme", selectedTheme);
@@ -138,6 +158,7 @@ const Header = () => {
                       />
                       <span className="toggle-mark"></span>
                     </label>
+                    <span className="text-xs text-base-content/60 ml-2">Ctrl+E</span>
                   </div>
                 </div>
               )}

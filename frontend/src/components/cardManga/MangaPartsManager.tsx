@@ -73,7 +73,7 @@ const MangaPartsManager: React.FC<MangaPartsManagerProps> = ({
         status: partToUpdate.status
       };
       
-      const response = await fetch(`/api/manga-part/${partId}`, {
+      const response = await fetch(`/api/manga/part/${partId}`, {
         method: 'PUT',
         headers: {
           'Content-Type': 'application/json',
@@ -131,7 +131,7 @@ const MangaPartsManager: React.FC<MangaPartsManagerProps> = ({
         status: newPart.status || WorkStatus.ONGOING
       };
       
-      const response = await fetch('/api/manga-part', {
+      const response = await fetch('/api/manga/part', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -186,7 +186,7 @@ const MangaPartsManager: React.FC<MangaPartsManagerProps> = ({
     setParentError(null);
     
     try {
-      const response = await fetch(`/api/manga-part/${partId}`, {
+      const response = await fetch(`/api/manga/part/${partId}`, {
         method: 'DELETE',
       });
       
@@ -432,18 +432,22 @@ const MangaPartsManager: React.FC<MangaPartsManagerProps> = ({
                 </div>
                 <div className="flex gap-2 items-center">
                   <Badge contentType="status" value={part.status} size="sm" />
-                  <button
-                    className="btn btn-success btn-outline btn-sm"
-                    onClick={() => setEditingPartId(part.id)}
-                  >
-                    <Pencil size={16} />
-                  </button>
-                  <button
-                    className="btn btn-sm btn-outline text-error"
-                    onClick={() => handleDeletePart(part.id)}
-                  >
-                    <Trash size={16} />
-                  </button>
+                  {isEditMode && (
+                    <>
+                    <button
+                      className="btn btn-success btn-outline btn-sm"
+                      onClick={() => setEditingPartId(part.id)}
+                    >
+                      <Pencil size={16} />
+                    </button>
+                    <button
+                      className="btn btn-sm btn-outline text-error"
+                      onClick={() => handleDeletePart(part.id)}
+                    >
+                      <Trash size={16} />
+                    </button>
+                    </>
+                  )}
                 </div>
               </>
             )}

@@ -3,6 +3,7 @@ import React from 'react';
 import { Season } from './AnimeSeasonManager';
 import { Pencil, X } from 'lucide-react';
 import Badge from '../ui/badge';
+import { useEditMode } from '../ui/EditModeContext';
 
 interface SeasonItemProps {
   season: Season;
@@ -12,6 +13,7 @@ interface SeasonItemProps {
   isLoading: boolean;
 }
 
+
 const SeasonItem: React.FC<SeasonItemProps> = ({ 
   season, 
   isLast, 
@@ -19,6 +21,7 @@ const SeasonItem: React.FC<SeasonItemProps> = ({
   onDelete,
   isLoading 
 }) => {
+  const { isEditMode } = useEditMode();
   return (
     <div 
       className={`p-3 ${!isLast ? 'border-b border-base-300 border-dashed' : ''}`}
@@ -43,6 +46,7 @@ const SeasonItem: React.FC<SeasonItemProps> = ({
               size="sm" 
             />
           )}
+          {isEditMode && (
           <div className="flex gap-1">
             <button 
               className="btn btn-success btn-xs btn-outline" 
@@ -58,6 +62,7 @@ const SeasonItem: React.FC<SeasonItemProps> = ({
               <X size={14} />
             </button>
           </div>
+          )}
         </div>
       </div>
     </div>

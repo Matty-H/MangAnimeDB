@@ -1,5 +1,5 @@
 import React from 'react';
-import { BookOpen, Pencil, Check, X, Loader } from 'lucide-react';
+import { BookOpen, Pencil, Check, X, Loader, Film } from 'lucide-react';
 import { useEditMode } from '../ui/EditModeContext';
 
 interface AnimeHeaderProps {
@@ -30,7 +30,7 @@ const AnimeHeader: React.FC<AnimeHeaderProps> = ({
   return (
     <div className="border-base-300 bg-base-200 border-b border-dashed">
       <div className="flex items-center gap-2 p-4">
-        <BookOpen size={18} className="opacity-70" />
+        <Film size={18} className="opacity-70" />
         <div className="grow">
           <div className="flex items-center justify-between">
             {isEditing ? (
@@ -57,6 +57,8 @@ const AnimeHeader: React.FC<AnimeHeaderProps> = ({
           </div>
         </div>
         
+        {isEditMode && (
+            <div>
             {isEditing ? (
               <div className="flex gap-2">
                 <button
@@ -83,10 +85,14 @@ const AnimeHeader: React.FC<AnimeHeaderProps> = ({
                 </button>
               </div>
             ) : (
-              <button className="btn btn-success btn-sm btn-outline" onClick={onEdit}>
-                <Pencil size={16} /> Éditer
-              </button>
+              
+                <button className="btn btn-success btn-sm btn-outline" onClick={onEdit}>
+                  <Pencil size={16} /> Éditer
+                </button>
+              
             )}
+            </div>
+          )}
       </div>
     </div>
   );
