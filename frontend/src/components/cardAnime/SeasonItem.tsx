@@ -45,7 +45,7 @@ const SeasonItem: React.FC<SeasonItemProps> = ({
           )}
           <div className="flex gap-1">
             <button 
-              className="btn btn-xs btn-outline" 
+              className="btn btn-success btn-xs btn-outline" 
               onClick={() => onEdit(season.id)}
             >
               <Pencil size={14} />

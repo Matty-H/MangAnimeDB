@@ -103,7 +103,7 @@ const AddDataModal: React.FC<AddDataModalProps> = ({ onClose }) => {
             <h3 className="text-lg font-medium flex items-center gap-2">
               <Bookmark size={18} /> Ajouter une licence
             </h3>
-            <button className="btn btn-sm btn-ghost" onClick={closeModal}>
+            <button className="btn btn-success btn-sm btn-ghost" onClick={closeModal}>
               <X size={18} />
             </button>
           </div>

@@ -1,6 +1,8 @@
 import React from 'react';
+import { BookOpen, Pencil, Check, X, Loader } from 'lucide-react';
+import { useEditMode } from '../ui/EditModeContext';
 
-interface AnimeCardHeaderProps {
+interface AnimeHeaderProps {
   anime: any;
   isEditing: boolean;
   editedAnime: any;
@@ -12,7 +14,7 @@ interface AnimeCardHeaderProps {
   isLoading: boolean;
 }
 
-const AnimeCardHeader: React.FC<AnimeCardHeaderProps> = ({
+const AnimeHeader: React.FC<AnimeHeaderProps> = ({
   anime,
   isEditing,
   editedAnime,
@@ -23,58 +25,75 @@ const AnimeCardHeader: React.FC<AnimeCardHeaderProps> = ({
   onFieldChange,
   isLoading
 }) => {
+  const { isEditMode, isDebugMode } = useEditMode();
+
   return (
-    <div className="card-header p-4 bg-base-200 border-b border-base-300 flex flex-wrap justify-between items-center gap-2">
-      <div className="flex-1">
-        {isEditing ? (
-          <input
-            type="text"
-            value={editedAnime?.title || ''}
-            onChange={(e) => onFieldChange('title', e.target.value)}
-            className="input input-bordered w-full"
-            placeholder="Titre de l'anime"
-          />
-        ) : (
-          <h2 className="card-title">{anime?.title || 'Sans titre'}</h2>
-        )}
-      </div>
-      
-      <div className="flex gap-2">
-        {isEditing ? (
-          <>
-            <button
-              className="btn btn-sm btn-primary"
-              onClick={onSave}
-              disabled={isLoading}
-            >
-              {isLoading ? 'Enregistrement...' : 'Enregistrer'}
-            </button>
-            <button
-              className="btn btn-sm btn-outline"
-              onClick={onCancel}
-              disabled={isLoading}
-            >
-              Annuler
-            </button>
-            <button
-              className="btn btn-sm btn-error"
-              onClick={onDelete}
-              disabled={isLoading}
-            >
-              Supprimer
-            </button>
-          </>
-        ) : (
-          <button
-            className="btn btn-sm btn-outline"
-            onClick={onEdit}
-          >
-            Modifier
-          </button>
+    <div className="border-base-300 bg-base-200 border-b border-dashed">
+      <div className="flex items-center gap-2 p-4">
+        <BookOpen size={18} className="opacity-70" />
+        <div className="grow">
+          <div className="flex items-center justify-between">
+            {isEditing ? (
+              <>
+                <input
+                  className="input input-sm max-w-xs"
+                  value={editedAnime?.title || ''}
+                  onChange={(e) => onFieldChange('title', e.target.value)}
+                  placeholder="Titre de l'anime"
+                />
+                <input
+                  className="input input-sm max-w-xs"
+                  value={editedAnime?.studio || ''}
+                  onChange={(e) => onFieldChange('studio', e.target.value)}
+                  placeholder="Studio"
+                />
+              </>
+            ) : (
+              <>
+                <h3 className="text-lg font-medium">{anime?.title || 'Sans titre'}</h3>
+                <div className="italic opacity-70 text-sm">{anime?.studio || ''}</div>
+              </>
+            )}
+          </div>
+        </div>
+        
+        {isDebugMode && (
+          <div>
+            {isEditing ? (
+              <div className="flex gap-2">
+                <button
+                  className="btn btn-sm btn-success"
+                  onClick={onSave}
+                  disabled={isLoading}
+                >
+                  {isLoading ? <Loader size={16} className="animate-spin" /> : <Check size={16} />}
+                  Sauvegarder
+                </button>
+                <button
+                  className="btn btn-sm btn-outline"
+                  onClick={onCancel}
+                  disabled={isLoading}
+                >
+                  <X size={16} /> Annuler
+                </button>
+                <button
+                  className="btn btn-sm btn-error"
+                  onClick={onDelete}
+                  disabled={isLoading}
+                >
+                  Supprimer
+                </button>
+              </div>
+            ) : (
+              <button className="btn btn-success btn-sm btn-outline" onClick={onEdit}>
+                <Pencil size={16} /> Éditer
+              </button>
+            )}
+          </div>
         )}
       </div>
     </div>
   );
 };
 
-export default AnimeCardHeader;
+export default AnimeHeader;

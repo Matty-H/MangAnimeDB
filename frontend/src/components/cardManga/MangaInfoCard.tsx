@@ -9,6 +9,8 @@ import { ErrorAlert } from '../ui/ErrorAlert';
 import { SuccessAlert } from '../ui/SuccessAlert';
 import ApiResponseDisplay from '../ui/ApiResponseDisplay';
 import { animeService } from '../../services';
+import { ChevronsLeftRightEllipsis } from 'lucide-react';
+import { useEditMode } from '../ui/EditModeContext';
 
 interface MangaInfoCardProps {
   manga?: MangaWork;
@@ -25,6 +27,7 @@ const MangaInfoCard: React.FC<MangaInfoCardProps> = ({
   onUpdate,
   onAddManga
 }) => {
+  const { isEditMode, isDebugMode } = useEditMode();
   const [isEditing, setIsEditing] = useState(false);
   const [editedManga, setEditedManga] = useState<MangaWork | undefined>(manga);
   const [apiResponse, setApiResponse] = useState<string>('');
@@ -207,14 +210,21 @@ const MangaInfoCard: React.FC<MangaInfoCardProps> = ({
         {showAlert && apiResponse && !error && (
           <SuccessAlert message={apiResponse} onClose={handleAlertClose} />
         )}
-
-        {/* Bouton pour afficher/masquer le débogueur */}
-        {(apiResponseData || error) && (
+        {/* N'afficher le bouton de débogage que si isDebugMode est vrai */}
+        {isDebugMode && (
           <button 
-            className="btn btn-sm btn-outline" 
-            onClick={handleResponseToggle}
-          >
-            {showResponse ? "Masquer le débogage" : "Afficher le débogage"}
+                    className="btn btn-error btn-sm btn-outline" 
+                    onClick={handleResponseToggle}
+                  >
+                    {showResponse ? (
+                      <>
+                        <ChevronsLeftRightEllipsis size={16} /> Masquer le débogage
+                      </>
+                    ) : (
+                      <>
+                        <ChevronsLeftRightEllipsis size={16} /> Afficher le débogage
+                      </>
+                    )}
           </button>
         )}
 

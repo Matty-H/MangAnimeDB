@@ -2,7 +2,7 @@
 import prisma from '../../prisma/client.js';
 
 // Récupérer un manga par ID
-export const getMangaById = async (req, re)  => {
+export const getMangaById = async (req, res)  => {
   const { id } = req.params;
   
   try {

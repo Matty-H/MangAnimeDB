@@ -1,8 +1,9 @@
-// AdaptationTable.tsx
 import { License } from '../../types';
 import React, { useState, useEffect } from 'react';
 import AdaptationHeader from './AdaptationHeader';
 import AdaptationList from './AdaptationList';
+import { ChevronsLeftRightEllipsis } from 'lucide-react';
+import { useEditMode } from '../ui/EditModeContext';
 
 export interface AdaptationRow {
   id: string;
@@ -34,6 +35,7 @@ export interface AdaptationListProps {
 }
 
 const AdaptationTable: React.FC<AdaptationTableProps> = ({ license }) => {
+  const { isEditMode } = useEditMode();
   const [currentTitle, setCurrentTitle] = useState(license.title);
   const [adaptationRows, setAdaptationRows] = useState<AdaptationRow[]>([]);
   const [debugMode, setDebugMode] = useState<boolean>(false);
@@ -97,22 +99,24 @@ const AdaptationTable: React.FC<AdaptationTableProps> = ({ license }) => {
         license={license}
         onTitleChange={handleTitleChange}
       />
-
-      {/* Zone de débogage avec bouton pour l'afficher/masquer */}
-      <div className="px-4 pt-2">
-        <button 
-          className="btn btn-xs btn-outline" 
-          onClick={toggleDebugMode}
-        >
-          {debugMode ? "Masquer le débogage" : "Afficher le débogage"}
-        </button>
-        
-        {debugMode && debugInfo && (
-          <div className="bg-gray-100 p-2 text-xs font-mono mt-2 rounded">
-            <pre>{debugInfo}</pre>
-          </div>
-        )}
-      </div>
+      
+      {/* Zone de débogage - visible en mode édition */}
+      {isEditMode && (
+        <div className="px-4 pt-2">
+          <button 
+            className="btn btn-error btn-xs btn-outline" 
+            onClick={toggleDebugMode}
+          >
+            {debugMode ? <><ChevronsLeftRightEllipsis size={16} /> Masquer le débogage </> : <><ChevronsLeftRightEllipsis size={16} />Afficher le débogage</>}
+          </button>
+          
+          {debugMode && debugInfo && (
+            <div className="bg-gray-100 p-2 text-xs font-mono mt-2 rounded">
+              <pre>{debugInfo}</pre>
+            </div>
+          )}
+        </div>
+      )}
 
       <div className="card-body p-4">
         <AdaptationList adaptationRows={adaptationRows} />

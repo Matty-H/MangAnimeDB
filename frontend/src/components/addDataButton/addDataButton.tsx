@@ -1,8 +1,11 @@
 import React, { useEffect, useRef } from 'react';
 import AddDataModal from '../addDataModal/addDataModal';
 import { Plus } from 'lucide-react';
+import { useEditMode } from '../ui/EditModeContext';
 
 const AddDataButton: React.FC = () => {
+  const { isEditMode, isDebugMode } = useEditMode();
+  
   // Référence au bouton pour debugging
   const buttonRef = useRef<HTMLButtonElement>(null);
   // Référence au modal
@@ -68,18 +71,21 @@ const AddDataButton: React.FC = () => {
   return (
     <div className="add-data-container">
       {/* Utiliser la référence sur le bouton pour debugging */}
-      <button
-        ref={buttonRef}
-        className="btn btn-primary btn-circle shadow-lg"
-        onClick={(e) => {
-          e.preventDefault(); // Empêcher tout comportement par défaut
-          console.log("Bouton cliqué");
-          openModal();
-        }}
-        aria-label="Ajouter des données"
-      >
-        <Plus size={24} />
-      </button>
+      {/* N'afficher le bouton de débogage que si isDebugMode est vrai */}
+      {isDebugMode && (
+        <button
+          ref={buttonRef}
+          className="btn btn-primary btn-circle shadow-lg"
+          onClick={(e) => {
+            e.preventDefault(); // Empêcher tout comportement par défaut
+            console.log("Bouton cliqué");
+            openModal();
+          }}
+          aria-label="Ajouter des données"
+        >
+          <Plus size={24} />
+        </button>
+      )}
       
       {/* Rendre le modal ici */}
       <AddDataModal />

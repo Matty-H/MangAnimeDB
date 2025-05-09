@@ -1,12 +1,13 @@
 //frontend/src/components/cardAnime/AnimeSeasonManager.tsx
 import React, { useState, useEffect } from 'react';
-import { Plus } from 'lucide-react';
+import { ChevronsLeftRightEllipsis, Plus } from 'lucide-react';
 import SeasonForm from './SeasonForm';
 import SeasonList from './SeasonList';
 import { animeSeasonService } from '../../services';
 import ApiResponseDisplay from '../ui/ApiResponseDisplay';
 import { ErrorAlert } from '../ui/ErrorAlert';
 import { SuccessAlert } from '../ui/SuccessAlert';
+import { useEditMode } from '../ui/EditModeContext';
 
 export enum AnimeFidelity {
   FAITHFUL = 'FAITHFUL',
@@ -49,6 +50,7 @@ const AnimeSeasonManager: React.FC<AnimeSeasonManagerProps> = ({
   const [error, setError] = useState<string | null>(null);
   
   // Nouveaux états pour le système d'alerte et de débogage
+  const { isEditMode, isDebugMode } = useEditMode();
   const [apiResponse, setApiResponse] = useState<string>('');
   const [apiResponseData, setApiResponseData] = useState<any>(null);
   const [showAlert, setShowAlert] = useState(false);
@@ -234,24 +236,35 @@ const AnimeSeasonManager: React.FC<AnimeSeasonManagerProps> = ({
 
       <div className="flex items-center justify-between mb-2">
         <div className="text-sm font-medium">Détails des saisons</div>
-        <button 
-          className="btn btn-xs btn-outline" 
-          onClick={() => setIsAddingSeason(true)}
-          disabled={isAddingSeason}
-        >
-          <Plus size={14} /> Ajouter
-        </button>
+        {/* N'afficher le bouton de débogage que si isDebugMode est vrai */}
+        {isDebugMode && (
+          <button 
+            className="btn btn-success btn-xs btn-outline" 
+            onClick={() => setIsAddingSeason(true)}
+            disabled={isAddingSeason}
+          >
+            <Plus size={14} /> Ajouter
+          </button>
+        )}
       </div>
-      
-      {/* Bouton pour afficher/masquer le débogueur */}
-      {(apiResponseData || error) && (
-        <button 
-          className="btn btn-sm btn-outline mb-2" 
-          onClick={handleResponseToggle}
-        >
-          {showResponse ? "Masquer le débogage" : "Afficher le débogage"}
-        </button>
-      )}
+
+      {/* N'afficher le bouton de débogage que si isDebugMode est vrai */}
+      {isDebugMode && (
+            <button 
+                className="btn btn-error btn-sm btn-outline" 
+                onClick={handleResponseToggle}
+              >
+                {showResponse ? (
+                  <>
+                    <ChevronsLeftRightEllipsis size={16} /> Masquer le débogage
+                  </>
+                ) : (
+                  <>
+                    <ChevronsLeftRightEllipsis size={16} /> Afficher le débogage
+                  </>
+                )}
+            </button>
+        )}
 
       {/* Affichage du débogueur - indépendant des alertes */}
       {showResponse && (

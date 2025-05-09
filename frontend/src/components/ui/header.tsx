@@ -1,7 +1,8 @@
 import React, { useEffect, useState } from "react";
-import { SignedIn, SignedOut, SignInButton, UserButton } from '@clerk/clerk-react'
-import ApiTester from "../../../../devtools/ApiTester";
-
+import { SignedIn, SignedOut, SignInButton, UserButton, useUser } from '@clerk/clerk-react';
+import { useEditMode } from "../ui/EditModeContext";
+import { Pencil, PencilOff, Settings, PaintBucket } from "lucide-react";
+import { userService } from "../../services/userService";
 
 const themes = [
   { name: "light", color: "#FFFFFF" },
@@ -35,51 +36,135 @@ const themes = [
   { name: "silk", color: "#F5F5F5" },
 ];
 
-const ThemeSelector = () => {
+const Header = () => {
   const [selectedTheme, setSelectedTheme] = useState(() => {
     return localStorage.getItem("selectedTheme") || "light";
   });
-
+  
+  const { isEditMode, toggleEditMode, toggleDebugMode } = useEditMode();
+  const { user, isLoaded } = useUser();
+  const [isAdmin, setIsAdmin] = useState(false);
+  const [isAdminLoading, setIsAdminLoading] = useState(true);
+  
+  // Vérifier si l'utilisateur est admin via notre API REST
+  useEffect(() => {
+    const checkAdminRole = async () => {
+      setIsAdminLoading(true);
+      try {
+        if (isLoaded && user) {
+          // Vérifier le rôle admin via l'API
+          const adminStatus = await userService.checkIsAdmin();
+          console.log("Statut admin:", adminStatus);
+          setIsAdmin(adminStatus);
+        } else {
+          setIsAdmin(false);
+        }
+      } catch (error) {
+        console.error("Erreur lors de la vérification du rôle admin:", error);
+        setIsAdmin(false);
+      } finally {
+        setIsAdminLoading(false);
+      }
+    };
+    
+    checkAdminRole();
+  }, [user, isLoaded]);
+  
+  // Fonction pour gérer le basculement du mode d'édition
+  const handleEditToggle = () => {
+    toggleEditMode();
+    toggleDebugMode();
+  };
+  
   useEffect(() => {
     document.documentElement.setAttribute("data-theme", selectedTheme);
     localStorage.setItem("selectedTheme", selectedTheme);
   }, [selectedTheme]);
-
+  
   return (
-    <div className="absolute top-2 left-0 right-0 z-50 flex justify-between px-4">
-      {/* Section gauche : Login */}
-      <div>
-        <SignedOut>
-          <SignInButton />
-        </SignedOut>
-        <SignedIn>
-          <UserButton />
-        </SignedIn>
-      </div>
-
-      {/* <div><ApiTester /></div> */}
-
-      {/* Section droite : Thème */}
-      <div>
-        <details className="dropdown dropdown-left dropdown-start">
-          <summary className="btn btn-xs italic rounded-lg p-5">Themes</summary>
-          <div className="dropdown-content bg-base-100 border border-base-300 rounded-lg shadow-md p-3 flex gap-2 max-h-sm">
-            {themes.map(({ name, color }) => (
-              <button
-                key={name}
-                onClick={() => setSelectedTheme(name)}
-                title={name}
-                className={`w-5 h-5 rounded-full border ${
-                  selectedTheme === name ? "border-black" : "border-gray-300"
-                } hover:opacity-80 cursor-pointer`}
-                style={{ backgroundColor: color }}
-              />
-            ))}
+    <header className="bg-base-200 shadow-sm">
+      <div className="container mx-auto flex items-center justify-between p-2">
+        {/* Logo / Brand section - peut être ajouté ici */}
+        <div className="flex-1">
+          {/* Espace réservé pour logo ou titre */}
+        </div>
+        
+        {/* Actions section */}
+        <div className="flex items-center space-x-3">
+          {/* Settings Dropdown */}
+          <div className="dropdown dropdown-end">
+            <button tabIndex={0} className="btn btn-ghost btn-circle">
+              <Settings size={20} />
+            </button>
+            <div tabIndex={0} className="dropdown-content menu bg-base-100 rounded-box z-10 w-64 p-4 shadow-lg mt-2">
+              {/* Thème sélecteur */}
+              <div className="mb-4">
+                <PaintBucket size={16}/>
+                <div className="max-h-48 overflow-y-auto grid grid-cols-2 gap-2">
+                  {themes.map(({ name, color }) => (
+                    <button
+                      key={name}
+                      onClick={() => setSelectedTheme(name)}
+                      className={`py-1 px-2 rounded text-left transition-all text-sm ${
+                        selectedTheme === name ? "bg-base-200 font-bold" : "hover:bg-base-200"
+                      }`}
+                    >
+                      <span 
+                        style={{ 
+                          color: color, 
+                          textShadow: (name === "light" || name === "silk") ? "0 0 3px rgba(0,0,0,0.75)" : "none" 
+                        }}
+                      >
+                        {name}
+                      </span>
+                    </button>
+                  ))}
+                </div>
+              </div>
+              
+              {/* Mode d'édition (visible uniquement pour les admins) */}
+              {!isAdminLoading && isAdmin && (
+                <div className="py-2 border-t border-base-300">
+                  <div className="flex items-center justify-between">
+                    <span className="flex items-center gap-2">
+                      {isEditMode ? <Pencil size={16} /> : <PencilOff size={16} />}
+                      <span>Mode édition</span>
+                    </span>
+                    <label className="toggle toggle-sm">
+                      <input
+                        type="checkbox"
+                        checked={isEditMode}
+                        onChange={handleEditToggle}
+                      />
+                      <span className="toggle-mark"></span>
+                    </label>
+                  </div>
+                </div>
+              )}
+            </div>
           </div>
-        </details>
+          
+          {/* User Authentication */}
+          <div>
+            <SignedOut>
+              <SignInButton mode="modal">
+                <button className="btn btn-sm btn-primary">Sign In</button>
+              </SignInButton>
+            </SignedOut>
+            <SignedIn>
+              <UserButton 
+                appearance={{
+                  elements: {
+                    userButtonAvatarBox: "w-8 h-8"
+                  }
+                }}
+              />
+            </SignedIn>
+          </div>
+        </div>
       </div>
-    </div>
+    </header>
   );
 };
 
-export default ThemeSelector;
+export default Header;

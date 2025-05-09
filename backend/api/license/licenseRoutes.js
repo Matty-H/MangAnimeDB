@@ -1,24 +1,16 @@
-//backend/api/licenses/licenseRoutes.js
+// backend/api/license/licenseRoutes.js
 import express from 'express';
-import { 
-  getAllLicenses, 
-  createLicense, 
-  updateLicense, 
-  deleteLicense 
-} from './licenseController.js';
+import { isAuthenticated, isAdmin } from '../../middleware/auth.js';
+import * as licenseController from './licenseController.js';
 
 const router = express.Router();
 
-// GET - Récupérer toutes les licences
-router.get('/', getAllLicenses);
+// Routes publiques
+router.get('/', licenseController.getAllLicenses);
 
-// POST - Ajouter une nouvelle licence
-router.post('/', createLicense);
-
-// PUT - Mettre à jour une licence
-router.put('/:id', updateLicense);
-
-// DELETE - Supprimer une licence
-router.delete('/:id', deleteLicense);
+// Routes protégées
+router.post('/', isAuthenticated, licenseController.createLicense);
+router.put('/:id', isAuthenticated, licenseController.updateLicense);
+router.delete('/:id', isAuthenticated, licenseController.deleteLicense);
 
 export default router;

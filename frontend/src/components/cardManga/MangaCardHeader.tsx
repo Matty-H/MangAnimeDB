@@ -1,6 +1,6 @@
-//frontend/src/components/cardManga/MangaPartsManager.tsx
 import React from 'react';
 import { Pencil, Check, X, Loader } from 'lucide-react';
+import { useEditMode } from '../ui/EditModeContext';
 
 interface MangaHeaderProps {
   title: string;
@@ -25,6 +25,9 @@ const MangaHeader: React.FC<MangaHeaderProps> = ({
   onTitleChange,
   onPublisherChange
 }) => {
+  // Déplacez le hook ici, à l'intérieur du composant
+  const { isEditMode, isDebugMode } = useEditMode();
+  
   return (
     <div className="border-base-300 bg-base-200 border-b border-dashed">
       <div className="flex items-center gap-2 p-4">
@@ -39,7 +42,6 @@ const MangaHeader: React.FC<MangaHeaderProps> = ({
             ) : (
               <div className="text-lg font-medium">{title}</div>
             )}
-            
             {isEditing ? (
               <input
                 className="input input-sm max-w-xs"
@@ -51,32 +53,34 @@ const MangaHeader: React.FC<MangaHeaderProps> = ({
             )}
           </div>
         </div>
-        
-        <div>
-          {isEditing ? (
-            <div className="flex gap-2">
-              <button 
-                className="btn btn-sm btn-success" 
-                onClick={onSaveClick}
-                disabled={isLoading}
-              >
-                {isLoading ? <Loader size={16} className="animate-spin" /> : <Check size={16} />} 
-                Sauvegarder
+        {/* N'afficher le bouton de débogage que si isDebugMode est vrai */}
+        {isDebugMode && (
+          <div>
+            {isEditing ? (
+              <div className="flex gap-2">
+                <button
+                  className="btn btn-sm btn-success"
+                  onClick={onSaveClick}
+                  disabled={isLoading}
+                >
+                  {isLoading ? <Loader size={16} className="animate-spin" /> : <Check size={16} />}
+                  Sauvegarder
+                </button>
+                <button
+                  className="btn btn-sm btn-outline"
+                  onClick={onCancelClick}
+                  disabled={isLoading}
+                >
+                  <X size={16} /> Annuler
+                </button>
+              </div>
+            ) : (
+              <button className="btn btn-success btn-sm btn-outline" onClick={onEditClick}>
+                <Pencil size={16} /> Éditer
               </button>
-              <button 
-                className="btn btn-sm btn-outline" 
-                onClick={onCancelClick}
-                disabled={isLoading}
-              >
-                <X size={16} /> Annuler
-              </button>
-            </div>
-          ) : (
-            <button className="btn btn-sm btn-outline" onClick={onEditClick}>
-              <Pencil size={16} /> Éditer
-            </button>
-          )}
-        </div>
+            )}
+          </div>
+        )}
       </div>
     </div>
   );

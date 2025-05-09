@@ -1,38 +1,21 @@
-//backend/api/manga/mangaRoutes.js
+// backend/api/manga/mangaRoutes.js
 import express from 'express';
-
-import { 
-  getMangaById,
-  createManga, 
-  updateManga,
-  updateMangaByLicense,
-  createMangaPart,
-  updateMangaPart,
-  deleteMangaPart
-} from './mangaController.js';
+import { isAuthenticated, isAdmin } from '../../middleware/auth.js';
+import * as mangaController from './mangaController.js';
 
 const router = express.Router();
 
-// GET - Récupérer un manga par ID
-router.get('/:id', getMangaById);
+// Routes publiques
+router.get('/:id', mangaController.getMangaById);
 
-// POST - Ajouter un nouveau manga
-router.post('/', createManga);
+// Routes protégées
+router.post('/', isAuthenticated, mangaController.createManga);
+router.put('/:id', isAuthenticated, mangaController.updateManga);
+router.put('/license/:licenseId/manga/:mangaId', isAuthenticated, mangaController.updateMangaByLicense);
 
-// PUT - Mettre à jour un manga
-router.put('/:id', updateManga);
-
-// PUT - Mettre à jour un manga via la licence
-router.put('/license/:licenseId/manga/:mangaId', updateMangaByLicense);
-
-// Routes pour les parties de manga
-// POST - Ajouter une nouvelle partie
-router.post('/part', createMangaPart);
-
-// PUT - Mettre à jour une partie
-router.put('/part/:id', updateMangaPart);
-
-// DELETE - Supprimer une partie
-router.delete('/part/:id', deleteMangaPart);
+// Routes des parties de manga - protégées
+router.post('/part', isAuthenticated, mangaController.createMangaPart);
+router.put('/part/:id', isAuthenticated, mangaController.updateMangaPart);
+router.delete('/part/:id', isAuthenticated, mangaController.deleteMangaPart);
 
 export default router;

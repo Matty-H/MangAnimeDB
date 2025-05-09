@@ -3,6 +3,7 @@ import React, { useState, useEffect } from 'react';
 import { MangaWork, WorkStatus, MangaPart } from '../../types';
 import { Plus, Pencil, Check, X, Loader, Trash } from 'lucide-react';
 import Badge from '../ui/badge';
+import { useEditMode } from '../ui/EditModeContext';
 
 interface MangaPartsManagerProps {
   manga: MangaWork;
@@ -20,6 +21,7 @@ const MangaPartsManager: React.FC<MangaPartsManagerProps> = ({
   setParentApiResponse
 }) => {
   // États pour l'édition des parties
+  const { isEditMode, isDebugMode } = useEditMode();
   const [editingPartId, setEditingPartId] = useState<string | null>(null);
   const [editedParts, setEditedParts] = useState(manga.parts || []);
   const [isAddingPart, setIsAddingPart] = useState(false);
@@ -237,12 +239,15 @@ const MangaPartsManager: React.FC<MangaPartsManagerProps> = ({
     <div className="mt-4">
       <div className="flex justify-between items-center mb-2">
         <div className="text-sm font-medium">Parties</div>
-        <button 
-          className="btn btn-xs btn-outline"
-          onClick={() => setIsAddingPart(true)}
-        >
-          <Plus size={14} /> Ajouter
-        </button>
+        {/* N'afficher le bouton de débogage que si isDebugMode est vrai */}
+        {isDebugMode && (
+          <button 
+            className="btn btn-success btn-xs btn-outline"
+            onClick={() => setIsAddingPart(true)}
+          >
+            <Plus size={14} /> Ajouter
+          </button>
+        )}
       </div>
       
       {/* Formulaire d'ajout de partie */}
@@ -429,13 +434,13 @@ const MangaPartsManager: React.FC<MangaPartsManagerProps> = ({
                 <div className="flex gap-2 items-center">
                   <Badge contentType="status" value={part.status} size="sm" />
                   <button
-                    className="btn btn-sm btn-ghost"
+                    className="btn btn-success btn-outline btn-sm"
                     onClick={() => setEditingPartId(part.id)}
                   >
                     <Pencil size={16} />
                   </button>
                   <button
-                    className="btn btn-sm btn-ghost text-error"
+                    className="btn btn-sm btn-outline text-error"
                     onClick={() => handleDeletePart(part.id)}
                   >
                     <Trash size={16} />

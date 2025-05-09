@@ -2,8 +2,10 @@ import React, { useState, useEffect } from 'react';
 import { Check, Pencil } from 'lucide-react';
 import { AdaptationRowProps } from './AdaptationTable';
 import ApiResponseDisplay from '../ui/ApiResponseDisplay';
+import { useEditMode } from '../ui/EditModeContext';
 
 const AdaptationRow: React.FC<AdaptationRowProps> = ({ row, index, isLastRow }) => {
+  const { isEditMode } = useEditMode(); // Utilisation du contexte d'édition
   const [episodes, setEpisodes] = useState(row.episodes);
   const [fromVolume, setFromVolume] = useState<string | number>(row.fromVolume ?? '');
   const [toVolume, setToVolume] = useState<string | number>(row.toVolume ?? '');
@@ -114,22 +116,25 @@ const AdaptationRow: React.FC<AdaptationRowProps> = ({ row, index, isLastRow }) 
           {row.type}
         </div>
 
-        <div className="w-16 text-center">
-          {isRowEditing ? (
-            <div className="flex gap-2 justify-center">
-              <button className="btn btn-sm btn-success" onClick={handleSaveRow}>
-                <Check size={16} />
+        {/* Affichage de la colonne d'actions seulement en mode édition */}
+        {isEditMode && (
+          <div className="w-16 text-center">
+            {isRowEditing ? (
+              <div className="flex gap-2 justify-center">
+                <button className="btn btn-sm btn-success" onClick={handleSaveRow}>
+                  <Check size={16} />
+                </button>
+                <button className="btn btn-sm btn-ghost" onClick={handleCancel}>
+                  Annuler
+                </button>
+              </div>
+            ) : (
+              <button className="btn btn-success btn-sm btn-outline" onClick={() => setIsRowEditing(true)}>
+                <Pencil size={16} />
               </button>
-              <button className="btn btn-sm btn-ghost" onClick={handleCancel}>
-                Annuler
-              </button>
-            </div>
-          ) : (
-            <button className="btn btn-sm btn-outline" onClick={() => setIsRowEditing(true)}>
-              <Pencil size={16} />
-            </button>
-          )}
-        </div>
+            )}
+          </div>
+        )}
       </div>
 
       {/* Affichage réponse ou erreur */}

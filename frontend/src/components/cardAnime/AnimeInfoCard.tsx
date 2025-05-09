@@ -1,11 +1,13 @@
 import React, { useState, useEffect } from 'react';
 import EmptyAnimeCard from './EmptyAnimeCard';
-import AnimeCardHeader from './AnimeCardHeader';
+import AnimeHeader from './AnimeCardHeader';
 import AnimeEditForm from './AnimeEditForm';
 import AnimeDisplayInfo from './AnimeDisplayInfo';
 import ApiResponseDisplay from '../ui/ApiResponseDisplay';
 import { ErrorAlert } from '../ui/ErrorAlert';
 import { SuccessAlert } from '../ui/SuccessAlert';
+import { ChevronsLeftRightEllipsis } from 'lucide-react';
+import { useEditMode } from '../ui/EditModeContext';
 
 interface AnimeInfoCardProps {
   anime?: any;
@@ -22,6 +24,7 @@ const AnimeInfoCard: React.FC<AnimeInfoCardProps> = ({
   onAnimeUpdated,
   onAnimeDeleted
 }) => {
+  const { isEditMode, isDebugMode } = useEditMode();
   const [isEditing, setIsEditing] = useState(false);
   const [editedAnime, setEditedAnime] = useState(anime);
   const [apiResponse, setApiResponse] = useState('');
@@ -271,7 +274,7 @@ const AnimeInfoCard: React.FC<AnimeInfoCardProps> = ({
 
   return (
     <div className="card bg-base-100 card-border border-base-300 overflow-hidden">
-      <AnimeCardHeader
+      <AnimeHeader
         anime={anime}
         isEditing={isEditing}
         editedAnime={editedAnime}
@@ -311,14 +314,21 @@ const AnimeInfoCard: React.FC<AnimeInfoCardProps> = ({
         {showAlert && apiResponse && !error && (
           <SuccessAlert message={apiResponse} onClose={handleAlertClose} />
         )}
-
-        {/* Bouton pour afficher/masquer le débogueur */}
-        {(apiResponseData || error) && (
+        {/* N'afficher le bouton de débogage que si isDebugMode est vrai */}
+        {isDebugMode && (
           <button 
-            className="btn btn-sm btn-outline" 
+            className="btn btn-error btn-sm btn-outline" 
             onClick={handleResponseToggle}
           >
-            {showResponse ? "Masquer le débogage" : "Afficher le débogage"}
+            {showResponse ? (
+              <>
+                <ChevronsLeftRightEllipsis size={16} /> Masquer le débogage
+              </>
+            ) : (
+              <>
+                <ChevronsLeftRightEllipsis size={16} /> Afficher le débogage
+              </>
+            )}
           </button>
         )}
 
