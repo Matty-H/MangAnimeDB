@@ -25,7 +25,7 @@ const AnimeHeader: React.FC<AnimeHeaderProps> = ({
   onFieldChange,
   isLoading
 }) => {
-  const { isEditMode, isDebugMode } = useEditMode();
+  const { isEditMode } = useEditMode();
 
   return (
     <div className="border-base-300 bg-base-200 border-b border-dashed">
@@ -57,8 +57,6 @@ const AnimeHeader: React.FC<AnimeHeaderProps> = ({
           </div>
         </div>
         
-        {isDebugMode && (
-          <div>
             {isEditing ? (
               <div className="flex gap-2">
                 <button
@@ -89,8 +87,6 @@ const AnimeHeader: React.FC<AnimeHeaderProps> = ({
                 <Pencil size={16} /> Éditer
               </button>
             )}
-          </div>
-        )}
       </div>
     </div>
   );

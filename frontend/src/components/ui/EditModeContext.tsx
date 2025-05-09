@@ -4,15 +4,11 @@ import React, { createContext, useState, useContext, ReactNode } from 'react';
 interface EditModeContextType {
   isEditMode: boolean;
   toggleEditMode: () => void;
-  isDebugMode: boolean;
-  toggleDebugMode: () => void;
 }
 
 const defaultContext: EditModeContextType = {
   isEditMode: false,
   toggleEditMode: () => {},
-  isDebugMode: false,
-  toggleDebugMode: () => {},
 };
 
 export const EditModeContext = createContext<EditModeContextType>(defaultContext);
@@ -25,18 +21,14 @@ interface EditModeProviderProps {
 
 export const EditModeProvider: React.FC<EditModeProviderProps> = ({ children }) => {
   const [isEditMode, setIsEditMode] = useState(false);
-  const [isDebugMode, setIsDebugMode] = useState(false);
 
   const toggleEditMode = () => {
     setIsEditMode(prev => !prev);
   };
 
-  const toggleDebugMode = () => {
-    setIsDebugMode(prev => !prev);
-  };
 
   return (
-    <EditModeContext.Provider value={{ isEditMode, toggleEditMode, isDebugMode, toggleDebugMode }}>
+    <EditModeContext.Provider value={{ isEditMode, toggleEditMode }}>
       {children}
     </EditModeContext.Provider>
   );

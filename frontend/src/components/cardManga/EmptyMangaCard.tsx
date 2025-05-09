@@ -8,7 +8,7 @@ interface EmptyMangaCardProps {
 }
 
 const EmptyMangaCard: React.FC<EmptyMangaCardProps> = ({ onAddManga }) => {
-  const { isEditMode, isDebugMode } = useEditMode();
+  const { isEditMode } = useEditMode();
   
   return (
     <div className="card bg-base-100 card-border border-base-300 overflow-hidden">
@@ -20,8 +20,7 @@ const EmptyMangaCard: React.FC<EmptyMangaCardProps> = ({ onAddManga }) => {
       </div>
       <div className="p-8 text-center flex flex-col items-center justify-center text-gray-500">
         <p className="mb-3">Aucun manga trouvé pour cette licence</p>
-        {/* N'afficher le bouton de débogage que si isDebugMode est vrai */}
-        {isDebugMode && (
+        {isEditMode && (
           <button className="btn btn-success btn-sm btn-outline" onClick={onAddManga}>
             <Plus size={16} /> Ajouter un manga
           </button>

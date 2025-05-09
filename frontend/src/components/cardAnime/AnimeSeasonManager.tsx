@@ -50,7 +50,7 @@ const AnimeSeasonManager: React.FC<AnimeSeasonManagerProps> = ({
   const [error, setError] = useState<string | null>(null);
   
   // Nouveaux états pour le système d'alerte et de débogage
-  const { isEditMode, isDebugMode } = useEditMode();
+  const { isEditMode } = useEditMode();
   const [apiResponse, setApiResponse] = useState<string>('');
   const [apiResponseData, setApiResponseData] = useState<any>(null);
   const [showAlert, setShowAlert] = useState(false);
@@ -236,8 +236,7 @@ const AnimeSeasonManager: React.FC<AnimeSeasonManagerProps> = ({
 
       <div className="flex items-center justify-between mb-2">
         <div className="text-sm font-medium">Détails des saisons</div>
-        {/* N'afficher le bouton de débogage que si isDebugMode est vrai */}
-        {isDebugMode && (
+        {isEditMode && (
           <button 
             className="btn btn-success btn-xs btn-outline" 
             onClick={() => setIsAddingSeason(true)}
@@ -248,8 +247,7 @@ const AnimeSeasonManager: React.FC<AnimeSeasonManagerProps> = ({
         )}
       </div>
 
-      {/* N'afficher le bouton de débogage que si isDebugMode est vrai */}
-      {isDebugMode && (
+      {isEditMode && (
             <button 
                 className="btn btn-error btn-sm btn-outline" 
                 onClick={handleResponseToggle}

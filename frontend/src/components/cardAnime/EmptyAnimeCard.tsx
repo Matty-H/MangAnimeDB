@@ -8,7 +8,7 @@ interface EmptyAnimeCardProps {
 
 const EmptyAnimeCard: React.FC<EmptyAnimeCardProps> = ({ onAddAnime }) => {
   // Use the EditModeContext to access the current edit mode state
-  const { isEditMode, isDebugMode } = useEditMode();
+  const { isEditMode } = useEditMode();
 
   return (
     <div className="card bg-base-100 card-border border-base-300 overflow-hidden">
@@ -25,13 +25,6 @@ const EmptyAnimeCard: React.FC<EmptyAnimeCardProps> = ({ onAddAnime }) => {
           <button className="btn btn-success btn-sm btn-outline" onClick={onAddAnime}>
             <Plus size={16} /> Ajouter un anime
           </button>
-        )}
-        {/* Debug info shown only when both edit mode and debug mode are active */}
-        {isEditMode && isDebugMode && (
-          <div className="mt-4 p-2 bg-base-200 rounded text-xs">
-            <p>Mode édition: <span className="font-bold">{isEditMode ? 'Activé' : 'Désactivé'}</span></p>
-            <p>Mode débogage: <span className="font-bold">{isDebugMode ? 'Activé' : 'Désactivé'}</span></p>
-          </div>
         )}
       </div>
     </div>

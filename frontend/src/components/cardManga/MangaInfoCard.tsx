@@ -27,7 +27,7 @@ const MangaInfoCard: React.FC<MangaInfoCardProps> = ({
   onUpdate,
   onAddManga
 }) => {
-  const { isEditMode, isDebugMode } = useEditMode();
+  const { isEditMode } = useEditMode();
   const [isEditing, setIsEditing] = useState(false);
   const [editedManga, setEditedManga] = useState<MangaWork | undefined>(manga);
   const [apiResponse, setApiResponse] = useState<string>('');
@@ -210,8 +210,7 @@ const MangaInfoCard: React.FC<MangaInfoCardProps> = ({
         {showAlert && apiResponse && !error && (
           <SuccessAlert message={apiResponse} onClose={handleAlertClose} />
         )}
-        {/* N'afficher le bouton de débogage que si isDebugMode est vrai */}
-        {isDebugMode && (
+        {isEditMode && (
           <button 
                     className="btn btn-error btn-sm btn-outline" 
                     onClick={handleResponseToggle}

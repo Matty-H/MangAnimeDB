@@ -4,7 +4,7 @@ import { Plus } from 'lucide-react';
 import { useEditMode } from '../ui/EditModeContext';
 
 const AddDataButton: React.FC = () => {
-  const { isEditMode, isDebugMode } = useEditMode();
+  const { isEditMode } = useEditMode();
   
   // Référence au bouton pour debugging
   const buttonRef = useRef<HTMLButtonElement>(null);
@@ -70,9 +70,7 @@ const AddDataButton: React.FC = () => {
 
   return (
     <div className="add-data-container">
-      {/* Utiliser la référence sur le bouton pour debugging */}
-      {/* N'afficher le bouton de débogage que si isDebugMode est vrai */}
-      {isDebugMode && (
+      {isEditMode && (
         <button
           ref={buttonRef}
           className="btn btn-primary btn-circle shadow-lg"

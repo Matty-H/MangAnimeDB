@@ -26,7 +26,7 @@ const MangaHeader: React.FC<MangaHeaderProps> = ({
   onPublisherChange
 }) => {
   // Déplacez le hook ici, à l'intérieur du composant
-  const { isEditMode, isDebugMode } = useEditMode();
+  const { isEditMode } = useEditMode();
   
   return (
     <div className="border-base-300 bg-base-200 border-b border-dashed">
@@ -53,8 +53,7 @@ const MangaHeader: React.FC<MangaHeaderProps> = ({
             )}
           </div>
         </div>
-        {/* N'afficher le bouton de débogage que si isDebugMode est vrai */}
-        {isDebugMode && (
+        {isEditMode && (
           <div>
             {isEditing ? (
               <div className="flex gap-2">

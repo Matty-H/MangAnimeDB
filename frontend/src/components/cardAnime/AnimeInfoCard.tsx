@@ -24,7 +24,7 @@ const AnimeInfoCard: React.FC<AnimeInfoCardProps> = ({
   onAnimeUpdated,
   onAnimeDeleted
 }) => {
-  const { isEditMode, isDebugMode } = useEditMode();
+  const { isEditMode } = useEditMode();
   const [isEditing, setIsEditing] = useState(false);
   const [editedAnime, setEditedAnime] = useState(anime);
   const [apiResponse, setApiResponse] = useState('');
@@ -314,8 +314,7 @@ const AnimeInfoCard: React.FC<AnimeInfoCardProps> = ({
         {showAlert && apiResponse && !error && (
           <SuccessAlert message={apiResponse} onClose={handleAlertClose} />
         )}
-        {/* N'afficher le bouton de débogage que si isDebugMode est vrai */}
-        {isDebugMode && (
+        {isEditMode && (
           <button 
             className="btn btn-error btn-sm btn-outline" 
             onClick={handleResponseToggle}

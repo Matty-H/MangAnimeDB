@@ -21,7 +21,7 @@ const MangaPartsManager: React.FC<MangaPartsManagerProps> = ({
   setParentApiResponse
 }) => {
   // États pour l'édition des parties
-  const { isEditMode, isDebugMode } = useEditMode();
+  const { isEditMode } = useEditMode();
   const [editingPartId, setEditingPartId] = useState<string | null>(null);
   const [editedParts, setEditedParts] = useState(manga.parts || []);
   const [isAddingPart, setIsAddingPart] = useState(false);
@@ -239,8 +239,7 @@ const MangaPartsManager: React.FC<MangaPartsManagerProps> = ({
     <div className="mt-4">
       <div className="flex justify-between items-center mb-2">
         <div className="text-sm font-medium">Parties</div>
-        {/* N'afficher le bouton de débogage que si isDebugMode est vrai */}
-        {isDebugMode && (
+        {isEditMode && (
           <button 
             className="btn btn-success btn-xs btn-outline"
             onClick={() => setIsAddingPart(true)}
