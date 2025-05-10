@@ -96,7 +96,7 @@ Le projet inclut une documentation complète :
 
 - [**Documentation API REST**](docs/API.md) - Détails des endpoints, méthodes HTTP et paramètres
 - [**Schéma de base de données**](docs/schemaDB.md) - Modèles Prisma, relations et types énumérés
-- [**Services Frontend**](docs/frontend-services.md) - Architecture des services API côté client
+- [**Services Frontend**](docs/serviceAPI.md) - Architecture des services API côté client
 
 ## 📝 Fonctionnalités détaillées
 
