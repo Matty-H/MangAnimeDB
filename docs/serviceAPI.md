@@ -1,117 +1,244 @@
-# 📁 Documentation – `frontend/src/services`
+# Documentation des Services API Frontend - MangAnime Tracking
 
-Ce dossier regroupe tous les services utilisés pour interagir avec l'API backend, y compris la configuration des endpoints, le client HTTP, et les services métiers comme les animes ou la recherche.
+Cette documentation détaille les services frontend qui communiquent avec l'API backend pour gérer les données d'anime, de manga et les fonctionnalités de recherche.
 
----
+## Table des matières
 
-## `anime-season-service.ts`
+- [Architecture générale](#architecture-générale)
+- [Configuration API](#configuration-api)
+- [Services disponibles](#services-disponibles)
+  - [Client HTTP](#client-http)
+  - [Service d'Anime](#service-danime)
+  - [Service de Saisons d'Anime](#service-de-saisons-danime)
+  - [Service de Recherche](#service-de-recherche)
+  - [Service Utilisateur](#service-utilisateur)
+- [Utilisation des services](#utilisation-des-services)
+- [Gestion des erreurs](#gestion-des-erreurs)
+- [Bonnes pratiques](#bonnes-pratiques)
 
-### Description
+## Architecture générale
 
-Gère les opérations CRUD liées aux **saisons** d'un anime.
+L'architecture frontend des services API suit le modèle "service layer" qui encapsule toutes les communications avec le backend. Cette approche permet:
 
-### Classe : `AnimeSeasonService`
+- Une séparation claire des préoccupations
+- Une réutilisation facile des appels API
+- Une gestion centralisée des erreurs
+- Une meilleure testabilité
 
-* `getSeasons(animeId: string)`: Récupère toutes les saisons pour un anime donné.
-* `createSeason(season: Partial<Season>)`: Crée une nouvelle saison.
-* `updateSeason(seasonId: string, season: Partial<Season>)`: Met à jour une saison existante.
-* `deleteSeason(seasonId: string)`: Supprime une saison existante.
+Tous les services partagent un client HTTP commun qui gère les détails de bas niveau comme les en-têtes et le traitement des erreurs.
 
-✅ **Export par défaut** : `AnimeSeasonService`
-✅ **Instance exportée** : `animeSeasonService`
+## Configuration API
 
----
+Les endpoints de l'API sont définis de manière centralisée dans le fichier `api-config.ts`:
 
-## `anime-service.ts`
-
-### Description
-
-Gère les opérations liées aux **animes** eux-mêmes.
-
-### Classe : `AnimeService`
-
-* `getAnimeById(animeId: string)`: Récupère un anime par son ID.
-* `updateAnime(animeId: string, animeData: Partial<AnimeWork>)`: Met à jour un anime.
-
-✅ **Export par défaut** : `AnimeService`
-✅ **Instance exportée** : `animeService`
-
----
-
-## `api-config.ts`
-
-### Description
-
-Fichier de **configuration des endpoints** utilisés par les services API.
-
-### Contenu exporté
-
-```ts
-API_ENDPOINTS: {
+```typescript
+// frontend/src/services/api-config.ts
+export const API_ENDPOINTS = {
   SEARCH: {
     DETAILED: '/api/search/detailed',
     SUGGESTIONS: '/api/search/suggestions',
   },
   LICENSES: {
-    ALL: '/api/getAllLicenses',
+    ALL: '/api/license',
   },
   ANIME: {
     DETAIL: (id: string) => `/api/anime/${id}`,
+    CREATE: '/api/anime',
     SEASONS: (id: string) => `/api/anime/${id}/seasons`,
     SEASON: {
       CREATE: '/api/anime/season',
       UPDATE: (id: string) => `/api/anime/season/${id}`,
       DELETE: (id: string) => `/api/anime/season/${id}`,
     }
+  },
+  MANGA: {
+    DETAIL: (id: string) => `/api/manga/${id}`,
+    CREATE: '/api/manga',
+    UPDATE: (id: string) => `/api/manga/${id}`,
+    PARTS: {
+      CREATE: '/api/manga/part',
+      UPDATE: (id: string) => `/api/manga/part/${id}`,
+      DELETE: (id: string) => `/api/manga/part/${id}`,
+    }
   }
+};
+```
+
+Cette approche offre plusieurs avantages:
+- Centralisation des URLs API
+- Modification facile des chemins d'API
+- Utilisation de fonctions pour les endpoints paramétrés
+
+## Services disponibles
+
+### Client HTTP
+
+Le client HTTP (`http-client.ts`) sert de fondation pour tous les services API. Il encapsule la logique de communication HTTP et offre une interface simplifiée.
+
+```typescript
+class HttpClient {
+  // Configuration avec URL de base optionnelle
+  constructor(baseUrl: string = '') { ... }
+  
+  // Méthode générique pour toutes les requêtes
+  async request<T>(endpoint: string, options: RequestOptions = {}): Promise<T> { ... }
+  
+  // Méthodes d'aide pour les verbes HTTP communs
+  async get<T>(endpoint: string, headers?: Record<string, string>): Promise<T> { ... }
+  async post<T>(endpoint: string, body: any, headers?: Record<string, string>): Promise<T> { ... }
+  async put<T>(endpoint: string, body: any, headers?: Record<string, string>): Promise<T> { ... }
+  async delete<T>(endpoint: string, headers?: Record<string, string>): Promise<T> { ... }
 }
 ```
 
-✅ **Export** : `API_ENDPOINTS`
+**Caractéristiques principales:**
+- Gestion automatique des en-têtes Content-Type
+- Conversion des réponses en JSON
+- Gestion des erreurs avec informations détaillées
+- Support de la généricité TypeScript
 
----
+### Service d'Anime
 
-## `http-client.ts`
+Le service d'anime (`anime-service.ts`) gère les opérations CRUD pour les animes.
 
-### Description
+```typescript
+class AnimeService {
+  // Récupère un anime par son ID
+  async getAnimeById(animeId: string): Promise<AnimeWork> { ... }
+  
+  // Met à jour un anime existant
+  async updateAnime(animeId: string, animeData: Partial<AnimeWork>): Promise<AnimeWork> { ... }
+  
+  // Crée un nouvel anime
+  async createAnime(animeData: Partial<AnimeWork>): Promise<AnimeWork> { ... }
+  
+  // Supprime un anime
+  async deleteAnime(animeId: string): Promise<void> { ... }
+}
+```
 
-Client HTTP **générique** pour toutes les requêtes vers l'API.
+**Fonctionnalités:**
+- Récupération des détails d'un anime
+- Création de nouveaux animes
+- Mise à jour d'animes existants
+- Suppression d'animes
 
-### Classe : `HttpClient`
+### Service de Saisons d'Anime
 
-* `request<T>(endpoint, options)`: Méthode générique de requête.
-* `get<T>(endpoint)`, `post<T>(endpoint, body)`, `put<T>(...)`, `delete<T>(...)`: Méthodes simplifiées pour chaque verbe HTTP.
+Le service de saisons d'anime (`anime-season-service.ts`) gère les opérations CRUD pour les saisons d'anime.
 
-✅ **Export par défaut** : `HttpClient`
-✅ **Instance exportée** : `httpClient`
+```typescript
+class AnimeSeasonService {
+  // Récupère toutes les saisons d'un anime
+  async getSeasons(animeId: string): Promise<Season[]> { ... }
+  
+  // Crée une nouvelle saison
+  async createSeason(season: Partial<Season>): Promise<Season> { ... }
+  
+  // Met à jour une saison existante
+  async updateSeason(seasonId: string, season: Partial<Season>): Promise<Season> { ... }
+  
+  // Supprime une saison
+  async deleteSeason(seasonId: string): Promise<Season> { ... }
+}
+```
 
----
+**Fonctionnalités:**
+- Récupération des saisons d'un anime
+- Création de nouvelles saisons
+- Mise à jour de saisons existantes
+- Suppression de saisons
 
-## `index.ts`
+### Service de Recherche
 
-### Description
+Le service de recherche (`search-service.ts`) gère les fonctionnalités de recherche et de récupération des licences.
 
-Point d'entrée unique pour importer tous les services facilement.
+```typescript
+class SearchService {
+  // Effectue une recherche détaillée
+  async searchDetailed(searchTerm: string): Promise<License[]> { ... }
+  
+  // Récupère les suggestions de recherche
+  async fetchSuggestions(searchTerm: string): Promise<SearchSuggestion[]> { ... }
+  
+  // Récupère toutes les licences
+  async getAllLicenses(): Promise<License[]> { ... }
+}
+```
 
-### Exportations
+**Fonctionnalités:**
+- Recherche détaillée par terme
+- Suggestions de recherche automatiques
+- Récupération de toutes les licences
 
-* Instances : `httpClient`, `searchService`, `animeService`, `animeSeasonService`
-* Classes : `HttpClient`, `SearchService`, `AnimeService`, `AnimeSeasonService`
-* Config : `API_ENDPOINTS`
+### Service Utilisateur
 
----
+Le service utilisateur gère les opérations liées aux utilisateurs et à l'administration.
 
-## `search-service.ts`
+```typescript
+const userService = {
+  // Vérifie si l'utilisateur actuel est un administrateur
+  async checkIsAdmin(): Promise<boolean> { ... },
+  
+  // Définit un utilisateur comme administrateur
+  async setUserAsAdmin(targetUserId: string): Promise<{success: boolean}> { ... }
+}
+```
 
-### Description
+**Fonctionnalités:**
+- Vérification du statut d'administrateur
+- Attribution des droits d'administrateur
 
-Gère les fonctionnalités liées à la **recherche** et à la récupération de **licences**.
+## Utilisation des services
 
-### Classe : `SearchService`
+Chaque service est exporté comme un singleton et comme une classe:
 
-* `searchDetailed(searchTerm)`: Recherche avancée.
-* `fetchSuggestions(searchTerm)`: Suggestions de recherche.
-* `getAllLicenses()`: Récupère toutes les licences disponibles.
+```typescript
+// Utilisation du singleton (recommandé pour la plupart des cas)
+import { animeService } from './services';
 
-✅ **Export par défaut** : `SearchService`
-✅ **Instance exportée** : `searchService`
+// Dans un composant React
+const fetchAnime = async (id) => {
+  try {
+    const animeData = await animeService.getAnimeById(id);
+    // Traitement des données
+  } catch (error) {
+    // Gestion des erreurs
+  }
+};
+
+// Utilisation de la classe (pour les tests ou configurations personnalisées)
+import { AnimeService } from './services';
+
+const customAnimeService = new AnimeService();
+```
+
+## Gestion des erreurs
+
+Tous les services utilisent une gestion d'erreurs cohérente via le client HTTP:
+
+1. Les erreurs HTTP sont détectées par le status code
+2. Une tentative est faite pour extraire un message d'erreur du corps de la réponse
+3. Une erreur JavaScript est lancée avec un message descriptif
+4. Les composants doivent envelopper les appels de service dans des blocs try/catch
+
+Exemple:
+```typescript
+try {
+  const animeData = await animeService.getAnimeById(id);
+  // Traitement normal
+} catch (error) {
+  // error.message contiendra soit le message d'erreur du serveur,
+  // soit une description générique de l'erreur HTTP
+  console.error('Erreur lors de la récupération de l\'anime:', error);
+  // Afficher une notification à l'utilisateur
+}
+```
+
+## Bonnes pratiques
+
+1. **Toujours utiliser les services API** plutôt que de faire des appels fetch directement dans les composants
+2. **Gérer les erreurs** avec des blocs try/catch
+3. **Utiliser les types TypeScript** pour les requêtes et réponses
+4. **Maintenir à jour les endpoints** dans le fichier `api-config.ts`
+5. **Tester les services** avec des mocks pour les appels réseau

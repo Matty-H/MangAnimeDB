@@ -6,7 +6,7 @@ const router = express.Router();
 
 // Route accessible uniquement aux administrateurs authentifiés
 router.get('/admin', isAuthenticated, isAdmin, (req, res) => {
-  res.json({ message: 'Bienvenue, administrateur!' });
+  res.json({ message: 'Bienvenue maître!' });
 });
 
 export default router;

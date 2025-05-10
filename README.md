@@ -90,7 +90,7 @@ Backend Node.js/Express pour la gestion d'œuvres **manga** et **anime**, avec P
 - 📘 [Documentation des API REST](docs/API.md)  
   Détaille les endpoints, méthodes HTTP, et paramètres.
 
-- 🗃️ [Modèle de base de données Prisma](docs/schema.md)  
+- 🗃️ [Modèle de base de données Prisma](docs/schemaDB.md)  
   Décrit les modèles, relations et types énumérés.
 
 ---
