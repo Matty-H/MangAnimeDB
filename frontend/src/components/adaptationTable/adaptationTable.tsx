@@ -93,7 +93,7 @@ const AdaptationTable: React.FC<AdaptationTableProps> = ({ license }) => {
   };
 
   return (
-    <div className="card bg-base-100 card-border border-base-300 overflow-hidden">
+    <div className="card bg-base-100 font-bold card-border border-base-300 overflow-hidden">
       <AdaptationHeader 
         title={currentTitle}
         license={license}

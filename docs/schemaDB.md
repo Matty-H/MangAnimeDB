@@ -24,7 +24,7 @@ L'architecture de la base de données est conçue pour représenter:
 - Des adaptations anime avec leurs saisons
 - Les relations complexes entre mangas et adaptations anime
 
-![Prisma Schema](https://github.com/Matty-H/MangAnimeDB/blob/main/docs/prisma-schema.png$0 "Prisma Schema")
+![Prisma Schema](https://github.com/Matty-H/MangAnimeDB/blob/main/docs/prisma-schema.png "Prisma Schema")
 
 ## Configuration
 

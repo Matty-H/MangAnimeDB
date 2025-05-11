@@ -1,4 +1,4 @@
-# 📚 MangAnime Sademarū? • Correspondance entre Anime & Manga
+# 📚 MangAnime Sademaru? • Correspondance entre Anime & Manga
 
 Plateforme de gestion correspondance de licenses **manga** et **anime** avec un backend Node.js/Express, Prisma ORM et une base PostgreSQL, ainsi qu'un frontend React/Vite.
 
