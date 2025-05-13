@@ -75,7 +75,7 @@ const AnimeInfoCard: React.FC<AnimeInfoCardProps> = ({
       
       console.log('Tentative de création d\'anime avec:', JSON.stringify(newAnime));
       
-      const response = await fetch('/api/anime', {
+      const res = await fetch(`${(import.meta as any).env.VITE_API_URL}/anime`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -83,10 +83,10 @@ const AnimeInfoCard: React.FC<AnimeInfoCardProps> = ({
         body: JSON.stringify(newAnime),
       });
 
-      console.log('Statut de la réponse:', response.status);
+      console.log('Statut de la réponse:', res.status);
       
       // Capturer le texte de la réponse brute pour un meilleur débogage
-      const responseText = await response.text();
+      const responseText = await res.text();
       console.log('Texte de la réponse brute:', responseText);
       
       // Tenter de parser le JSON, mais capturer les erreurs
@@ -104,9 +104,9 @@ const AnimeInfoCard: React.FC<AnimeInfoCardProps> = ({
       
       setApiResponseData(responseData);
       
-      if (!response.ok) {
+      if (!res.ok) {
         // Afficher les détails complets de l'erreur
-        const errorDetails = responseData?.details || responseData?.error || `Erreur ${response.status}`;
+        const errorDetails = responseData?.details || responseData?.error || `Erreur ${res.status}`;
         console.error('Erreur API complète:', responseData);
         throw new Error(errorDetails);
       }

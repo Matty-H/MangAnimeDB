@@ -175,7 +175,7 @@ Le projet inclut une documentation complète :
 3. Configurer les variables d'environnement
    ```
    # Créer un fichier .env.local
-   VITE_API_URL="http://localhost:3000"
+   VITE_API_URL="http://localhost:2100"
    VITE_CLERK_PUBLISHABLE_KEY="your_clerk_publishable_key"
    ```
 

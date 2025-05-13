@@ -81,18 +81,18 @@ const MangaInfoCard: React.FC<MangaInfoCardProps> = ({
       console.log('Données envoyées à l\'API:', newMangaData);
 
       // Appel à l'API pour créer un manga
-      const response = await fetch('/api/manga', {
+      const res = await fetch(`${(import.meta as any).env.VITE_API_URL}/manga`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(newMangaData),
       });
 
-      const responseData = await response.json();
+      const responseData = await res.json();
       setApiResponseData(responseData);
       console.log('Réponse de l\'API:', responseData);
 
-      if (!response.ok) {
-        throw new Error(responseData.error || `Erreur ${response.status}`);
+      if (!res.ok) {
+        throw new Error(responseData.error || `Erreur ${res.status}`);
       }
 
       setApiResponse('Manga ajouté avec succès');

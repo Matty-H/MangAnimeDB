@@ -131,7 +131,7 @@ const MangaPartsManager: React.FC<MangaPartsManagerProps> = ({
         status: newPart.status || WorkStatus.ONGOING
       };
       
-      const response = await fetch('/api/manga/part', {
+      const res = await fetch(`${(import.meta as any).env.VITE_API_URL}/manga/part`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -139,12 +139,12 @@ const MangaPartsManager: React.FC<MangaPartsManagerProps> = ({
         body: JSON.stringify(payload),
       });
       
-      if (!response.ok) {
-        const errorData = await response.json();
-        throw new Error(errorData.error || `Erreur ${response.status}`);
+      if (!res.ok) {
+        const errorData = await res.json();
+        throw new Error(errorData.error || `Erreur ${res.status}`);
       }
       
-      const createdPart = await response.json();
+      const createdPart = await res.json();
       
       // Ajouter la nouvelle partie à la liste
       const updatedParts = [...editedParts, createdPart];

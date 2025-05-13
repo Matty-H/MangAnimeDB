@@ -16,7 +16,7 @@ const AdaptationRow: React.FC<AdaptationRowProps> = ({ row, index, isLastRow }) 
 
   const handleSaveRow = async () => {
     try {
-      const res = await fetch(`/api/adaptation/${row.id}`, {
+      const res = await fetch(`${(import.meta as any).env.VITE_API_URL}/adaptation/${row.id}`, {
         method: 'PUT',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({

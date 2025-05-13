@@ -1,5 +1,3 @@
-const API_BASE_URL = '/api'; // Adaptez selon votre configuration
-
 export const userService = {
   /**
    * Vérifie si l'utilisateur actuel est un administrateur
@@ -8,7 +6,7 @@ export const userService = {
   async checkIsAdmin() {
     try {
       // Modifié pour pointer vers la bonne route
-      const response = await fetch(`${API_BASE_URL}/admin/check-admin`, {
+      const res = await fetch(`${(import.meta as any).env.VITE_API_URL}/admin/check-admin`, {
         method: 'GET',
         headers: {
           'Content-Type': 'application/json',
@@ -17,11 +15,11 @@ export const userService = {
         credentials: 'include'
       });
       
-      if (!response.ok) {
+      if (!res.ok) {
         return false;
       }
       
-      const data = await response.json();
+      const data = await res.json();
       return data.isAdmin === true;
     } catch (error) {
       console.error('Erreur lors de la vérification du rôle admin:', error);
@@ -37,7 +35,7 @@ export const userService = {
   async setUserAsAdmin(targetUserId) {
     try {
       // Modifié pour pointer vers la bonne route
-      const response = await fetch(`${API_BASE_URL}/admin/set-admin`, {
+      const res = await fetch(`${(import.meta as any).env.VITE_API_URL}/admin/set-admin`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -46,7 +44,7 @@ export const userService = {
         body: JSON.stringify({ targetUserId }),
       });
       
-      const data = await response.json();
+      const data = await res.json();
       return data;
     } catch (error) {
       console.error('Erreur lors de la définition du rôle admin:', error);
