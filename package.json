@@ -7,58 +7,46 @@
     "schema": "./backend/prisma/schema.prisma"
   },
   "scripts": {
+    "bro": "echo Build Run Open && npm run build && concurrently \"npm run dev\" \"sleep 2 && open https://localhost:2150\"",
     "dev:client": "vite",
-
-    "dev:server": "NODE_ENV=development node backend/apiServer.js",
-    "server:prod": "NODE_ENV=production node backend/apiServer.js",
-    "server:dev": "NODE_ENV=development node backend/apiServer.js",
-
+    "dev:server": "node backend/apiServer.js",
     "dev": "concurrently \"npm run dev:client\" \"npm run dev:server\"",
     "dev:full": "concurrently \"npm run dev:client\" \"npm run dev:server\" \"npm run dev:db\"",
     "dev:dev": "concurrently \"vite\" \"NODE_ENV=development node backend/apiServer.js\"",
     "dev:prod": "concurrently \"vite\" \"NODE_ENV=production node backend/apiServer.js\"",
-
     "dev:net": "vite --host",
     "net": "concurrently \"npm run dev:net\" \"npm run dev:server\"",
-
     "dev:db": "npx prisma studio --schema=backend/prisma/schema.prisma",
     "prismagen": "prisma generate --schema=backend/prisma/schema.prisma",
     "seed": "ts-node backend/prisma/seed.ts",
     "ping": "npx ts-node test-db.ts",
     "dbreboot": "npx prisma migrate reset && npx prisma migrate dev --name init && npm run seed",
-
     "generate-routes": "tsr generate",
     "watch-routes": "tsr watch",
     "dev:routes": "npm run watch-routes",
     "build-routes": "npm run generate-routes",
-
     "build": "tsc -b && vite build",
     "preview": "vite preview",
-
     "lint": "eslint .",
     "format": "prettier --write .",
-
     "add-comment": "node add-comment.js",
     "debug:routes": "node -e \"console.log(require('@tanstack/router-generator').getConfig())\""
   },
-
-  
   "dependencies": {
-    "@clerk/clerk-react": "^5.30.4",
-    "@clerk/express": "^1.4.16",
-    "@clerk/localizations": "^3.15.2",
+    "@auth/express": "^0.10.1",
     "@prisma/client": "^6.6.0",
     "@tailwindcss/vite": "^4.1.5",
     "@tanstack/react-form": "^1.9.0",
     "@tanstack/react-router": "^1.116.0",
     "axios": "^1.8.4",
+    "cookie-parser": "^1.4.7",
     "cors": "^2.8.5",
     "daisyui": "^5.0.35",
     "dotenv": "^16.5.0",
     "express": "^5.1.0",
     "express-async-handler": "^1.2.0",
     "lucide-react": "^0.507.0",
-    "next": "^15.3.0",
+    "path-to-regexp": "^8.2.0",
     "pg": "^8.14.1",
     "prisma": "^6.6.0",
     "react": "^19.0.0",

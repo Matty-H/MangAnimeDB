@@ -145,3 +145,36 @@ export interface SearchSuggestion {
   id: string;
   title: string;
 }
+
+// frontend/src/types/auth.ts
+/**
+ * Type représentant un utilisateur authentifié
+ */
+export interface AuthUser {
+  id?: string;
+  name?: string | null;
+  email?: string | null;
+  image?: string | null;
+}
+
+/**
+ * Type représentant une session d'authentification
+ */
+export interface AuthSession {
+  user?: AuthUser | null;
+  expires?: string | null;
+}
+
+/**
+ * Type représentant le contexte d'authentification fourni par useAuth
+ */
+export interface AuthContextType {
+  session: AuthSession | null;
+  loading: boolean;
+  error: Error | null;
+  signIn: (provider: string) => Promise<void>;
+  signOut: () => Promise<void>;
+  refreshSession: () => Promise<void>;
+  isAuthenticated: boolean;
+  user: AuthUser | null;
+}

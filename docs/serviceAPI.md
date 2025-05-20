@@ -179,9 +179,6 @@ Le service utilisateur gère les opérations liées aux utilisateurs et à l'adm
 const userService = {
   // Vérifie si l'utilisateur actuel est un administrateur
   async checkIsAdmin(): Promise<boolean> { ... },
-  
-  // Définit un utilisateur comme administrateur
-  async setUserAsAdmin(targetUserId: string): Promise<{success: boolean}> { ... }
 }
 ```
 

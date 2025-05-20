@@ -75,7 +75,7 @@ const AnimeInfoCard: React.FC<AnimeInfoCardProps> = ({
       
       console.log('Tentative de création d\'anime avec:', JSON.stringify(newAnime));
       
-      const res = await fetch(`${(import.meta as any).env.VITE_API_URL}/anime`, {
+      const res = await fetch(`${(import.meta as any).env.VITE_API_URL}/api/anime`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

@@ -2,18 +2,22 @@ import React from 'react';
 import ReactDOM from 'react-dom/client';
 import { routeTree } from './routeTree.gen';
 import { createRouter, RouterProvider } from '@tanstack/react-router';
-import { ClerkProvider } from '@clerk/clerk-react'
+import { AuthProvider } from './contexts/AuthContext';
 import Header from './components/ui/header';
 import { EditModeProvider } from './components/ui/EditModeContext';
 import './style.css';
 
 
-const PUBLISHABLE_KEY = (import.meta as any).env.VITE_PUBLIC_CLERK_PUBLISHABLE_KEY
+console.log("Environnement:", process.env.NODE_ENV);
+console.log("URL de base:", window.location.origin);
 
-if (!PUBLISHABLE_KEY) {
-  throw new Error('Add your Clerk Publishable Key to the .env file')
-}
-const router = createRouter({ routeTree });
+const router = createRouter({
+  routeTree,
+  defaultErrorComponent: ({ error }) => <div>Aïe Aïe Aïe la boulette 😱 \n{JSON.stringify(error)}</div>,
+  defaultNotFoundComponent: () => <div className='text-center font-bold p-10'>Page introuvable 🤷</div>,
+  defaultPreload: 'intent',
+  defaultPreloadStaleTime: 0,
+})
 
 declare module '@tanstack/react-router' {
   interface Register {
@@ -21,17 +25,18 @@ declare module '@tanstack/react-router' {
   }
 }
 
+
 const rootElement = document.getElementById('root');
 if (rootElement) {
   const root = ReactDOM.createRoot(rootElement);
   root.render(
     <React.StrictMode>
-      <ClerkProvider publishableKey={PUBLISHABLE_KEY} afterSignOutUrl="/">
+      <AuthProvider>
         <EditModeProvider>
           <Header />
           <RouterProvider router={router} />
         </EditModeProvider>
-      </ClerkProvider>
-    </React.StrictMode>,
+      </AuthProvider>
+    </React.StrictMode>
   );
 }

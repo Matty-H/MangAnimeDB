@@ -10,7 +10,7 @@ const AdaptationHeader: React.FC<AdaptationHeaderProps> = ({ title, license, onT
   
   const handleSaveTitle = async () => {
     try {
-      const res = await fetch(`${(import.meta as any).env.VITE_API_URL}/license/${license.id}`, {
+      const res = await fetch(`${(import.meta as any).env.VITE_API_URL}/api/license/${license.id}`, {
         method: 'PUT',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ title: editedTitle }),

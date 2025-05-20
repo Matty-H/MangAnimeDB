@@ -131,7 +131,7 @@ const MangaPartsManager: React.FC<MangaPartsManagerProps> = ({
         status: newPart.status || WorkStatus.ONGOING
       };
       
-      const res = await fetch(`${(import.meta as any).env.VITE_API_URL}/manga/part`, {
+      const res = await fetch(`${(import.meta as any).env.VITE_API_URL}/api/manga/part`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

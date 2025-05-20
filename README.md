@@ -40,7 +40,7 @@ MangAnime/
 │   │   ├── users/          # Gestion utilisateurs et admin
 │   │   └── index.js        # Point d'entrée API
 │   ├── middleware/         # Middlewares Express
-│   │   ├── auth.js         # Authentication
+│   │   ├── authMiddleware.js # Authentication
 │   │   ├── errorHandler.js # Gestion d'erreurs
 │   ├── prisma/             # ORM Prisma
 │   │   ├── migrations/     # Migrations DB
@@ -176,7 +176,7 @@ Le projet inclut une documentation complète :
    ```
    # Créer un fichier .env.local
    VITE_API_URL="http://localhost:2100"
-   VITE_CLERK_PUBLISHABLE_KEY="your_clerk_publishable_key"
+   VITE_PUBLIC_CLERK_PUBLISHABLE_KEY="your_clerk_publishable_key"
    ```
 
 4. Lancer l'application

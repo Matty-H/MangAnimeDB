@@ -81,7 +81,7 @@ const MangaInfoCard: React.FC<MangaInfoCardProps> = ({
       console.log('Données envoyées à l\'API:', newMangaData);
 
       // Appel à l'API pour créer un manga
-      const res = await fetch(`${(import.meta as any).env.VITE_API_URL}/manga`, {
+      const res = await fetch(`${(import.meta as any).env.VITE_API_URL}/api/manga`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(newMangaData),

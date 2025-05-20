@@ -1,6 +1,6 @@
 // backend/api/license/licenseRoutes.js
 import express from 'express';
-import { isAuthenticated, isAdmin } from '../../middleware/auth.js';
+import { authenticatedUser, checkRole } from '../../middleware/auth.middleware.js';
 import * as licenseController from './licenseController.js';
 
 const router = express.Router();
@@ -9,8 +9,8 @@ const router = express.Router();
 router.get('/', licenseController.getAllLicenses);
 
 // Routes protégées
-router.post('/', isAuthenticated, licenseController.createLicense);
-router.put('/:id', isAuthenticated, licenseController.updateLicense);
-router.delete('/:id', isAuthenticated, licenseController.deleteLicense);
+router.post('/', authenticatedUser, checkRole('admin'), licenseController.createLicense);
+router.put('/:id', authenticatedUser, checkRole('admin'), licenseController.updateLicense);
+router.delete('/:id', authenticatedUser, checkRole('admin'), licenseController.deleteLicense);
 
 export default router;

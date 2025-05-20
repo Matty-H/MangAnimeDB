@@ -69,7 +69,7 @@ const AddDataModal: React.FC<AddDataModalProps> = ({ onClose }) => {
         throw new Error('Une licence avec ce titre existe déjà.');
       }
   
-      const res = await fetch(`${(import.meta as any).env.VITE_API_URL}/license`, {
+      const res = await fetch(`${(import.meta as any).env.VITE_API_URL}/api/license`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(licenseData),

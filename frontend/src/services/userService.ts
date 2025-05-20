@@ -1,54 +1,59 @@
+// src/services/userService.js
+
+/**
+ * Service pour gérer les opérations liées aux utilisateurs
+ */
 export const userService = {
   /**
-   * Vérifie si l'utilisateur actuel est un administrateur
+   * Vérifie si l'utilisateur actuel a le rôle admin
    * @returns {Promise<boolean>} True si l'utilisateur est admin, false sinon
    */
   async checkIsAdmin() {
     try {
-      // Modifié pour pointer vers la bonne route
-      const res = await fetch(`${(import.meta as any).env.VITE_API_URL}/admin/check-admin`, {
+      const response = await fetch('/api/users/me/role', {
         method: 'GET',
         headers: {
           'Content-Type': 'application/json',
         },
-        // Les credentials sont importantes pour transmettre les cookies d'authentification
-        credentials: 'include'
+        credentials: 'include', // Important pour envoyer les cookies d'authentification
       });
-      
-      if (!res.ok) {
-        return false;
+
+      if (!response.ok) {
+        throw new Error('Failed to check admin status');
       }
-      
-      const data = await res.json();
+
+      const data = await response.json();
       return data.isAdmin === true;
     } catch (error) {
-      console.error('Erreur lors de la vérification du rôle admin:', error);
+      console.error('Error checking admin status:', error);
       return false;
     }
   },
-  
+
   /**
-   * Définit un utilisateur comme administrateur
-   * @param {string} targetUserId - L'ID de l'utilisateur à promouvoir
-   * @returns {Promise<{success: boolean}>} Résultat de l'opération
+   * Récupère le profil de l'utilisateur actuel
+   * @returns {Promise<Object>} Les données de l'utilisateur
    */
-  async setUserAsAdmin(targetUserId) {
+  async getCurrentUser() {
     try {
-      // Modifié pour pointer vers la bonne route
-      const res = await fetch(`${(import.meta as any).env.VITE_API_URL}/admin/set-admin`, {
-        method: 'POST',
+      const response = await fetch('/api/users/me', {
+        method: 'GET',
         headers: {
           'Content-Type': 'application/json',
         },
         credentials: 'include',
-        body: JSON.stringify({ targetUserId }),
       });
-      
-      const data = await res.json();
-      return data;
+
+      if (!response.ok) {
+        throw new Error('Failed to fetch user profile');
+      }
+
+      return await response.json();
     } catch (error) {
-      console.error('Erreur lors de la définition du rôle admin:', error);
-      return { success: false, error: 'Erreur réseau' };
+      console.error('Error fetching user profile:', error);
+      throw error;
     }
-  }
-};
+  },
+
+  // Vous pouvez ajouter d'autres méthodes liées aux utilisateurs ici
+}
