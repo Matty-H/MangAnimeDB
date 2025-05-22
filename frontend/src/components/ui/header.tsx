@@ -4,11 +4,8 @@ import { Settings, PaintBucket, Pencil, PencilOff } from "lucide-react";
 import { useEditMode } from "../ui/EditModeContext";
 import { userService } from "../../services/userService";
 import { useAuth } from "../../hooks/useAuth"; // Importation du hook TypeScript
-import { AuthUser } from "../../types"; // Importation des types
-
-const themes = [
-  { name: "light", color: "#FFFFFF" }
-];
+import { AuthUser } from "../../types";
+import { themes } from '../../themes';
 
 const Header = () => {
   // État du thème sélectionné
@@ -37,13 +34,11 @@ const Header = () => {
         if (!loading && isAuthenticated && session?.user) {
           // Vérifier le rôle admin via l'API
           const adminStatus = await userService.checkIsAdmin();
-          console.log("Statut admin:", adminStatus);
           setIsAdmin(adminStatus);
         } else {
           setIsAdmin(false);
         }
       } catch (error) {
-        console.error("Erreur lors de la vérification du rôle admin:", error);
         setIsAdmin(false);
       } finally {
         setIsAdminLoading(false);

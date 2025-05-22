@@ -13,7 +13,7 @@ export default defineConfig({
   server: {
     proxy: {
       '/api': {
-        target: 'https://localhost:2150',
+        target: 'https://api.sademaru.fr:2150',
         changeOrigin: true,
         secure: false,
       },

@@ -3,6 +3,7 @@ import { Check, Pencil } from 'lucide-react';
 import { AdaptationRowProps } from './AdaptationTable';
 import ApiResponseDisplay from '../ui/ApiResponseDisplay';
 import { useEditMode } from '../ui/EditModeContext';
+import { searchService } from '../../services';
 
 const AdaptationRow: React.FC<AdaptationRowProps> = ({ row, index, isLastRow }) => {
   const { isEditMode } = useEditMode(); // Utilisation du contexte d'édition
@@ -16,23 +17,15 @@ const AdaptationRow: React.FC<AdaptationRowProps> = ({ row, index, isLastRow }) 
 
   const handleSaveRow = async () => {
     try {
-      const res = await fetch(`${(import.meta as any).env.VITE_API_URL}/api/adaptation/${row.id}`, {
-        method: 'PUT',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          type: row.type,
-          episodes: Number(episodes),
-          fromVolume: fromVolume !== '' ? Number(fromVolume) : null,
-          toVolume: toVolume !== '' ? Number(toVolume) : null
-        }),
+      const data = await searchService.updateAdaptation(row.id, {
+        type: row.type,
+        episodes: Number(episodes),
+        fromVolume: fromVolume !== '' ? Number(fromVolume) : null,
+        toVolume: toVolume !== '' ? Number(toVolume) : null
       });
-
-      const data = await res.json();
+      
       setApiResponse(JSON.stringify(data, null, 2));
       setShowResponse(true);
-
-      if (!res.ok) throw new Error(`Erreur: ${res.status}`);
-
       setIsRowEditing(false);
       setError(null);
     } catch (err) {

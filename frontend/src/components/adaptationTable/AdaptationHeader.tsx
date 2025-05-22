@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { BookOpen, Tv, ArrowRight, Pencil, Check } from 'lucide-react';
 import { AdaptationHeaderProps } from './AdaptationTable';
 import { useEditMode } from '../ui/EditModeContext';
+import { searchService } from '../../services';
 
 const AdaptationHeader: React.FC<AdaptationHeaderProps> = ({ title, license, onTitleChange }) => {
   const { isEditMode } = useEditMode();
@@ -10,13 +11,7 @@ const AdaptationHeader: React.FC<AdaptationHeaderProps> = ({ title, license, onT
   
   const handleSaveTitle = async () => {
     try {
-      const res = await fetch(`${(import.meta as any).env.VITE_API_URL}/api/license/${license.id}`, {
-        method: 'PUT',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ title: editedTitle }),
-      });
-      
-      if (!res.ok) throw new Error('Erreur de mise à jour');
+      await searchService.updateLicenseTitle(license.id, editedTitle);
       onTitleChange(editedTitle);
       setIsEditing(false);
     } catch (err) {

@@ -7,10 +7,6 @@ import Header from './components/ui/header';
 import { EditModeProvider } from './components/ui/EditModeContext';
 import './style.css';
 
-
-console.log("Environnement:", process.env.NODE_ENV);
-console.log("URL de base:", window.location.origin);
-
 const router = createRouter({
   routeTree,
   defaultErrorComponent: ({ error }) => <div>Aïe Aïe Aïe la boulette 😱 \n{JSON.stringify(error)}</div>,

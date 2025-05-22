@@ -4,6 +4,7 @@ import { MangaWork, WorkStatus, MangaPart } from '../../types';
 import { Plus, Pencil, Check, X, Loader, Trash } from 'lucide-react';
 import Badge from '../ui/badge';
 import { useEditMode } from '../ui/EditModeContext';
+import { searchService } from '../../services';
 
 interface MangaPartsManagerProps {
   manga: MangaWork;
@@ -73,26 +74,13 @@ const MangaPartsManager: React.FC<MangaPartsManagerProps> = ({
         status: partToUpdate.status
       };
       
-      const response = await fetch(`/api/manga/part/${partId}`, {
-        method: 'PUT',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(payload),
-      });
-      
-      if (!response.ok) {
-        const errorData = await response.json();
-        throw new Error(errorData.error || `Erreur ${response.status}`);
-      }
-      
-      const updatedPart = await response.json();
+      // Utilisation du SearchService au lieu de fetch direct
+      const updatedPart = await searchService.updateMangaPart(partId, payload);
       
       // Mettre à jour la liste des parties
-      const updatedParts = editedParts.map(part => 
+      const updatedParts = editedParts.map(part =>
         part.id === partId ? updatedPart : part
       );
-      
       setEditedParts(updatedParts);
       setEditingPartId(null);
       setParentApiResponse('Partie mise à jour avec succès');
@@ -102,8 +90,7 @@ const MangaPartsManager: React.FC<MangaPartsManagerProps> = ({
         ...manga,
         parts: updatedParts
       });
-      
-    } catch (err) {
+    } catch (err: any) {
       setParentError(err.message || 'Une erreur est survenue lors de la mise à jour');
       console.error('Erreur lors de la mise à jour de la partie:', err);
     } finally {
@@ -111,7 +98,6 @@ const MangaPartsManager: React.FC<MangaPartsManagerProps> = ({
     }
   };
   
-  // Fonction pour ajouter une nouvelle partie
   const handleAddPart = async () => {
     setIsLoading(true);
     setParentError(null);
@@ -131,20 +117,8 @@ const MangaPartsManager: React.FC<MangaPartsManagerProps> = ({
         status: newPart.status || WorkStatus.ONGOING
       };
       
-      const res = await fetch(`${(import.meta as any).env.VITE_API_URL}/api/manga/part`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(payload),
-      });
-      
-      if (!res.ok) {
-        const errorData = await res.json();
-        throw new Error(errorData.error || `Erreur ${res.status}`);
-      }
-      
-      const createdPart = await res.json();
+      // Utilisation du SearchService au lieu de fetch direct
+      const createdPart = await searchService.createMangaPart(payload);
       
       // Ajouter la nouvelle partie à la liste
       const updatedParts = [...editedParts, createdPart];
@@ -159,7 +133,6 @@ const MangaPartsManager: React.FC<MangaPartsManagerProps> = ({
         endVolume: 1,
         status: WorkStatus.ONGOING
       });
-      
       setParentApiResponse('Nouvelle partie ajoutée avec succès');
       
       // Mise à jour du manga parent
@@ -167,8 +140,7 @@ const MangaPartsManager: React.FC<MangaPartsManagerProps> = ({
         ...manga,
         parts: updatedParts
       });
-      
-    } catch (err) {
+    } catch (err: any) {
       setParentError(err.message || 'Une erreur est survenue lors de l\'ajout');
       console.error('Erreur lors de l\'ajout de la partie:', err);
     } finally {
@@ -176,7 +148,6 @@ const MangaPartsManager: React.FC<MangaPartsManagerProps> = ({
     }
   };
   
-  // Fonction pour supprimer une partie
   const handleDeletePart = async (partId: string) => {
     if (!confirm('Êtes-vous sûr de vouloir supprimer cette partie?')) {
       return;
@@ -186,19 +157,12 @@ const MangaPartsManager: React.FC<MangaPartsManagerProps> = ({
     setParentError(null);
     
     try {
-      const response = await fetch(`/api/manga/part/${partId}`, {
-        method: 'DELETE',
-      });
-      
-      if (!response.ok) {
-        const errorData = await response.json();
-        throw new Error(errorData.error || `Erreur ${response.status}`);
-      }
+      // Utilisation du SearchService au lieu de fetch direct
+      await searchService.deleteMangaPart(partId);
       
       // Supprimer la partie de la liste
       const updatedParts = editedParts.filter(part => part.id !== partId);
       setEditedParts(updatedParts);
-      
       setParentApiResponse('Partie supprimée avec succès');
       
       // Mise à jour du manga parent
@@ -206,8 +170,7 @@ const MangaPartsManager: React.FC<MangaPartsManagerProps> = ({
         ...manga,
         parts: updatedParts
       });
-      
-    } catch (err) {
+    } catch (err: any) {
       setParentError(err.message || 'Une erreur est survenue lors de la suppression');
       console.error('Erreur lors de la suppression de la partie:', err);
     } finally {

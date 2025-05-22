@@ -8,6 +8,7 @@ import { ErrorAlert } from '../ui/ErrorAlert';
 import { SuccessAlert } from '../ui/SuccessAlert';
 import { ChevronsLeftRightEllipsis } from 'lucide-react';
 import { useEditMode } from '../ui/EditModeContext';
+import { searchService } from '../../services';
 
 interface AnimeInfoCardProps {
   anime?: any;
@@ -55,83 +56,49 @@ const AnimeInfoCard: React.FC<AnimeInfoCardProps> = ({
     setError(null);
     setApiResponseData(null);
     setApiResponse('');
-    
+  
     try {
       // Assurons-nous que licenseId est bien défini
       if (!licenseId) {
         throw new Error("L'ID de licence est obligatoire");
       }
-      
+  
       // Création d'un anime avec tous les champs obligatoires
       const newAnime = {
         licenseId: licenseId,
         title: "Nouvel anime",
         studio: "Studio à déterminer", // Champ obligatoire
-        adaptationType: "TV_SERIES",   // Valeurs d'enum obligatoires
+        adaptationType: "TV_SERIES", // Valeurs d'enum obligatoires
         status: "ONGOING",
         fidelity: "FAITHFUL",
         relationType: "MANGA_ADAPTATION"
       };
-      
-      console.log('Tentative de création d\'anime avec:', JSON.stringify(newAnime));
-      
-      const res = await fetch(`${(import.meta as any).env.VITE_API_URL}/api/anime`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(newAnime),
-      });
-
-      console.log('Statut de la réponse:', res.status);
-      
-      // Capturer le texte de la réponse brute pour un meilleur débogage
-      const responseText = await res.text();
-      console.log('Texte de la réponse brute:', responseText);
-      
-      // Tenter de parser le JSON, mais capturer les erreurs
-      let responseData;
-      try {
-        if (responseText) {
-          responseData = JSON.parse(responseText);
-        } else {
-          responseData = { message: 'Réponse vide du serveur' };
-        }
-      } catch (parseError) {
-        console.error('Erreur lors du parsing JSON:', parseError);
-        responseData = { error: 'Format de réponse non valide', rawResponse: responseText };
-      }
-      
+  
+      const responseData = await searchService.createAnime(newAnime);
       setApiResponseData(responseData);
-      
-      if (!res.ok) {
-        // Afficher les détails complets de l'erreur
-        const errorDetails = responseData?.details || responseData?.error || `Erreur ${res.status}`;
-        console.error('Erreur API complète:', responseData);
-        throw new Error(errorDetails);
-      }
-
       setApiResponse('Anime créé avec succès');
-      setShowAlert(true);
+  
+      // Recharger les données ou mettre à jour l'état local
+      // await loadAnimeData(); // ou autre logique de rafraîchissement
+  
+    } catch (error: any) {
+      console.error('Erreur lors de la création de l\'anime:', error);
       
-      if (onAnimeUpdated && responseData) {
-        onAnimeUpdated(responseData);
+      // Gestion des erreurs plus précise
+      if (error.response) {
+        // Erreur HTTP avec réponse du serveur
+        const errorDetails = error.response.details || error.response.error || `Erreur ${error.status}`;
+        setError(`Erreur API: ${errorDetails}`);
+        setApiResponseData(error.response);
+      } else if (error.message) {
+        // Erreur JavaScript standard
+        setError(error.message);
+      } else {
+        // Erreur inconnue
+        setError('Une erreur inattendue s\'est produite');
       }
       
-      setEditedAnime(responseData);
-      setIsEditing(true);
-    } catch (err: any) {
-      // Capture et affichage détaillé de l'erreur
-      console.error('Erreur complète:', err);
-      
-      // Afficher l'erreur complète, y compris les propriétés potentielles comme code ou meta
-      const errorMessage = err.message || 'Erreur inconnue lors de la création';
-      const detailedError = typeof err === 'object' ? 
-        `${errorMessage} (Code: ${err.code || 'inconnu'}) ${JSON.stringify(err.meta || {})}` : 
-        errorMessage;
-      
-      setError(detailedError);
-      setShowAlert(true);
+      setApiResponse('Erreur lors de la création');
     } finally {
       setIsLoading(false);
     }
@@ -147,35 +114,10 @@ const AnimeInfoCard: React.FC<AnimeInfoCardProps> = ({
     setApiResponse('');
     
     try {
-      const response = await fetch(`/api/anime/${editedAnime.id}`, {
-        method: 'DELETE',
-        headers: {
-          'Content-Type': 'application/json',
-        }
-      });
-
-      // Capturer la réponse brute pour le débogage
-      const responseText = await response.text();
-      let responseData;
-      
-      try {
-        if (responseText) {
-          responseData = JSON.parse(responseText);
-        } else {
-          responseData = { message: 'Anime supprimé avec succès' };
-        }
-      } catch (parseError) {
-        console.error('Erreur lors du parsing JSON:', parseError);
-        responseData = { message: 'Anime supprimé, mais format de réponse non valide' };
-      }
+      // Utilisation du SearchService au lieu de fetch direct
+      const responseData = await searchService.deleteAnime(editedAnime.id);
       
       setApiResponseData(responseData);
-      
-      if (!response.ok) {
-        const errorDetails = responseData?.details || responseData?.error || `Erreur ${response.status}`;
-        throw new Error(errorDetails);
-      }
-
       setApiResponse('Anime supprimé avec succès');
       setShowAlert(true);
       setShowDeleteConfirm(false);
@@ -186,9 +128,11 @@ const AnimeInfoCard: React.FC<AnimeInfoCardProps> = ({
       }
     } catch (err: any) {
       console.error('Erreur lors de la suppression de l\'anime:', err);
+      
+      // Le SearchService encapsule déjà la gestion des erreurs HTTP
       const errorMessage = err.message || 'Erreur inconnue lors de la suppression';
-      const detailedError = typeof err === 'object' ? 
-        `${errorMessage} (Code: ${err.code || 'inconnu'}) ${JSON.stringify(err.meta || {})}` : 
+      const detailedError = typeof err === 'object' ?
+        `${errorMessage} (Code: ${err.code || 'inconnu'}) ${JSON.stringify(err.meta || {})}` :
         errorMessage;
       
       setError(detailedError);
@@ -209,27 +153,17 @@ const AnimeInfoCard: React.FC<AnimeInfoCardProps> = ({
 
   const saveAnimeChanges = async () => {
     if (!editedAnime) return;
+    
     setIsLoading(true);
     setError(null);
     setApiResponseData(null);
     setApiResponse('');
     
     try {
-      const response = await fetch(`/api/anime/${editedAnime.id}`, {
-        method: 'PUT',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(editedAnime),
-      });
-
-      const responseData = await response.json();
-      setApiResponseData(responseData);
+      // Utilisation du SearchService au lieu de fetch direct
+      const responseData = await searchService.updateAnime(editedAnime.id, editedAnime);
       
-      if (!response.ok) {
-        throw new Error(responseData.error || `Erreur: ${response.status}`);
-      }
-
+      setApiResponseData(responseData);
       setApiResponse('Anime mis à jour avec succès');
       setShowAlert(true);
       setIsEditing(false);
@@ -237,7 +171,6 @@ const AnimeInfoCard: React.FC<AnimeInfoCardProps> = ({
       if (onAnimeUpdated) {
         onAnimeUpdated(responseData);
       }
-      
       setEditedAnime(responseData);
     } catch (err: any) {
       console.error('Erreur lors de la mise à jour de l\'anime:', err);

@@ -1,6 +1,7 @@
 import React, { useMemo, useState, FormEvent, ChangeEvent, KeyboardEvent, useEffect } from 'react';
 import { useNavigate } from '@tanstack/react-router';
 import { Search, Loader2 } from 'lucide-react';
+import { searchService } from '../../services';
 
 interface SearchBarProps {
   onSearch?: (searchTerm: string) => void;
@@ -21,14 +22,12 @@ function SearchBar({ onSearch = () => {} }: SearchBarProps) {
 
   const fetchSuggestions = async (input: string) => {
     if (!input.trim()) return [];
-
+    
     setIsLoading(true);
+    
     try {
-      const response = await fetch(`/api/search/suggestions?query=${encodeURIComponent(input)}`);
-      if (!response.ok) {
-        throw new Error('Failed to fetch suggestions');
-      }
-      const data = await response.json();
+      // Utilisation du SearchService au lieu de fetch direct
+      const data = await searchService.fetchSuggestions(input);
       return data as SearchSuggestion[];
     } catch (error) {
       console.error('Error fetching suggestions:', error);

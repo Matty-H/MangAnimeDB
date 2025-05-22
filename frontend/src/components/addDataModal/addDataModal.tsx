@@ -53,41 +53,32 @@ const AddDataModal: React.FC<AddDataModalProps> = ({ onClose }) => {
     }
   };
 
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-    setIsSubmitting(true);
-    setError(null);
+  // Création de licence
+const handleSubmit = async (e: React.FormEvent) => {
+  e.preventDefault();
+  setIsSubmitting(true);
+  setError(null);
   
-    try {
-      // ⚠️ Vérifie côté client si le titre existe déjà
-      const allLicenses = await searchService.getAllLicenses();
-      const titleExists = allLicenses.some(
-        (lic: any) => lic.title.toLowerCase().trim() === licenseData.title.toLowerCase().trim()
-      );
-  
-      if (titleExists) {
-        throw new Error('Une licence avec ce titre existe déjà.');
-      }
-  
-      const res = await fetch(`${(import.meta as any).env.VITE_API_URL}/api/license`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(licenseData),
-      });
-  
-      if (!res.ok) {
-        const errorData = await res.json().catch(() => null);
-        throw new Error(errorData?.message || `Erreur: ${res.statusText}`);
-      }
-  
-      setSuccess(true);
-      setTimeout(() => closeModal(), 2000);
-    } catch (err) {
-      setError(err instanceof Error ? err.message : 'Erreur inconnue');
-    } finally {
-      setIsSubmitting(false);
+  try {
+    // Vérifie côté client si le titre existe déjà
+    const allLicenses = await searchService.getAllLicenses();
+    const titleExists = allLicenses.some(
+      (lic: any) => lic.title.toLowerCase().trim() === licenseData.title.toLowerCase().trim()
+    );
+    
+    if (titleExists) {
+      throw new Error('Une licence avec ce titre existe déjà.');
     }
-  };  
+
+    await searchService.createLicense(licenseData);
+    setSuccess(true);
+    setTimeout(() => closeModal(), 2000);
+  } catch (err) {
+    setError(err instanceof Error ? err.message : 'Erreur inconnue');
+  } finally {
+    setIsSubmitting(false);
+  }
+};
 
   const closeModal = () => {
     const modal = document.getElementById('add_data_modal') as HTMLDialogElement;

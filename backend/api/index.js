@@ -1,11 +1,11 @@
-//backend/api/index.js
+// backend/api/index.js
 import express from 'express';
 import animeRoutes from './anime/animeRoutes.js';
 import mangaRoutes from './manga/mangaRoutes.js';
 import licenseRoutes from './license/licenseRoutes.js';
 import searchRoutes from './search/searchRoutes.js';
 import adaptationRoutes from './adaptation/adaptationRoutes.js';
-import adminRoute from './users/adminRoutes.js';
+import userRoute from './user/userRoute.js';
 
 const router = express.Router();
 
@@ -18,7 +18,6 @@ router.use('/manga', mangaRoutes);
 router.use('/license', licenseRoutes);
 router.use('/search', searchRoutes);
 router.use('/adaptation', adaptationRoutes);
-router.use('/admin', adminRoute);
-
+router.use('/user', userRoute);
 
 export default router;

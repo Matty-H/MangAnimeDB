@@ -8,7 +8,7 @@ import EmptyMangaCard from './EmptyMangaCard';
 import { ErrorAlert } from '../ui/ErrorAlert';
 import { SuccessAlert } from '../ui/SuccessAlert';
 import ApiResponseDisplay from '../ui/ApiResponseDisplay';
-import { animeService } from '../../services';
+import { searchService } from '../../services';
 import { ChevronsLeftRightEllipsis } from 'lucide-react';
 import { useEditMode } from '../ui/EditModeContext';
 
@@ -64,46 +64,34 @@ const MangaInfoCard: React.FC<MangaInfoCardProps> = ({
     setIsLoading(true);
     setError(null);
     setApiResponseData(null);
-
+    
     try {
       // Création d'un nouveau manga à partir de la licence
       const newMangaData = {
         licenseId: licenseId,
-        title: 'Nouveau manga',         // Titre par défaut
-        authors: [],                    // Tableau vide d'auteurs
-        volumes: 0,                     // Nombre de volumes à 0 par défaut
-        status: 'ONGOING',              // Statut par défaut
-        startDate: null,                // Pas de date de début
-        endDate: null,                  // Pas de date de fin
-        publisher: ''                   // Éditeur vide par défaut
+        title: 'Nouveau manga', // Titre par défaut
+        authors: [], // Tableau vide d'auteurs
+        volumes: 0, // Nombre de volumes à 0 par défaut
+        status: 'ONGOING', // Statut par défaut
+        startDate: null, // Pas de date de début
+        endDate: null, // Pas de date de fin
+        publisher: '' // Éditeur vide par défaut
       };
-
+      
       console.log('Données envoyées à l\'API:', newMangaData);
-
-      // Appel à l'API pour créer un manga
-      const res = await fetch(`${(import.meta as any).env.VITE_API_URL}/api/manga`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(newMangaData),
-      });
-
-      const responseData = await res.json();
+      
+      // Utilisation du SearchService au lieu de fetch direct
+      const responseData = await searchService.createManga(newMangaData);
+      
       setApiResponseData(responseData);
-      console.log('Réponse de l\'API:', responseData);
-
-      if (!res.ok) {
-        throw new Error(responseData.error || `Erreur ${res.status}`);
-      }
-
       setApiResponse('Manga ajouté avec succès');
       setShowAlert(true);
-
+      
       // Si le callback externe existe, on l'appelle
       if (onAddManga) onAddManga();
-
+      
       // Si une mise à jour des données est nécessaire, on peut appeler onUpdate avec les données du manga créé
       if (onUpdate) onUpdate(responseData);
-
     } catch (err: any) {
       setError(err.message || 'Une erreur est survenue lors de l\'ajout du manga');
       setShowAlert(true);
@@ -115,11 +103,11 @@ const MangaInfoCard: React.FC<MangaInfoCardProps> = ({
 
   const handleSaveManga = async () => {
     if (!editedManga) return;
-
+    
     setIsLoading(true);
     setError(null);
     setApiResponseData(null);
-
+    
     try {
       const payload = {
         licenseId,
@@ -131,27 +119,17 @@ const MangaInfoCard: React.FC<MangaInfoCardProps> = ({
         endDate: editedManga.endDate,
         publisher: editedManga.publisher
       };
-
-      const response = await fetch(`/api/manga/${editedManga.id}`, {
-        method: 'PUT',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(payload),
-      });
-
-      const responseData = await response.json();
+      
+      // Utilisation du SearchService au lieu de fetch direct
+      const responseData = await searchService.updateManga(editedManga.id, payload);
+      
       setApiResponseData(responseData);
-
-      if (!response.ok) {
-        throw new Error(responseData.error || `Erreur ${response.status}`);
-      }
-
       setApiResponse('Manga mis à jour avec succès');
       setShowAlert(true);
       setIsEditing(false);
       setEditedManga(responseData);
-
+      
       if (onUpdate) onUpdate(responseData);
-
     } catch (err: any) {
       setError(err.message || 'Une erreur est survenue lors de la mise à jour');
       setShowAlert(true);

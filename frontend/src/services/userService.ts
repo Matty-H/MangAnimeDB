@@ -10,20 +10,8 @@ export const userService = {
    */
   async checkIsAdmin() {
     try {
-      const response = await fetch('/api/users/me/role', {
-        method: 'GET',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        credentials: 'include', // Important pour envoyer les cookies d'authentification
-      });
-
-      if (!response.ok) {
-        throw new Error('Failed to check admin status');
-      }
-
-      const data = await response.json();
-      return data.isAdmin === true;
+      const user = await this.getCurrentUser();
+      return user.role === 'admin';
     } catch (error) {
       console.error('Error checking admin status:', error);
       return false;
@@ -36,12 +24,12 @@ export const userService = {
    */
   async getCurrentUser() {
     try {
-      const response = await fetch('/api/users/me', {
+      const response = await fetch('/api/user/me', {
         method: 'GET',
         headers: {
           'Content-Type': 'application/json',
         },
-        credentials: 'include',
+        credentials: 'include', // Important pour envoyer les cookies d'auth
       });
 
       if (!response.ok) {
@@ -54,6 +42,4 @@ export const userService = {
       throw error;
     }
   },
-
-  // Vous pouvez ajouter d'autres méthodes liées aux utilisateurs ici
-}
+};

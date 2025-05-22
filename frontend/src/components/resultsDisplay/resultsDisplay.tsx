@@ -23,13 +23,9 @@ const ResultsDisplay: React.FC<ResultsDisplayProps> = ({ searchTerm }) => {
         setLoading(true);
         setError(null);
         if (searchTerm) {
-          console.log(`Fetching results for: ${searchTerm}`);
-          // Utiliser la méthode searchDetailed au lieu d'appeler directement le service
           const data = await searchService.searchDetailed(searchTerm);
-          console.log('Search results received:', data);
           setResults(data);
         } else {
-          console.log('No search term provided, clearing results');
           setResults([]);
         }
       } catch (err) {
