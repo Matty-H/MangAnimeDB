@@ -28,27 +28,29 @@ Plateforme de gestion correspondance de licenses **manga** et **anime** avec un 
 
 ```
 MangAnime/
-├── backend/                # Serveur Express et API REST
-│   ├── api/                # Modules API organisés par entité
-│   │   ├── adaptation/     # Gestion des adaptations manga/anime
-│   │   ├── anime/          # Gestion des animes
-│   │   ├── license/        # Gestion des licences
-│   │   ├── manga/          # Gestion des mangas
-│   │   ├── search/         # Fonctionnalités de recherche
-│   │   ├── users/          # Gestion utilisateurs et admin
-│   │   └── index.js        # Point d'entrée API
-│   ├── middleware/         # Middlewares Express
+├── backend/                  # Serveur Express et API REST
+│   ├── api/                  # Modules API organisés par entité
+│   │   ├── adaptation/       # Gestion des adaptations manga/anime
+│   │   ├── anime/            # Gestion des animes
+│   │   ├── license/          # Gestion des licences
+│   │   ├── manga/            # Gestion des mangas
+│   │   ├── search/           # Fonctionnalités de recherche
+│   │   ├── users/            # Gestion utilisateurs et admin
+│   │   └── index.js          # Point d'entrée API
+│   ├── middleware/           # Middlewares Express
 │   │   ├── authMiddleware.js # Authentication
-│   │   ├── errorHandler.js # Gestion d'erreurs
-│   ├── auth/               # Gestion de l'Oauth par AuthJs
-│   ├── prisma/             # ORM Prisma
-│   │   ├── migrations/     # Migrations DB
-│   │   ├── client.js       # Client Prisma
-│   │   └── schema.prisma   # Schéma de données
-│   ├── types/              # Types TypeScript
-│   └── apiServer.js        # Serveur Express
+│   │   └── errorHandler.js   # Gestion d'erreurs
+│   ├── auth/                 # Gestion de l'Oauth par AuthJs
+│   │   ├── auth-pages.js     # Configuration des pages d'authentification/erreur
+│   │   └── auth-routes.js    # Routes Auth.js avec Google OAuth
+│   ├── prisma/               # ORM Prisma
+│   │   ├── migrations/       # Migrations DB
+│   │   ├── client.js         # Client Prisma
+│   │   └── schema.prisma     # Schéma de données
+│   ├── types/                # Types TypeScript
+│   └── apiServer.js          # Serveur Express
 ├── frontend/               # Application React/Vite
-│   ├── src/
+│   ├── src/                # Noyaux de l'UI/route/API
 │   │   ├── components/     # Composants React
 │   │   ├── routes/         # Routes de l'application
 │   │   ├── services/       # Services API
