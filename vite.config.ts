@@ -1,4 +1,3 @@
-// vite.config.ts
 import { defineConfig } from 'vite'
 import react from '@vitejs/plugin-react'
 import { TanStackRouterVite } from '@tanstack/router-plugin/vite'
@@ -10,6 +9,7 @@ export default defineConfig({
     react(),
     tailwindcss()
   ],
+  publicDir: './frontend/public', // spécifier le bon dossier public
   server: {
     proxy: {
       '/api': {
@@ -18,5 +18,9 @@ export default defineConfig({
         secure: false,
       },
     },
+  },
+  build: {
+    outDir: './dist',
+    emptyOutDir: true,
   },
 })

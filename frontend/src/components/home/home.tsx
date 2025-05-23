@@ -1,22 +1,57 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import SearchBar from '../searchBar/searchBar';
 import JishoDictionary from '../jishoSamedaru/jishoDictionnary';
+import RandomAnimePhrase from '../ui/RandomAnimePhrase';
+import RandomMangaTitle from '../ui/RandomMangaTitle';
 
 function Home() {
+  const [isLoaded, setIsLoaded] = useState(false);
+
+  // Déclencher l'animation au montage du composant
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      setIsLoaded(true);
+    }, 100);
+
+    return () => clearTimeout(timer);
+  }, []);
+
   return (
     <div className="min-h-screen flex justify-center items-center p-8 pb-50">
       <div className="p-50">
         <div className="tooltip">
-          <div className="tooltip-content">
-            <div className="animate-bounce text-shadow-sky-100 -rotate-5 text-2xl font-black">Sumimasen, anime ha doko ni Sadematta nodesu ka ?</div>
+          <div　className="tooltip-content transform transition-all ease-out translate-y-0">
+            <RandomAnimePhrase />
           </div>
-          <header className="text-4xl max-w-3xl mx-auto text-center font-black mb-2">
-            <h1>MangAnime Sademaru?</h1>
+          <header 
+            className={`text-4xl max-w-3xl mx-auto text-center font-black mb-2 transform transition-all duration-700 ease-out delay-200 ${
+              isLoaded 
+                ? 'opacity-100 translate-y-0' 
+                : 'opacity-0 translate-y-8'
+            }`}
+          >
+            <RandomMangaTitle />
           </header>
         </div>
         <main>
-          <SearchBar onSearch={() => {}} />
-          <JishoDictionary />
+          <div 
+            className={`transform transition-all duration-700 ease-out delay-400 ${
+              isLoaded 
+                ? 'opacity-100 translate-y-0' 
+                : 'opacity-0 translate-y-8'
+            }`}
+          >
+            <SearchBar onSearch={() => {}} />
+          </div>
+          <div 
+            className={`transform transition-all duration-700 ease-out delay-600 ${
+              isLoaded 
+                ? 'opacity-100 translate-y-0' 
+                : 'opacity-0 translate-y-8'
+            }`}
+          >
+            <JishoDictionary />
+          </div>
         </main>
       </div>
     </div>
