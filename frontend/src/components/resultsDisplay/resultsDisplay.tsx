@@ -5,6 +5,7 @@ import MangaInfoCard from '../cardManga/MangaInfoCard';
 import AnimeInfoCard from '../cardAnime/AnimeInfoCard';
 import SearchBar from '../searchBar/searchBar';
 import AddDataButton from '../addDataButton/addDataButton';
+import RandomMangaTitle from '../ui/RandomMangaTitle'; // Ajout de l'import
 import { License, MangaWork, AnimeWork, WorkStatus } from '../../types';
 import { Search, AlertCircle, Loader2 } from 'lucide-react';
 
@@ -42,6 +43,9 @@ const ResultsDisplay: React.FC<ResultsDisplayProps> = ({ searchTerm }) => {
 
   return (
     <div className="max-w-5/6 mx-auto px-4 py-6">
+      {/* Ajout du RandomMangaTitle au-dessus de la SearchBar */}
+      <RandomMangaTitle searchTerm={searchTerm} />
+      
       <div className="mb-8">
         <SearchBar />
       </div>

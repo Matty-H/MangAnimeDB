@@ -158,7 +158,7 @@ function SearchBar({ onSearch = () => {} }: SearchBarProps) {
         </div>
       
         {showSuggestions && filteredSuggestions.length > 0 && (
-          <div className="absolute z-50 w-full mt-1">
+          <div className="absolute z-[9999] w-full mt-1">
             <div className="card bg-base-100 card-border border-base-300 overflow-hidden shadow-lg">
               <ul className="divide-y divide-base-300 divide-dashed">
                 {filteredSuggestions.map((suggestion, index) => (

@@ -1,11 +1,10 @@
 import React, { useState } from 'react';
 
 const JishoDictionary = () => {
-  const [expandedEntries, setExpandedEntries] = useState({});
-  const [isOpen, setIsOpen] = useState(false);
+  const [showDefinition, setShowDefinition] = useState({});
 
-  const toggleInflection = (wordId) => {
-    setExpandedEntries(prev => ({
+  const toggleDefinition = (wordId) => {
+    setShowDefinition(prev => ({
       ...prev,
       [wordId]: !prev[wordId]
     }));
@@ -69,151 +68,42 @@ const JishoDictionary = () => {
   ];
 
   return (
-    <div className="$bg-base-100 pt-4 max-w-3xl opacity-30 hover:opacity-100 transition-opacity duration-300">
-          <div className="card bg-base-200">
-            <div className="card-body">          
-              {entries.map((entry) => (
-                <div key={entry.id} className="mb-6 bg-base-100 rounded-lg p-4 shadow">
-                  {/* Mot et lecture */}
-                  <div className="flex justify-between items-start mb-2">
-                    <div>
-                      <div className="text-4xl font-bold">
-                        <ruby>
-                          {entry.kanji} <rt className="text-xs text-base-content opacity-70">{entry.furigana}</rt>
-                        </ruby>
-                      </div>
-                      {entry.pos && <div className="badge badge-ghost">{entry.pos}</div>}
-                    </div>
-                    <div>
-                      {entry.common && <span className="badge badge-success">Mot courant</span>}
-                      {entry.id.match(/る$|す$/) && (
-                        <button 
-                          className="btn btn-xs btn-ghost ml-2" 
-                          onClick={() => toggleInflection(entry.id)}
-                        >
-                          Afficher les conjugaisons
-                        </button>
-                      )}
-                    </div>
+    <div className="bg-base-100 pt-4 max-w-3xl opacity-70 hover:opacity-100 transition-opacity duration-300">
+      <div className="card bg-base-200">
+        <div className="card-body">          
+          {entries.map((entry) => (
+            <div key={entry.id} className="bg-base-100 rounded-lg p-4 shadow h-auto min-h-[80px]">
+              {/* Barre compacte avec informations essentielles */}
+              <div className="flex justify-between items-center">
+                <div className="flex items-center gap-3">
+                  <div className="text-2xl font-bold">
+                    <ruby>
+                      {entry.kanji} <rt className="text-xs text-base-content opacity-70">{entry.furigana}</rt>
+                    </ruby>
                   </div>
-                  
-                  {/* Tableau de conjugaisons (affiché conditionnellement) */}
-                  {expandedEntries[entry.id] && (
-                    <div className="bg-base-200 p-2 mb-2 rounded">
-                      <h4 className="font-semibold mb-1">Conjugaisons</h4>
-                      {entry.id === 'さでまる' ? (
-                        <div>
-                          <div className="collapse collapse-arrow">
-                            <input type="checkbox" className="min-h-0" /> 
-                            <div className="collapse-title font-semibold p-1 pl-5 min-h-0 shadow-[0_2px_4px_rgba(0,0,0,0.1)] flex items-center">
-                                Formes Informelles
-                            </div>
-                            <div className="collapse-content p-1"> 
-                              <table className="table table-compact w-full">
-                                <tbody>
-                                  <tr>
-                                    <td className="font-semibold">Présent Positif</td>
-                                    <td>さでまる</td>
-                                  </tr>
-                                  <tr>
-                                    <td className="font-semibold">Présent Négatif</td>
-                                    <td>さでまらない</td>
-                                  </tr>
-                                  <tr>
-                                    <td className="font-semibold">Passé Positif</td>
-                                    <td>さでまった</td>
-                                  </tr>
-                                  <tr>
-                                    <td className="font-semibold">Passé Négatif</td>
-                                    <td>さでまらなかった</td>
-                                  </tr>
-                                  <tr>
-                                    <td className="font-semibold">Forme en te</td>
-                                    <td>さでまって</td>
-                                  </tr>
-                                  <tr>
-                                    <td className="font-semibold">Conditionnel</td>
-                                    <td>さでまれば</td>
-                                  </tr>
-                                  <tr>
-                                    <td className="font-semibold">Volitif</td>
-                                    <td>さでまろう</td>
-                                  </tr>
-                                </tbody>
-                              </table>
-                            </div>
-                          </div>
-
-                          <div className="collapse collapse-arrow mt-2">
-                            <input type="checkbox" className="min-h-0" /> 
-                            <div className="collapse-title font-semibold p-1 pl-5 min-h-0 flex shadow-[0_2px_4px_rgba(0,0,0,0.1)] items-center">
-                              Formes Formelles
-                            </div>
-                            <div className="collapse-content p-1"> 
-                              <table className="table table-compact w-full">
-                                <tbody>
-                                  <tr>
-                                    <td className="font-semibold">Présent Positif</td>
-                                    <td>さでまります</td>
-                                  </tr>
-                                  <tr>
-                                    <td className="font-semibold">Présent Négatif</td>
-                                    <td>さでまりません</td>
-                                  </tr>
-                                  <tr>
-                                    <td className="font-semibold">Passé Positif</td>
-                                    <td>さでまりました</td>
-                                  </tr>
-                                  <tr>
-                                    <td className="font-semibold">Passé Négatif</td>
-                                    <td>さでまりませんでした</td>
-                                  </tr>
-                                  <tr>
-                                    <td className="font-semibold">Forme en te</td>
-                                    <td>さでまりまして</td>
-                                  </tr>
-                                  <tr>
-                                    <td className="font-semibold">Conditionnel</td>
-                                    <td>さでまりますれば</td>
-                                  </tr>
-                                  <tr>
-                                    <td className="font-semibold">Volitif</td>
-                                    <td>さでまりましょう</td>
-                                  </tr>
-                                </tbody>
-                              </table>
-                            </div>
-                          </div>
-                        </div>
-                      ) : (
-                        <table className="table table-compact w-full">
-                          <tbody>
-                            <tr>
-                              <td>Forme simple positive</td>
-                              <td>{entry.id}</td>
-                            </tr>
-                            <tr>
-                              <td>Forme simple négative</td>
-                              <td>
-                                {entry.id.endsWith('る') 
-                                  ? entry.id.slice(0, -1) + 'ない' 
-                                  : entry.id.slice(0, -1) + 'さない'}
-                              </td>
-                            </tr>
-                            <tr>
-                              <td>Forme en te</td>
-                              <td>
-                                {entry.id.endsWith('る') 
-                                  ? entry.id.slice(0, -1) + 'て' 
-                                  : entry.id.slice(0, -1) + 'して'}
-                              </td>
-                            </tr>
-                          </tbody>
-                        </table>
-                      )}
-                    </div>
-                  )}
-                  
+                  {entry.pos && <div className="badge badge-ghost">{entry.pos}</div>}
+                  {entry.common && <span className="badge badge-success">Mot courant</span>}
+                  {entry.level && <span className="badge badge-info badge-sm">{entry.level}</span>}
+                </div>
+                <div 
+                  className="flex btn items-center gap-1 cursor-pointer text-primary hover:text-primary-focus transition-colors" 
+                  onClick={() => toggleDefinition(entry.id)}
+                >
+                  <span className=" text-sm">Définition</span>
+                  <svg 
+                    className={`w-4 h-4 transition-transform duration-200 ${showDefinition[entry.id] ? 'rotate-180' : ''}`} 
+                    fill="none" 
+                    stroke="currentColor" 
+                    viewBox="0 0 24 24"
+                  >
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+                  </svg>
+                </div>
+              </div>
+              
+              {/* Définition complète (conditionnelle) */}
+              <div className={`overflow-hidden transition-all duration-300 ${showDefinition[entry.id] ? 'max-h-[2000px] opacity-100' : 'max-h-0 opacity-0'}`}>
+                <div className="pt-2">
                   {/* Significations */}
                   <div className="mt-3">
                     {entry.meanings.map((meaning, idx) => (
@@ -271,21 +161,107 @@ const JishoDictionary = () => {
                     </div>
                   )}
                   
-                  {/* Niveau JLPT - Seulement pour さでまる */}
-                  {entry.level && (
-                    <div className="mt-1">
-                      <span className="badge badge-info badge-sm">{entry.level}</span>
+                  {/* Tableau de conjugaisons - affiché directement */}
+                  {entry.conjugations && (
+                    <div className="bg-base-200 p-2 mt-4 rounded">
+                      <h4 className="font-semibold pl-2 pt-1">Conjugaison</h4>
+                      
+                      {/* Formes Informelles */}
+                      <div className="collapse collapse-arrow">
+                        <input type="checkbox" className="min-h-0" /> 
+                        <div className="collapse-title font-semibold p-2 min-h-0 flex items-center">
+                          Formes Informelles
+                        </div>
+                        <div className="collapse-content "> 
+                          <table className="table table-compact w-full">
+                            <tbody>
+                              <tr>
+                                <td className="font-semibold">Présent Positif</td>
+                                <td>さでまる</td>
+                              </tr>
+                              <tr>
+                                <td className="font-semibold">Présent Négatif</td>
+                                <td>さでまらない</td>
+                              </tr>
+                              <tr>
+                                <td className="font-semibold">Passé Positif</td>
+                                <td>さでまった</td>
+                              </tr>
+                              <tr>
+                                <td className="font-semibold">Passé Négatif</td>
+                                <td>さでまらなかった</td>
+                              </tr>
+                              <tr>
+                                <td className="font-semibold">Forme en te</td>
+                                <td>さでまって</td>
+                              </tr>
+                              <tr>
+                                <td className="font-semibold">Conditionnel</td>
+                                <td>さでまれば</td>
+                              </tr>
+                              <tr>
+                                <td className="font-semibold">Volitif</td>
+                                <td>さでまろう</td>
+                              </tr>
+                            </tbody>
+                          </table>
+                        </div>
+                      </div>
+                      <div className="divider m-0 p-0"></div>
+                      {/* Formes Formelles */}
+                      <div className="collapse collapse-arrow">
+                        <input type="checkbox" className="min-h-0" /> 
+                        <div className="collapse-title font-semibold p-2 min-h-0 flex shadow-[0_2px_4px_rgba(0,0,0,0.1)] items-center">
+                          Formes Formelles
+                        </div>
+                        <div className="collapse-content"> 
+                          <table className="table table-compact w-full">
+                            <tbody>
+                              <tr>
+                                <td className="font-semibold">Présent Positif</td>
+                                <td>さでまります</td>
+                              </tr>
+                              <tr>
+                                <td className="font-semibold">Présent Négatif</td>
+                                <td>さでまりません</td>
+                              </tr>
+                              <tr>
+                                <td className="font-semibold">Passé Positif</td>
+                                <td>さでまりました</td>
+                              </tr>
+                              <tr>
+                                <td className="font-semibold">Passé Négatif</td>
+                                <td>さでまりませんでした</td>
+                              </tr>
+                              <tr>
+                                <td className="font-semibold">Forme en te</td>
+                                <td>さでまりまして</td>
+                              </tr>
+                              <tr>
+                                <td className="font-semibold">Conditionnel</td>
+                                <td>さでまりますれば</td>
+                              </tr>
+                              <tr>
+                                <td className="font-semibold">Volitif</td>
+                                <td>さでまりましょう</td>
+                              </tr>
+                            </tbody>
+                          </table>
+                        </div>
+                      </div>
                     </div>
                   )}
-                  
+
                   <div className="text-right mt-2">
                     <a href={`https://jisho.org/search/prank`} className="link link-primary text-xs">Détails ▸</a>
                   </div>
                 </div>
-              ))}
+              </div>
             </div>
-          </div>
+          ))}
         </div>
+      </div>
+    </div>
   );
 };
 

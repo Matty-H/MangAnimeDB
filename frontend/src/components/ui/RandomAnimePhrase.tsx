@@ -46,7 +46,18 @@ export default function RandomAnimePhrase() {
       "Vend Toyota Sprinter Trueno AE86, bon état.",
       "Les Bigoudènes Aventures de Johanig Jozester",
       "Expérimentales Céréales Lait",
-      
+      "Truck-kun ! UwU",
+      "One man, one life, one truck, two worlds.",
+      "Two worlds, one truck.",
+      "C'est un gars, il meurt, il se réincarne, il a un harem.",
+      "V2 Final Remix",
+      "Nice",
+      "UwU",
+      "( ._.)",
+      "(๑ơ ₃ ơ)♥",
+      "٩(ˊᗜˋ )و",
+      "( ╯°□°)╯ ┻━━┻",
+      ""
     ];
     
 
