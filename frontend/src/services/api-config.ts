@@ -43,7 +43,10 @@ export const API_ENDPOINTS = {
       UPDATE: (id: string) => buildApiUrl(`/api/manga/part/${id}`),
       DELETE: (id: string) => buildApiUrl(`/api/manga/part/${id}`),
     }
-  }
+  },
+  USER: {
+    ME: buildApiUrl('/api/user/me'),
+  },
 };
 
 // Export de l'URL de base pour d'autres utilisations si nécessaire

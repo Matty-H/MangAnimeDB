@@ -1,61 +1,176 @@
-// Schéma des fichiers d'authentification
+# Documentation d'authentification
 
-/**
- * Structure des fichiers pour l'authentification
- * 
- * backend/
- * ├── api/
- * │   ├── route-folder/     //  Dossier contenant les routes API ainsi que les controllers
- * │   └── index.js          //  Router vers les api /anime, /manga, /license, /search, /adaptation, /admin
- * ├── auth/
- * │   ├── auth-config.js    // Configuration et middlewares d'authentification
- * │   └── auth-routes.js    // Routes pour Auth.js avec Google OAuth
- * └── apiServer.js          // Fichier principal du serveur
- * .env                      // Variables d'environnement
- */
+## Architecture des fichiers
 
-// 1. backend/auth/auth-config.js
-// Contient la configuration de base et les middlewares d'authentification
+```
+backend/
+├── api/
+│   ├── adaptation/          # Routes pour les adaptations
+│   ├── anime/              # Routes pour les animes
+│   ├── license/            # Routes pour les licences
+│   ├── manga/              # Routes pour les mangas
+│   ├── search/             # Routes de recherche
+│   ├── user/               # Routes utilisateur
+│   └── index.js            # Router principal des API
+├── auth/
+│   ├── auth-pages.js       # Configuration des pages d'authentification
+│   └── auth-routes.js      # Routes Auth.js avec Google OAuth
+├── middleware/
+│   ├── auth.middleware.js  # Middlewares d'authentification
+│   └── errorHandler.js     # Gestionnaire d'erreurs global
+├── prisma/                 # Configuration base de données
+├── types/                  # Types TypeScript
+└── apiServer.js           # Serveur principal
+```
 
-// 2. backend/auth/auth-routes.js
-// Définit les routes d'authentification avec Auth.js et Google OAuth
+## 1. Configuration du serveur principal (`apiServer.js`)
 
-// 3. Utilisation dans apiServer.js
-import authRoutes from './auth/auth-routes.js';
-import { configureAuth } from './auth/auth-config.js';
+Le serveur utilise Express avec HTTPS et configure :
+- **CORS** : Autorise les domaines Sademaru et localhost
+- **Authentification** : Montée sur `/auth`
+- **API** : Montée sur `/api`
+- **Pages d'auth** : Configuration automatique des routes `/auth/login`, `/auth/logout`, etc.
 
-// Configuration de l'authentification
-configureAuth(app);
+```javascript
+// Routes d'authentification (ordre important)
+app.use('/auth', authHandler);
+setupAuthPages(app);
 
-// Montage des routes d'authentification sur /api/auth
-app.use('/api/auth', authRoutes);
+// Routes API
+app.use('/api', apiRoutes);
+```
 
-// 4. Utilisation des middlewares d'authentification
-import { requireAuth, requireRole } from './auth/auth-config.js';
+## 2. Configuration Auth.js (`auth/auth-routes.js`)
 
-// Route protégée simple
-router.get('/protected', requireAuth, (req, res) => {
-  res.json({ message: "Route protégée" });
+Utilise **@auth/express** avec :
+- **Provider** : Google OAuth uniquement
+- **Gestion des rôles** : Basée sur les emails configurés dans `ROLE_EMAILS`
+- **Session customisée** : Inclut email, image et rôle
+
+### Gestion des rôles
+Les rôles sont définis dans la variable d'environnement `ROLE_EMAILS` :
+```
+ROLE_EMAILS=admin:admin@example.com,editor:editor@example.com
+```
+
+## 3. Pages d'authentification (`auth/auth-pages.js`)
+
+Configure automatiquement les routes :
+- `/auth/login` - Connexion
+- `/auth/logout` - Déconnexion  
+- `/auth/error` - Gestion des erreurs
+- `/auth/verify-request` - Vérification des demandes
+
+Toutes redirigent vers `dist/index.html` pour être gérées côté frontend.
+
+## 4. Middlewares d'authentification (`middleware/auth.middleware.js`)
+
+### `authenticatedUser(req, res, next)`
+Vérifie qu'un utilisateur est connecté et ajoute la session à `req.session`.
+
+### `checkRole(role)`
+Middleware factory qui vérifie un rôle spécifique :
+```javascript
+export const isAdmin = checkRole('admin');
+export const isEditor = checkRole('editor');  
+export const isUser = checkRole('user');
+```
+
+### Optimisations
+- **Cache de session** : Utilise `res.locals.session` pour éviter les appels répétés
+- **Ajout automatique du rôle** : Si absent dans la session, le calcule automatiquement
+
+## 5. Utilisation dans les routes
+
+### Route protégée simple
+```javascript
+import { authenticatedUser } from '../middleware/auth.middleware.js';
+
+router.get('/protected', authenticatedUser, (req, res) => {
+  res.json({ 
+    message: "Route protégée",
+    user: req.session.user 
+  });
 });
+```
 
-// Route protégée avec rôle spécifique
-router.get('/admin', requireAuth, requireRole('admin'), (req, res) => {
-  res.json({ message: "Route admin" });
+### Route avec rôle spécifique
+```javascript
+import { isAdmin } from '../middleware/auth.middleware.js';
+
+router.get('/admin', isAdmin, (req, res) => {
+  res.json({ message: "Route admin uniquement" });
 });
+```
 
-// 5. Accès à l'utilisateur authentifié
-app.get('/api/profile', requireAuth, (req, res) => {
-  // L'utilisateur authentifié est disponible via req.auth.user
-  const { name, email, role } = req.auth.user;
-  res.json({ name, email, role });
-});
+### Combinaison de middlewares
+```javascript
+import { authenticatedUser, checkRole } from '../middleware/auth.middleware.js';
 
-/**
- * Flux d'authentification
- * 
- * 1. L'utilisateur accède à /api/auth/signin/google
- * 2. Redirection vers le formulaire de connexion Google
- * 3. Après validation, Google redirige vers /api/auth/callback/google
- * 4. Auth.js crée une session et redirige vers votre application
- * 5. La session est disponible via req.auth
- */
+router.get('/editor', 
+  authenticatedUser, 
+  checkRole('editor'), 
+  (req, res) => {
+    res.json({ message: "Accès éditeur" });
+  }
+);
+```
+
+## 6. Structure de la session
+
+Après authentification, `req.session` contient :
+```javascript
+{
+  expires: "2024-01-01T00:00:00.000Z",
+  user: {
+    email: "user@example.com",
+    image: "https://lh3.googleusercontent.com/...",
+    role: "admin" // ou "editor", "user", "guest"
+  }
+}
+```
+
+## 7. Flux d'authentification
+
+1. **Connexion** : `GET /auth/signin/google`
+2. **OAuth Google** : Redirection vers Google
+3. **Callback** : `GET /auth/callback/google`
+4. **Session** : Création avec email, image et rôle
+5. **Redirection** : Vers l'application frontend
+
+## 8. Gestion des erreurs
+
+Le middleware `errorHandler.js` capture toutes les erreurs et retourne :
+```javascript
+{
+  error: "Message d'erreur",
+  details: "Détails optionnels",
+  path: "/api/route"
+}
+```
+
+## 9. Variables d'environnement requises
+
+```env
+# Google OAuth
+GOOGLE_ID=your_google_client_id
+GOOGLE_SECRET=your_google_client_secret
+
+# Auth.js
+AUTH_SECRET=your_random_secret_key
+
+# Rôles utilisateurs
+ROLE_EMAILS=admin:admin@example.com,editor:editor@example.com
+
+# Serveur
+HOST=sademaru.fr
+PORT=2150
+```
+
+## 10. Sécurité
+
+- **HTTPS** : Certificats Let's Encrypt
+- **CORS** : Domaines autorisés explicitement
+- **Trust Proxy** : Pour les headers de proxy inverse
+- **Session sécurisée** : Secret fort requis pour Auth.js
+- **Logging** : Suivi des requêtes et erreurs d'authentification
