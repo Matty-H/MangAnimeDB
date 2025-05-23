@@ -57,7 +57,24 @@ export default function RandomAnimePhrase() {
       "(๑ơ ₃ ơ)♥",
       "٩(ˊᗜˋ )و",
       "( ╯°□°)╯ ┻━━┻",
-      "See you in space, cowboy."
+      "See you in space, cowboy.",
+      "Coucou youtube !",
+      "1+1=11",
+      "<3",
+      "😂 OMG KI A FÉ SA ?! 😂 *envoyer tweet*", 
+      "J'ai ██████ ton █████████ !",
+      "C'est farpait !",
+      "Dernière douche : 2̵͈̘͕̐́̈́̆̈́̿̀̽7̴̩̫̻̟̥̯̓͒͒͒͒̀̔̍̕͝ͅ ̸̡̧̨͔̠̜͉̺͆̍͋̈́̓͂j̸͎̔́͑̀͆̿͝o̵̜̣͍̠̯̳̹͚̻͈͛̉̈̔͑͆̍̋ủ̶̖̀̈́r̶̛͎̯̃̌̑̆͑̔͘͜͝͝ͅs̷͈͎̟̱̤̲͓͓̳̣̒̾͘͘",
+      "Un big flow et au lit !",
+      "Version Netflix > all",
+      "L'anime de la muerte !! (ça veut dire la Mort en espagnole)",
+      "Pas financé par le CNC.",
+      "L'URSSAF a déjà tout pris",
+      "Adapté du roman adapté du film adapté des jouets adaptés du CD adapté du…",
+      "差出真る", 
+      "Déjà-vu",
+      "·−−− ·−−−−· ·− ··  −−· ·− −−· −· ··−·· −−··−−  −· · ·− ·−· ",
+      "Le N°2 chez votre marchande de journaux.",
     ];
     
 

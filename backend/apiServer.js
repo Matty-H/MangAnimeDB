@@ -19,8 +19,8 @@ const PORT = process.env.PORT || 2150;
 
 // Options HTTPS
 const httpsOptions = {
-  key: fs.readFileSync('/etc/letsencrypt/live/sademaru.fr/privkey.pem'),
-  cert: fs.readFileSync('/etc/letsencrypt/live/sademaru.fr/fullchain.pem'),
+  key: fs.readFileSync('/etc/letsencrypt/live/api.sademaru.fr/privkey.pem'),
+  cert: fs.readFileSync('/etc/letsencrypt/live/api.sademaru.fr/fullchain.pem'),
 };
 
 // CORS - AJOUT DES DOMAINES SADEMARU
