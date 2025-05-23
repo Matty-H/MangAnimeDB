@@ -1,4 +1,79 @@
-import React, { useState } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
+
+// Hook pour rendre le texte des badges responsive
+const useResponsiveBadgeText = (
+  textRef,
+  containerRef,
+  minFontSize = 10
+) => {
+  const [fontSize, setFontSize] = useState(14);
+
+  useEffect(() => {
+    const adjustFontSize = () => {
+      if (!textRef.current || !containerRef.current) return;
+
+      const container = containerRef.current;
+      const text = textRef.current;
+      
+      // Largeur disponible (conteneur - padding)
+      const containerWidth = container.offsetWidth;
+      const availableWidth = containerWidth - 16; // padding des badges
+      
+      // Reset à la taille de base
+      text.style.fontSize = '14px';
+      let currentFontSize = 14;
+      
+      // Réduire progressivement jusqu'à ce que le texte rentre
+      while (text.scrollWidth > availableWidth && currentFontSize > minFontSize) {
+        currentFontSize -= 0.5;
+        text.style.fontSize = `${currentFontSize}px`;
+      }
+      
+      setFontSize(currentFontSize);
+    };
+
+    // Ajuster immédiatement
+    const timeoutId = setTimeout(adjustFontSize, 10);
+
+    // Observer les changements de taille
+    const resizeObserver = new ResizeObserver(adjustFontSize);
+    if (containerRef.current) {
+      resizeObserver.observe(containerRef.current);
+    }
+
+    return () => {
+      clearTimeout(timeoutId);
+      resizeObserver.disconnect();
+    };
+  }, [textRef, containerRef, minFontSize]);
+
+  return fontSize;
+};
+
+// Composant Badge responsive
+const ResponsiveBadge = ({ children, className = "", maxWidth, ...props }) => {
+  const containerRef = useRef(null);
+  const textRef = useRef(null);
+  
+  const fontSize = useResponsiveBadgeText(textRef, containerRef, 10);
+
+  return (
+    <span 
+      ref={containerRef}
+      className={`badge ${className} overflow-hidden`}
+      style={maxWidth ? { maxWidth: `${maxWidth}px` } : {}}
+      {...props}
+    >
+      <span 
+        ref={textRef}
+        className="transition-all duration-200 whitespace-nowrap overflow-hidden text-ellipsis"
+        style={{ fontSize: `${fontSize}px` }}
+      >
+        {children}
+      </span>
+    </span>
+  );
+};
 
 const JishoDictionary = () => {
   const [showDefinition, setShowDefinition] = useState({});
@@ -16,7 +91,7 @@ const JishoDictionary = () => {
       id: 'さでまる',
       kanji: '差出真る',
       furigana: 'さでまる',
-      pos: 'Verbe godan en \'ru\', Verbe transitif',
+      pos: 'Verbe godan transitif',
       meanings: ['connaître les correspondances entre manga et anime', 'localiser où commence une scène spécifique dans une adaptation animée'],
       otherForms: ['差出真し 【さでまし】', '差出回る 【さでまる】'],
       etymology: 'Du français "ça démarre où"',
@@ -75,21 +150,44 @@ const JishoDictionary = () => {
             <div key={entry.id} className="bg-base-100 rounded-lg p-4 shadow h-auto min-h-[80px]">
               {/* Barre compacte avec informations essentielles */}
               <div className="flex justify-between items-center">
-                <div className="flex items-center gap-3">
-                  <div className="text-2xl font-bold">
+                <div className="flex items-center gap-3 flex-1 min-w-0">
+                  <div className="text-2xl font-bold flex-shrink-0">
                     <ruby>
                       {entry.kanji} <rt className="text-xs text-base-content opacity-70">{entry.furigana}</rt>
                     </ruby>
                   </div>
-                  {entry.pos && <div className="badge badge-ghost">{entry.pos}</div>}
-                  {entry.common && <span className="badge badge-success">Mot courant</span>}
-                  {entry.level && <span className="badge badge-info badge-sm">{entry.level}</span>}
+                  <div className="flex flex-wrap items-center gap-2 min-w-0 flex-1">
+                    {entry.pos && (
+                      <ResponsiveBadge 
+                        className="badge-ghost" 
+                        maxWidth={200}
+                      >
+                        {entry.pos}
+                      </ResponsiveBadge>
+                    )}
+                    {entry.common && (
+                      <ResponsiveBadge 
+                        className="badge-success" 
+                        maxWidth={120}
+                      >
+                        Mot courant
+                      </ResponsiveBadge>
+                    )}
+                    {entry.level && (
+                      <ResponsiveBadge 
+                        className="badge-info badge-sm" 
+                        maxWidth={80}
+                      >
+                        {entry.level}
+                      </ResponsiveBadge>
+                    )}
+                  </div>
                 </div>
                 <div 
-                  className="flex btn items-center gap-1 cursor-pointer text-primary hover:text-primary-focus transition-colors" 
+                  className="flex btn items-center gap-1 cursor-pointer text-primary hover:text-primary-focus transition-colors flex-shrink-0 ml-2" 
                   onClick={() => toggleDefinition(entry.id)}
                 >
-                  <span className=" text-sm">Définition</span>
+                  <span className="text-sm">Définition</span>
                   <svg 
                     className={`w-4 h-4 transition-transform duration-200 ${showDefinition[entry.id] ? 'rotate-180' : ''}`} 
                     fill="none" 

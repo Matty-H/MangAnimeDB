@@ -57,7 +57,7 @@ export default function RandomAnimePhrase() {
       "(๑ơ ₃ ơ)♥",
       "٩(ˊᗜˋ )و",
       "( ╯°□°)╯ ┻━━┻",
-      ""
+      "See you in space, cowboy."
     ];
     
 
