@@ -75,6 +75,7 @@ export default function RandomAnimePhrase() {
       "Déjà-vu",
       "·−−− ·−−−−· ·− ··  −−· ·− −−· −· ··−·· −−··−−  −· · ·− ·−· ",
       "Le N°2 chez votre marchande de journaux.",
+      "Kira ma tuer",
     ];
     
 

@@ -200,6 +200,49 @@ export const createManga = async (req, res) => {
   }
 };
 
+// Supprimer un manga
+export const deleteManga = async (req, res) => {
+  const { id } = req.params;
+
+  try {
+    // Vérifier si le manga existe
+    const mangaExists = await prisma.mangaWork.findUnique({
+      where: { id },
+      include: {
+        parts: true
+      }
+    });
+
+    if (!mangaExists) {
+      res.status(404).json({ error: 'Manga non trouvé' });
+      return;
+    }
+
+    // Supprimer d'abord toutes les parties associées
+    if (mangaExists.parts && mangaExists.parts.length > 0) {
+      await prisma.mangaPart.deleteMany({
+        where: { mangaId: id }
+      });
+    }
+
+    // Suppression du manga
+    const deletedManga = await prisma.mangaWork.delete({
+      where: { id }
+    });
+
+    res.json({
+      message: 'Manga supprimé avec succès',
+      deletedManga
+    });
+  } catch (error) {
+    console.error('Erreur lors de la suppression du manga:', error);
+    res.status(500).json({ 
+      error: 'Erreur serveur', 
+      details: error.message 
+    });
+  }
+};
+
 // Mettre à jour un manga
 export const updateManga = async (req, res) => {
   const { id } = req.params;

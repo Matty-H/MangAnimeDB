@@ -110,6 +110,13 @@ export class SearchService {
   async deleteMangaPart(partId: string): Promise<any> {
     return httpClient.delete(API_ENDPOINTS.MANGA.PARTS.DELETE(partId));
   }
+
+  /**
+ * Supprime un manga
+ */
+async deleteManga(mangaId: string): Promise<void> {
+  return httpClient.delete<void>(API_ENDPOINTS.MANGA.DELETE(mangaId));
+}
 }
 
 // Exporter une instance singleton par défaut

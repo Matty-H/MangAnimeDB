@@ -224,8 +224,7 @@ const AnimeSeasonManager: React.FC<AnimeSeasonManagerProps> = ({
   };
 
   return (
-    <div className="mt-2">
-      {/* Affichage des alertes - indépendant du débogueur */}
+    <>
       {showAlert && error && (
         <ErrorAlert message={error} onClose={handleAlertClose} />
       )}
@@ -233,19 +232,20 @@ const AnimeSeasonManager: React.FC<AnimeSeasonManagerProps> = ({
       {showAlert && apiResponse && !error && (
         <SuccessAlert message={apiResponse} onClose={handleAlertClose} />
       )}
-
-      <div className="flex items-center justify-between mb-2">
-        <div className="text-sm font-medium">Détails des saisons</div>
-        {isEditMode && (
-          <button 
-            className="btn btn-success btn-xs btn-outline" 
-            onClick={() => setIsAddingSeason(true)}
-            disabled={isAddingSeason}
-          >
-            <Plus size={14} /> Ajouter
-          </button>
+        <div className="flex justify-between items-center">
+        {(editedSeasons.length > 0 || isAddingSeason || editingSeasonId) && (
+          <div className="text-sm font-medium">Détails des saisons</div>
         )}
-      </div>
+          {isEditMode && (
+            <button 
+              className="btn btn-success btn-xs btn-outline" 
+              onClick={() => setIsAddingSeason(true)}
+              disabled={isAddingSeason}
+            >
+              <Plus size={14} /> Ajouter une saison
+            </button>
+          )}
+        </div>
 
       {isEditMode && (
             <button 
@@ -305,7 +305,7 @@ const AnimeSeasonManager: React.FC<AnimeSeasonManagerProps> = ({
         onDelete={deleteSeason}
         isLoading={isLoading}
       />
-    </div>
+    </>
   );
 };
 

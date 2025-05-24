@@ -10,6 +10,7 @@ interface MangaHeaderProps {
   onEditClick: () => void;
   onSaveClick: () => void;
   onCancelClick: () => void;
+  onDeleteClick: () => void;
   onTitleChange: (value: string) => void;
   onPublisherChange: (value: string) => void;
 }
@@ -22,16 +23,16 @@ const MangaHeader: React.FC<MangaHeaderProps> = ({
   onEditClick,
   onSaveClick,
   onCancelClick,
+  onDeleteClick,
   onTitleChange,
   onPublisherChange
 }) => {
-  // Déplacez le hook ici, à l'intérieur du composant
   const { isEditMode } = useEditMode();
   
   return (
     <div className="border-base-300 bg-base-200 border-b border-dashed">
       <div className="flex items-center gap-2 p-4">
-      <BookOpen size={18} className="opacity-70" />
+        <BookOpen size={18} className="opacity-70" />
         <div className="grow">
           <div className="flex items-center justify-between">
             {isEditing ? (
@@ -72,6 +73,13 @@ const MangaHeader: React.FC<MangaHeaderProps> = ({
                   disabled={isLoading}
                 >
                   <X size={16} /> Annuler
+                </button>
+                <button
+                  className="btn btn-sm btn-error"
+                  onClick={onDeleteClick}
+                  disabled={isLoading}
+                >
+                  Supprimer
                 </button>
               </div>
             ) : (

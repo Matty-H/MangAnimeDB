@@ -1,3 +1,4 @@
+//frontend/src/components/cardAnime/AnimeInfoCard.tsx
 import React, { useState, useEffect } from 'react';
 import EmptyAnimeCard from './EmptyAnimeCard';
 import AnimeHeader from './AnimeCardHeader';
@@ -6,7 +7,7 @@ import AnimeDisplayInfo from './AnimeDisplayInfo';
 import ApiResponseDisplay from '../ui/ApiResponseDisplay';
 import { ErrorAlert } from '../ui/ErrorAlert';
 import { SuccessAlert } from '../ui/SuccessAlert';
-import { ChevronsLeftRightEllipsis } from 'lucide-react';
+import { ChevronsLeftRightEllipsis, Plus } from 'lucide-react';
 import { useEditMode } from '../ui/EditModeContext';
 import { searchService } from '../../services';
 
@@ -273,17 +274,28 @@ const AnimeInfoCard: React.FC<AnimeInfoCardProps> = ({
           />
         )}
 
-        {isEditing ? (
+       {isEditing ? (
           <AnimeEditForm
             editedAnime={editedAnime}
             onFieldChange={handleFieldChange}
           />
         ) : (
-          <AnimeDisplayInfo
-            anime={anime}
-            onSeasonsUpdated={handleSeasonsUpdated}
-          />
+          <>
+            <AnimeDisplayInfo
+              anime={anime}
+              onSeasonsUpdated={handleSeasonsUpdated}
+            />
+            {isEditMode && (
+              <div className="text-right">
+                <button className="btn btn-success btn-sm btn-outline" onClick={handleAddAnime}>
+                  <Plus size={16} className="mr-1" />
+                  Ajouter un anime
+                </button>
+              </div>
+            )}
+          </>
         )}
+
       </div>
     </div>
   );

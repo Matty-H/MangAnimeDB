@@ -199,15 +199,18 @@ const MangaPartsManager: React.FC<MangaPartsManagerProps> = ({
   };
 
   return (
-    <div className="mt-4">
-      <div className="flex justify-between items-center mb-2">
+    
+    <>
+      <div className="flex justify-between items-center">
+      {(editedParts.length > 0 || isAddingPart || editingPartId) && (
         <div className="text-sm font-medium">Parties</div>
+      )}
         {isEditMode && (
           <button 
             className="btn btn-success btn-xs btn-outline"
             onClick={() => setIsAddingPart(true)}
           >
-            <Plus size={14} /> Ajouter
+            <Plus size={14} /> Ajouter une partie/arc
           </button>
         )}
       </div>
@@ -418,11 +421,13 @@ const MangaPartsManager: React.FC<MangaPartsManagerProps> = ({
           ))}
         </div>
       ) : (
-        <div className="text-center p-4 text-gray-500 bg-base-200 rounded-lg border border-dashed border-base-300">
-          Aucune partie ajoutée pour ce manga
-        </div>
+        <>
+        {/*<div className="text-center p-4 text-gray-500 bg-base-200 rounded-lg border border-dashed border-base-300">
+        Aucune partie ajoutée pour ce manga
+        </div> */}
+        </>
       )}
-    </div>
+    </>
   );
 };
 

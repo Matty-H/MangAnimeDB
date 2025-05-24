@@ -95,7 +95,7 @@ const Header = () => {
   }, [selectedTheme]);
 
   return (
-    <header className="sticky top-0 z-50">
+    <header className="sticky top-0 z-50 pr-5 backdrop-blur-md bg-base-100/70">
       <div className="container mx-auto flex items-center justify-between p-2">
         {/* Logo / Brand section */}
         <div className="flex-1">

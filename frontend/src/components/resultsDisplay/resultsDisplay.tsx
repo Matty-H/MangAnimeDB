@@ -5,8 +5,8 @@ import MangaInfoCard from '../cardManga/MangaInfoCard';
 import AnimeInfoCard from '../cardAnime/AnimeInfoCard';
 import SearchBar from '../searchBar/searchBar';
 import AddDataButton from '../addDataButton/addDataButton';
-import RandomMangaTitle from '../ui/RandomMangaTitle'; // Ajout de l'import
-import { License, MangaWork, AnimeWork, WorkStatus } from '../../types';
+import RandomMangaTitle from '../ui/RandomMangaTitle';
+import { License } from '../../types';
 import { Search, AlertCircle, Loader2 } from 'lucide-react';
 
 interface ResultsDisplayProps {
@@ -17,6 +17,13 @@ const ResultsDisplay: React.FC<ResultsDisplayProps> = ({ searchTerm }) => {
   const [results, setResults] = useState<License[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
+  const [isLoaded, setIsLoaded] = useState(false);
+
+  // Animation d'apparition
+  useEffect(() => {
+    const timer = setTimeout(() => setIsLoaded(true), 100);
+    return () => clearTimeout(timer);
+  }, []);
 
   useEffect(() => {
     const fetchResults = async () => {
@@ -42,10 +49,13 @@ const ResultsDisplay: React.FC<ResultsDisplayProps> = ({ searchTerm }) => {
   }, [searchTerm]);
 
   return (
-    <div className="max-w-5/6 mx-auto px-4 py-6">
-      {/* Ajout du RandomMangaTitle au-dessus de la SearchBar */}
+    <div
+      className={`max-w-5/6 mx-auto px-4 py-6 transform transition-all duration-700 ease-out ${
+        isLoaded ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'
+      }`}
+    >
       <RandomMangaTitle searchTerm={searchTerm} />
-      
+
       <div className="mb-8">
         <SearchBar />
       </div>
@@ -76,9 +86,8 @@ const ResultsDisplay: React.FC<ResultsDisplayProps> = ({ searchTerm }) => {
           {results.map((license) => (
             <div key={license.id} className="space-y-6">
               <AdaptationTable license={license} />
-              
+
               <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
-                {/* Manga Section - utilisant le composant MangaInfoCard avec isEmptyTemplate si nécessaire */}
                 {license.mangas && license.mangas.length > 0 ? (
                   <div className="space-y-6">
                     {license.mangas.map((manga) => (
@@ -88,8 +97,7 @@ const ResultsDisplay: React.FC<ResultsDisplayProps> = ({ searchTerm }) => {
                 ) : (
                   <MangaInfoCard licenseId={license.id} isEmptyTemplate={true} />
                 )}
-                
-                {/* Anime Section - utilisant le composant AnimeInfoCard avec isEmptyTemplate si nécessaire */}
+
                 {license.animeAdaptations && license.animeAdaptations.length > 0 ? (
                   <div className="space-y-6">
                     {license.animeAdaptations.map((anime) => (
@@ -104,7 +112,7 @@ const ResultsDisplay: React.FC<ResultsDisplayProps> = ({ searchTerm }) => {
           ))}
         </div>
       )}
-      
+
       <div className="fixed bottom-6 right-6">
         <AddDataButton />
       </div>

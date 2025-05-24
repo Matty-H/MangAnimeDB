@@ -38,6 +38,7 @@ export const API_ENDPOINTS = {
     DETAIL: (id: string) => buildApiUrl(`/api/manga/${id}`),
     CREATE: buildApiUrl('/api/manga'),
     UPDATE: (id: string) => buildApiUrl(`/api/manga/${id}`),
+    DELETE: (id: string) => buildApiUrl(`/api/manga/${id}`),
     PARTS: {
       CREATE: buildApiUrl('/api/manga/part'),
       UPDATE: (id: string) => buildApiUrl(`/api/manga/part/${id}`),

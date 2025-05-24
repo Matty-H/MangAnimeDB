@@ -11,6 +11,7 @@ router.get('/:id', mangaController.getMangaById);
 // Routes protégées (requiert rôle admin)
 router.post('/', authenticatedUser, checkRole('admin'), mangaController.createManga);
 router.put('/:id', authenticatedUser, checkRole('admin'), mangaController.updateManga);
+router.delete('/:id', authenticatedUser, checkRole('admin'), mangaController.deleteManga);
 router.put('/license/:licenseId/manga/:mangaId', authenticatedUser, checkRole('admin'), mangaController.updateMangaByLicense);
 
 // Routes des parties de manga - protégées (requiert rôle admin)

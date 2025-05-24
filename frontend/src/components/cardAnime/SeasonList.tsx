@@ -18,9 +18,11 @@ const SeasonList: React.FC<SeasonListProps> = ({
 }) => {
   if (seasons.length === 0) {
     return (
-      <div className="text-center py-4 border border-base-300 rounded-lg">
+      <>
+      {/* <div className="text-center py-4 border border-base-300 rounded-lg">
         <p className="text-sm text-gray-500">Aucune saison ajoutée</p>
-      </div>
+      </div> */}
+      </>
     );
   }
 
