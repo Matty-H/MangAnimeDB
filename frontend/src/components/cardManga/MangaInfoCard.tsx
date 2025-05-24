@@ -1,37 +1,41 @@
 import React, { useState, useEffect } from 'react';
-import EmptyMangaCard from './EmptyMangaCard';
+import { MangaWork } from '../../types';
+import MangaPartsManager from './MangaPartsManager';
 import MangaHeader from './MangaCardHeader';
+import MangaInfo from './MangaDisplayInfo';
 import MangaEditForm from './MangaEditForm';
-import MangaDisplayInfo from './MangaDisplayInfo';
-import ApiResponseDisplay from '../ui/ApiResponseDisplay';
+import EmptyMangaCard from './EmptyMangaCard';
 import { ErrorAlert } from '../ui/ErrorAlert';
 import { SuccessAlert } from '../ui/SuccessAlert';
+import ApiResponseDisplay from '../ui/ApiResponseDisplay';
+import { searchService } from '../../services';
 import { ChevronsLeftRightEllipsis, Plus } from 'lucide-react';
 import { useEditMode } from '../ui/EditModeContext';
-import { searchService } from '../../services';
 
 interface MangaInfoCardProps {
-  manga?: any;
+  manga?: MangaWork;
   licenseId: string;
   isEmptyTemplate?: boolean;
-  onMangaUpdated?: (updatedManga: any) => void;
+  onUpdate?: (updatedManga: MangaWork) => void;
+  onAddManga?: () => void;
   onMangaDeleted?: (mangaId: string) => void;
 }
 
-const MangaInfoCard: React.FC<MangaInfoCardProps> = ({
-  manga,
-  licenseId,
+const MangaInfoCard: React.FC<MangaInfoCardProps> = ({ 
+  manga, 
+  licenseId, 
   isEmptyTemplate = false,
-  onMangaUpdated,
+  onUpdate,
+  onAddManga,
   onMangaDeleted
 }) => {
   const { isEditMode } = useEditMode();
   const [isEditing, setIsEditing] = useState(false);
-  const [editedManga, setEditedManga] = useState(manga);
-  const [apiResponse, setApiResponse] = useState('');
+  const [editedManga, setEditedManga] = useState<MangaWork | undefined>(manga);
+  const [apiResponse, setApiResponse] = useState<string>('');
   const [apiResponseData, setApiResponseData] = useState<any>(null);
-  const [error, setError] = useState<string | null>(null);
   const [isLoading, setIsLoading] = useState(false);
+  const [error, setError] = useState<string | null>(null);
   const [showAlert, setShowAlert] = useState(false);
   const [showResponse, setShowResponse] = useState(false);
   const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
@@ -43,64 +47,62 @@ const MangaInfoCard: React.FC<MangaInfoCardProps> = ({
     setError(null);
   }, [manga]);
 
-  // Mise à jour des états lors de nouvelles réponses API ou erreurs
-  useEffect(() => {
-    if (apiResponse || error) {
-      setShowAlert(true);
-    }
-  }, [apiResponse, error]);
+  if (isEmptyTemplate || !manga) {
+    return <EmptyMangaCard onAddManga={handleAddManga} />;
+  }
 
-  // Fonction pour ajouter un nouveau manga
-  const handleAddManga = async () => {
+  const handleFieldChange = (field: keyof MangaWork, value: any) => {
+    if (!editedManga) return;
+    setEditedManga({ ...editedManga, [field]: value });
+  };
+
+  const handleAuthorsChange = (authorsString: string) => {
+    if (!editedManga) return;
+    const authors = authorsString.split(',').map(a => a.trim()).filter(Boolean);
+    setEditedManga({ ...editedManga, authors });
+  };
+
+  // Fonction pour gérer l'ajout d'un manga
+  async function handleAddManga() {
     setIsLoading(true);
     setError(null);
     setApiResponseData(null);
-    setApiResponse('');
-
+    
     try {
-      // Assurons-nous que licenseId est bien défini
-      if (!licenseId) {
-        throw new Error("L'ID de licence est obligatoire");
-      }
-
-      // Création d'un manga avec tous les champs obligatoires
-      const newManga = {
+      // Création d'un nouveau manga à partir de la licence
+      const newMangaData = {
         licenseId: licenseId,
-        title: "Nouveau manga",
-        publisher: "Éditeur à déterminer", // Champ obligatoire
-        status: "ONGOING", // Statut par défaut
-        genre: "ACTION" // Genre par défaut
+        title: 'Nouveau manga', // Titre par défaut
+        authors: [], // Tableau vide d'auteurs
+        volumes: 0, // Nombre de volumes à 0 par défaut
+        status: 'ONGOING', // Statut par défaut
+        startDate: null, // Pas de date de début
+        endDate: null, // Pas de date de fin
+        publisher: '' // Éditeur vide par défaut
       };
-
-      const responseData = await searchService.createManga(newManga);
+      
+      console.log('Données envoyées à l\'API:', newMangaData);
+      
+      // Utilisation du SearchService au lieu de fetch direct
+      const responseData = await searchService.createManga(newMangaData);
+      
       setApiResponseData(responseData);
-      setApiResponse('Manga créé avec succès');
-
-      // Recharger les données ou mettre à jour l'état local
-      // await loadMangaData(); // ou autre logique de rafraîchissement
-
-    } catch (error: any) {
-      console.error('Erreur lors de la création du manga:', error);
+      setApiResponse('Manga ajouté avec succès');
+      setShowAlert(true);
       
-      // Gestion des erreurs plus précise
-      if (error.response) {
-        // Erreur HTTP avec réponse du serveur
-        const errorDetails = error.response.details || error.response.error || `Erreur ${error.status}`;
-        setError(`Erreur API: ${errorDetails}`);
-        setApiResponseData(error.response);
-      } else if (error.message) {
-        // Erreur JavaScript standard
-        setError(error.message);
-      } else {
-        // Erreur inconnue
-        setError('Une erreur inattendue s\'est produite');
-      }
+      // Si le callback externe existe, on l'appelle
+      if (onAddManga) onAddManga();
       
-      setApiResponse('Erreur lors de la création');
+      // Si une mise à jour des données est nécessaire, on peut appeler onUpdate avec les données du manga créé
+      if (onUpdate) onUpdate(responseData);
+    } catch (err: any) {
+      setError(err.message || 'Une erreur est survenue lors de l\'ajout du manga');
+      setShowAlert(true);
+      console.error('Erreur lors de l\'ajout du manga:', err);
     } finally {
       setIsLoading(false);
     }
-  };
+  }
 
   // Fonction pour supprimer un manga
   const handleDeleteManga = async () => {
@@ -140,59 +142,54 @@ const MangaInfoCard: React.FC<MangaInfoCardProps> = ({
     }
   };
 
-  if (isEmptyTemplate || !manga) {
-    return <EmptyMangaCard onAddManga={handleAddManga} />;
-  }
-
-  const handleFieldChange = (field: string, value: any) => {
-    if (!editedManga) return;
-    setEditedManga({ ...editedManga, [field]: value });
-  };
-
-  const saveMangaChanges = async () => {
+  const handleSaveManga = async () => {
     if (!editedManga) return;
     
     setIsLoading(true);
     setError(null);
     setApiResponseData(null);
-    setApiResponse('');
     
     try {
+      const payload = {
+        licenseId,
+        title: editedManga.title,
+        authors: editedManga.authors,
+        volumes: editedManga.volumes,
+        status: editedManga.status,
+        startDate: editedManga.startDate,
+        endDate: editedManga.endDate,
+        publisher: editedManga.publisher
+      };
+      
       // Utilisation du SearchService au lieu de fetch direct
-      const responseData = await searchService.updateManga(editedManga.id, editedManga);
+      const responseData = await searchService.updateManga(editedManga.id, payload);
       
       setApiResponseData(responseData);
       setApiResponse('Manga mis à jour avec succès');
       setShowAlert(true);
       setIsEditing(false);
-      
-      if (onMangaUpdated) {
-        onMangaUpdated(responseData);
-      }
       setEditedManga(responseData);
+      
+      if (onUpdate) onUpdate(responseData);
     } catch (err: any) {
-      console.error('Erreur lors de la mise à jour du manga:', err);
-      setError(err.message || 'Erreur lors de la mise à jour');
+      setError(err.message || 'Une erreur est survenue lors de la mise à jour');
       setShowAlert(true);
+      console.error('Erreur lors de la mise à jour du manga:', err);
     } finally {
       setIsLoading(false);
     }
   };
 
-  const handleVolumesUpdated = (updatedVolumes: any) => {
-    if (onMangaUpdated && manga) {
-      const updatedManga = {
-        ...manga,
-        volumes: updatedVolumes
-      };
-      onMangaUpdated(updatedManga);
-    }
-  };
-
-  const handleCancel = () => {
+  const handleCancelEdit = () => {
     setIsEditing(false);
     setEditedManga(manga);
     setError(null);
+    setApiResponseData(null);
+  };
+
+  const handleMangaPartsUpdate = (updatedManga: MangaWork) => {
+    setEditedManga(updatedManga);
+    if (onUpdate) onUpdate(updatedManga);
   };
 
   const handleAlertClose = () => {
@@ -203,14 +200,12 @@ const MangaInfoCard: React.FC<MangaInfoCardProps> = ({
     setShowResponse(!showResponse);
   };
 
-  // Fonctions pour MangaHeader
-  const handleTitleChange = (value: string) => {
-    handleFieldChange('title', value);
-  };
-
-  const handlePublisherChange = (value: string) => {
-    handleFieldChange('publisher', value);
-  };
+  // Mise à jour des états lors de nouvelles réponses API ou erreurs
+  useEffect(() => {
+    if (apiResponse || error) {
+      setShowAlert(true);
+    }
+  }, [apiResponse, error]);
 
   return (
     <div className="card bg-base-100 card-border border-base-300 overflow-hidden">
@@ -219,14 +214,14 @@ const MangaInfoCard: React.FC<MangaInfoCardProps> = ({
         publisher={editedManga?.publisher || ''}
         isEditing={isEditing}
         isLoading={isLoading}
-        onEditClick={() => setIsEditing(true)}
-        onSaveClick={saveMangaChanges}
-        onCancelClick={handleCancel}
+        onEditClick={() => setIsEditing(true)} 
+        onSaveClick={handleSaveManga}
+        onCancelClick={handleCancelEdit}
         onDeleteClick={() => setShowDeleteConfirm(true)}
-        onTitleChange={handleTitleChange}
-        onPublisherChange={handlePublisherChange}
+        onTitleChange={(value) => handleFieldChange('title', value)}
+        onPublisherChange={(value) => handleFieldChange('publisher', value)}
       />
-      
+
       <div className="card-body gap-4 p-4">
         {/* Confirmation de suppression */}
         {showDeleteConfirm && (
@@ -255,49 +250,59 @@ const MangaInfoCard: React.FC<MangaInfoCardProps> = ({
         {showAlert && apiResponse && !error && (
           <SuccessAlert message={apiResponse} onClose={handleAlertClose} />
         )}
-
         {isEditMode && (
           <button 
-            className="btn btn-error btn-sm btn-outline" 
-            onClick={handleResponseToggle}
-          >
-            {showResponse ? (
-              <>
-                <ChevronsLeftRightEllipsis size={16} /> Masquer le débogage
-              </>
-            ) : (
-              <>
-                <ChevronsLeftRightEllipsis size={16} /> Afficher le débogage
-              </>
-            )}
+                    className="btn btn-error btn-sm btn-outline" 
+                    onClick={handleResponseToggle}
+                  >
+                    {showResponse ? (
+                      <>
+                        <ChevronsLeftRightEllipsis size={16} /> Masquer le débogage
+                      </>
+                    ) : (
+                      <>
+                        <ChevronsLeftRightEllipsis size={16} /> Afficher le débogage
+                      </>
+                    )}
           </button>
         )}
 
         {/* Affichage du débogueur - indépendant des alertes */}
         {showResponse && (
           <ApiResponseDisplay
-            response={apiResponseData ? JSON.stringify(apiResponseData, null, 2) : null}
+            response={apiResponseData ? JSON.stringify(apiResponseData, null, 2) : null} 
             error={error}
             onClose={handleResponseToggle}
           />
         )}
 
         {isEditing ? (
-          <MangaEditForm
-            editedManga={editedManga}
+          <MangaEditForm 
+            manga={editedManga as MangaWork}
             onFieldChange={handleFieldChange}
+            onAuthorsChange={handleAuthorsChange}
           />
         ) : (
           <>
-            <MangaDisplayInfo
+            <MangaInfo manga={manga} />
+            <MangaPartsManager 
               manga={manga}
-              onVolumesUpdated={handleVolumesUpdated}
+              licenseId={licenseId}
+              onUpdate={handleMangaPartsUpdate}
+              setParentError={(err) => {
+                setError(err);
+                setShowAlert(true);
+              }}
+              setParentApiResponse={(res) => {
+                setApiResponse(res);
+                setShowAlert(true);
+              }}
             />
             {isEditMode && (
               <div className="text-right">
                 <button className="btn btn-success btn-sm btn-outline" onClick={handleAddManga}>
                   <Plus size={16} className="mr-1" />
-                  Ajouter un manga
+                  Ajouter un autre manga
                 </button>
               </div>
             )}

@@ -1,4 +1,4 @@
-//frontend/src/components/cardManga/MangaPartsManager.tsx
+//frontend/src/components/cardManga/EmptyMangaCard.tsx
 import React from 'react';
 import { BookOpen, Plus } from 'lucide-react';
 import { useEditMode } from '../ui/EditModeContext';

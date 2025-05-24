@@ -289,7 +289,7 @@ const AnimeInfoCard: React.FC<AnimeInfoCardProps> = ({
               <div className="text-right">
                 <button className="btn btn-success btn-sm btn-outline" onClick={handleAddAnime}>
                   <Plus size={16} className="mr-1" />
-                  Ajouter un anime
+                  Ajouter un autre anime
                 </button>
               </div>
             )}
