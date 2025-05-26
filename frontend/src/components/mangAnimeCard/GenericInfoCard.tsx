@@ -7,6 +7,7 @@ import { SuccessAlert } from '../ui/SuccessAlert';
 import ApiResponseDisplay from '../ui/ApiResponseDisplay';
 import { ChevronsLeftRightEllipsis, Plus } from 'lucide-react';
 import { useEditMode } from '../ui/EditModeContext';
+import { useGenericApi } from './hooks/useGenericApi';
 import { searchService } from '../../services';
 
 interface GenericInfoCardProps<T> {
@@ -39,34 +40,23 @@ function GenericInfoCard<T extends { id: string }>({
   subtitlePlaceholder
 }: GenericInfoCardProps<T>) {
   const { isEditMode } = useEditMode();
+  const api = useGenericApi();
+  
+  // États locaux simplifiés
   const [isEditing, setIsEditing] = useState(false);
   const [editedItem, setEditedItem] = useState<T | undefined>(item);
-  const [apiResponse, setApiResponse] = useState('');
-  const [apiResponseData, setApiResponseData] = useState<any>(null);
-  const [error, setError] = useState<string | null>(null);
-  const [isLoading, setIsLoading] = useState(false);
-  const [showAlert, setShowAlert] = useState(false);
-  const [showResponse, setShowResponse] = useState(false);
   const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
+  const [showResponse, setShowResponse] = useState(false);
 
+  // Synchronisation avec les props
   useEffect(() => {
     setEditedItem(item);
-    setApiResponse('');
-    setApiResponseData(null);
-    setError(null);
+    api.resetState();
   }, [item]);
 
-  useEffect(() => {
-    if (apiResponse || error) {
-      setShowAlert(true);
-    }
-  }, [apiResponse, error]);
-
+  // Opérations CRUD unifiées
   const handleAdd = async () => {
-    setIsLoading(true);
-    setError(null);
-    setApiResponseData(null);
-    setApiResponse('');
+    api.setLoading(true);
   
     try {
       if (!licenseId) {
@@ -74,12 +64,10 @@ function GenericInfoCard<T extends { id: string }>({
       }
   
       const newItemData = createDefaultItem(licenseId);
-      
       const serviceMethod = type === 'anime' ? searchService.createAnime : searchService.createManga;
       const responseData = await serviceMethod(newItemData);
       
-      setApiResponseData(responseData);
-      setApiResponse(`${type === 'anime' ? 'Anime' : 'Manga'} créé avec succès`);
+      api.setSuccess(`${type === 'anime' ? 'Anime' : 'Manga'} créé avec succès`, responseData);
       
       if (onUpdate) {
         onUpdate(responseData);
@@ -87,87 +75,71 @@ function GenericInfoCard<T extends { id: string }>({
     } catch (error: any) {
       console.error(`Erreur lors de la création du ${type}:`, error);
       
-      if (error.response) {
-        const errorDetails = error.response.details || error.response.error || `Erreur ${error.status}`;
-        setError(`Erreur API: ${errorDetails}`);
-        setApiResponseData(error.response);
-      } else if (error.message) {
-        setError(error.message);
-      } else {
-        setError('Une erreur inattendue s\'est produite');
-      }
+      const errorMessage = error.response?.details || 
+                           error.response?.error || 
+                           error.message || 
+                           'Une erreur inattendue s\'est produite';
       
-      setApiResponse('Erreur lors de la création');
-    } finally {
-      setIsLoading(false);
+      api.setError(`Erreur lors de la création: ${errorMessage}`, error.response);
     }
   };
 
   const handleDelete = async () => {
     if (!editedItem?.id) return;
     
-    setIsLoading(true);
-    setError(null);
-    setApiResponseData(null);
-    setApiResponse('');
+    api.setLoading(true);
     
     try {
       const serviceMethod = type === 'anime' ? searchService.deleteAnime : searchService.deleteManga;
       const responseData = await serviceMethod(editedItem.id);
       
-      setApiResponseData(responseData);
-      setApiResponse(`${type === 'anime' ? 'Anime' : 'Manga'} supprimé avec succès`);
-      setShowAlert(true);
+      api.setSuccess(`${type === 'anime' ? 'Anime' : 'Manga'} supprimé avec succès`, responseData);
       setShowDeleteConfirm(false);
       
       if (onDeleted && editedItem?.id) {
         onDeleted(editedItem.id);
       }
-    } catch (err: any) {
-      console.error(`Erreur lors de la suppression du ${type}:`, err);
+    } catch (error: any) {
+      console.error(`Erreur lors de la suppression du ${type}:`, error);
       
-      const errorMessage = err.message || 'Erreur inconnue lors de la suppression';
-      const detailedError = typeof err === 'object' ?
-        `${errorMessage} (Code: ${err.code || 'inconnu'}) ${JSON.stringify(err.meta || {})}` :
-        errorMessage;
+      const errorMessage = error.response?.details || 
+                           error.response?.error || 
+                           error.message || 
+                           'Erreur inconnue lors de la suppression';
       
-      setError(detailedError);
-      setShowAlert(true);
-    } finally {
-      setIsLoading(false);
+      api.setError(`Erreur lors de la suppression: ${errorMessage}`, error);
     }
   };
 
   const handleSave = async () => {
     if (!editedItem) return;
     
-    setIsLoading(true);
-    setError(null);
-    setApiResponseData(null);
-    setApiResponse('');
+    api.setLoading(true);
     
     try {
       const serviceMethod = type === 'anime' ? searchService.updateAnime : searchService.updateManga;
       const responseData = await serviceMethod(editedItem.id, editedItem);
       
-      setApiResponseData(responseData);
-      setApiResponse(`${type === 'anime' ? 'Anime' : 'Manga'} mis à jour avec succès`);
-      setShowAlert(true);
+      api.setSuccess(`${type === 'anime' ? 'Anime' : 'Manga'} mis à jour avec succès`, responseData);
       setIsEditing(false);
       
       if (onUpdate) {
         onUpdate(responseData);
       }
       setEditedItem(responseData);
-    } catch (err: any) {
-      console.error(`Erreur lors de la mise à jour du ${type}:`, err);
-      setError(err.message || 'Erreur lors de la mise à jour');
-      setShowAlert(true);
-    } finally {
-      setIsLoading(false);
+    } catch (error: any) {
+      console.error(`Erreur lors de la mise à jour du ${type}:`, error);
+      
+      const errorMessage = error.response?.details || 
+                           error.response?.error || 
+                           error.message || 
+                           'Erreur lors de la mise à jour';
+      
+      api.setError(`Erreur lors de la mise à jour: ${errorMessage}`, error);
     }
   };
 
+  // Handlers simplifiés
   const handleFieldChange = (field: string, value: any) => {
     if (!editedItem) return;
     setEditedItem({ ...editedItem, [field]: value } as T);
@@ -176,17 +148,14 @@ function GenericInfoCard<T extends { id: string }>({
   const handleCancel = () => {
     setIsEditing(false);
     setEditedItem(item);
-    setError(null);
-  };
-
-  const handleAlertClose = () => {
-    setShowAlert(false);
+    api.resetState();
   };
 
   const handleResponseToggle = () => {
     setShowResponse(!showResponse);
   };
 
+  // Rendu conditionnel pour template vide
   if (isEmptyTemplate || !item) {
     return <GenericEmptyCard type={type} onAdd={handleAdd} />;
   }
@@ -198,7 +167,7 @@ function GenericInfoCard<T extends { id: string }>({
         title={editedItem ? getTitle(editedItem) : ''}
         subtitle={getSubtitle && editedItem ? getSubtitle(editedItem) : undefined}
         isEditing={isEditing}
-        isLoading={isLoading}
+        isLoading={api.isLoading}
         onEdit={() => setIsEditing(true)}
         onSave={handleSave}
         onCancel={handleCancel}
@@ -208,7 +177,7 @@ function GenericInfoCard<T extends { id: string }>({
         subtitlePlaceholder={subtitlePlaceholder}
       />
       
-      <div className="card-body gap-4 p-4">
+      <div className="card-body p-4">
         {/* Confirmation de suppression */}
         {showDeleteConfirm && (
           <div className="alert alert-warning shadow-lg">
@@ -219,24 +188,25 @@ function GenericInfoCard<T extends { id: string }>({
               <span>Êtes-vous sûr de vouloir supprimer définitivement ce {type} ?</span>
             </div>
             <div className="flex-none">
-              <button className="btn btn-sm btn-error" onClick={handleDelete} disabled={isLoading}>
-                {isLoading ? 'Suppression...' : 'Confirmer'}
+              <button className="btn btn-sm btn-error" onClick={handleDelete} disabled={api.isLoading}>
+                {api.isLoading ? 'Suppression...' : 'Confirmer'}
               </button>
-              <button className="btn btn-sm btn-ghost ml-2" onClick={() => setShowDeleteConfirm(false)} disabled={isLoading}>
+              <button className="btn btn-sm btn-ghost ml-2" onClick={() => setShowDeleteConfirm(false)} disabled={api.isLoading}>
                 Annuler
               </button>
             </div>
           </div>
         )}
 
-        {/* Affichage des alertes */}
-        {showAlert && error && (
-          <ErrorAlert message={error} onClose={handleAlertClose} />
+        {/* Système d'alertes unifié */}
+        {api.showAlert && api.error && (
+          <ErrorAlert message={api.error} onClose={api.closeAlert} />
         )}
-        {showAlert && apiResponse && !error && (
-          <SuccessAlert message={apiResponse} onClose={handleAlertClose} />
+        {api.showAlert && api.apiResponse && !api.error && (
+          <SuccessAlert message={api.apiResponse} onClose={api.closeAlert} />
         )}
         
+        {/* Bouton de débogage */}
         {isEditMode && (
           <button 
             className="btn btn-error btn-sm btn-outline" 
@@ -257,12 +227,13 @@ function GenericInfoCard<T extends { id: string }>({
         {/* Affichage du débogueur */}
         {showResponse && (
           <ApiResponseDisplay
-            response={apiResponseData ? JSON.stringify(apiResponseData, null, 2) : null}
-            error={error}
+            response={api.apiResponseData ? JSON.stringify(api.apiResponseData, null, 2) : null}
+            error={api.error}
             onClose={handleResponseToggle}
           />
         )}
 
+        {/* Contenu principal */}
         {isEditing ? (
           <EditComponent
             item={editedItem as T}
@@ -276,7 +247,7 @@ function GenericInfoCard<T extends { id: string }>({
             />
             {isEditMode && (
               <div className="text-right">
-                <button className="btn btn-success btn-sm btn-outline" onClick={handleAdd}>
+                <button className="btn btn-success btn-sm btn-outline" onClick={handleAdd} disabled={api.isLoading}>
                   <Plus size={16} className="mr-1" />
                   Ajouter un autre {type}
                 </button>
