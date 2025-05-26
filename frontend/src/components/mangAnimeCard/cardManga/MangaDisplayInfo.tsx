@@ -1,9 +1,8 @@
 //frontend/src/components/cardManga/MangaDisplayInfo.tsx
-
 import React from 'react';
-import { MangaWork } from '../../types';
+import { MangaWork } from '../../../types';
 import { BookCopy, Calendar, Pen } from 'lucide-react';
-import Badge from '../ui/badge';
+import Badge from '../../ui/badge';
 
 interface MangaDisplayInfoProps {
   manga: MangaWork;

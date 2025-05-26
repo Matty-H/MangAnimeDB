@@ -1,6 +1,6 @@
 // frontend/src/components/cardAnime/AnimeEditForm.tsx
 import React from 'react';
-import { WorkStatus, AnimeFidelity } from '../../types';
+import { WorkStatus, AnimeFidelity } from '../../../types';
 
 const AnimeEditForm = ({ editedAnime, onFieldChange }) => {
   return (

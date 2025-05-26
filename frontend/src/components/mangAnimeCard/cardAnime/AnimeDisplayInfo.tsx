@@ -1,7 +1,7 @@
 // frontend/src/components/cardAnime/AnimeDisplayInfo.tsx
 import React from 'react';
 import { Tv, Calendar, Info } from 'lucide-react';
-import Badge from '../ui/badge';
+import Badge from '../../ui/badge';
 import AnimeSeasonManager from './AnimeSeasonManager';
 
 const AnimeDisplayInfo = ({ anime, onSeasonsUpdated }) => {

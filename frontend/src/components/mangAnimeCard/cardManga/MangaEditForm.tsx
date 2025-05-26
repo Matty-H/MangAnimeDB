@@ -1,5 +1,6 @@
+//frontend/src/components/cardManga/MangaEditForm.tsx
 import React from 'react';
-import { MangaWork, WorkStatus } from '../../types';
+import { MangaWork, WorkStatus } from '../../../types';
 
 interface MangaEditFormProps {
   manga: MangaWork; // Changé de editedManga vers manga

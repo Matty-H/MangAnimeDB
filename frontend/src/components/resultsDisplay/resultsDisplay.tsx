@@ -1,8 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import { searchService } from '../../services';
 import AdaptationTable from '../adaptationTable/AdaptationTable';
-import MangaInfoCard from '../cardManga/MangaInfoCard';
-import AnimeInfoCard from '../cardAnime/AnimeInfoCard';
+import MangaInfoCard from '../mangAnimeCard/cardManga/MangaInfoCard';
+import AnimeInfoCard from '../mangAnimeCard/cardAnime/AnimeInfoCard';
 import SearchBar from '../searchBar/searchBar';
 import AddDataButton from '../addDataButton/addDataButton';
 import RandomMangaTitle from '../ui/RandomMangaTitle';

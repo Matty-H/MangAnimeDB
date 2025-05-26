@@ -1,5 +1,5 @@
 // frontend/src/services/anime-season-service.ts
-import { Season } from '../components/cardAnime/AnimeSeasonManager';
+import { Season } from '../components/mangAnimeCard/cardAnime/AnimeSeasonManager';
 import { httpClient } from './http-client';
 import { API_ENDPOINTS } from './api-config';
 

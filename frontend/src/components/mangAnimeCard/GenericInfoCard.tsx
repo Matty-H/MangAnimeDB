@@ -1,34 +1,46 @@
-//frontend/src/components/cardAnime/AnimeInfoCard.tsx
+//frontend/src/components/mangAnimeCard/GenericInfoCard.tsx
 import React, { useState, useEffect } from 'react';
-import EmptyAnimeCard from './EmptyAnimeCard';
-import AnimeHeader from './AnimeCardHeader';
-import AnimeEditForm from './AnimeEditForm';
-import AnimeDisplayInfo from './AnimeDisplayInfo';
-import ApiResponseDisplay from '../ui/ApiResponseDisplay';
+import GenericCardHeader from './GenericCardHeader';
+import GenericEmptyCard from './GenericEmptyCard';
 import { ErrorAlert } from '../ui/ErrorAlert';
 import { SuccessAlert } from '../ui/SuccessAlert';
+import ApiResponseDisplay from '../ui/ApiResponseDisplay';
 import { ChevronsLeftRightEllipsis, Plus } from 'lucide-react';
 import { useEditMode } from '../ui/EditModeContext';
 import { searchService } from '../../services';
 
-interface AnimeInfoCardProps {
-  anime?: any;
+interface GenericInfoCardProps<T> {
+  type: 'anime' | 'manga';
+  item?: T;
   licenseId: string;
   isEmptyTemplate?: boolean;
-  onAnimeUpdated?: (updatedAnime: any) => void;
-  onAnimeDeleted?: (animeId: string) => void;
+  onUpdate?: (updatedItem: T) => void;
+  onDeleted?: (itemId: string) => void;
+  getTitle: (item: T) => string;
+  getSubtitle?: (item: T) => string;
+  createDefaultItem: (licenseId: string) => any;
+  DisplayComponent: React.ComponentType<{ item: T; onUpdate?: (item: T) => void }>;
+  EditComponent: React.ComponentType<{ item: T; onFieldChange: (field: string, value: any) => void }>;
+  subtitlePlaceholder?: string;
 }
 
-const AnimeInfoCard: React.FC<AnimeInfoCardProps> = ({
-  anime,
+function GenericInfoCard<T extends { id: string }>({
+  type,
+  item,
   licenseId,
   isEmptyTemplate = false,
-  onAnimeUpdated,
-  onAnimeDeleted
-}) => {
+  onUpdate,
+  onDeleted,
+  getTitle,
+  getSubtitle,
+  createDefaultItem,
+  DisplayComponent,
+  EditComponent,
+  subtitlePlaceholder
+}: GenericInfoCardProps<T>) {
   const { isEditMode } = useEditMode();
   const [isEditing, setIsEditing] = useState(false);
-  const [editedAnime, setEditedAnime] = useState(anime);
+  const [editedItem, setEditedItem] = useState<T | undefined>(item);
   const [apiResponse, setApiResponse] = useState('');
   const [apiResponseData, setApiResponseData] = useState<any>(null);
   const [error, setError] = useState<string | null>(null);
@@ -38,64 +50,50 @@ const AnimeInfoCard: React.FC<AnimeInfoCardProps> = ({
   const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
 
   useEffect(() => {
-    setEditedAnime(anime);
+    setEditedItem(item);
     setApiResponse('');
     setApiResponseData(null);
     setError(null);
-  }, [anime]);
+  }, [item]);
 
-  // Mise à jour des états lors de nouvelles réponses API ou erreurs
   useEffect(() => {
     if (apiResponse || error) {
       setShowAlert(true);
     }
   }, [apiResponse, error]);
 
-  // Fonction pour ajouter un nouvel anime
-  const handleAddAnime = async () => {
+  const handleAdd = async () => {
     setIsLoading(true);
     setError(null);
     setApiResponseData(null);
     setApiResponse('');
   
     try {
-      // Assurons-nous que licenseId est bien défini
       if (!licenseId) {
         throw new Error("L'ID de licence est obligatoire");
       }
   
-      // Création d'un anime avec tous les champs obligatoires
-      const newAnime = {
-        licenseId: licenseId,
-        title: "Nouvel anime",
-        studio: "Studio à déterminer", // Champ obligatoire
-        adaptationType: "TV_SERIES", // Valeurs d'enum obligatoires
-        status: "ONGOING",
-        fidelity: "FAITHFUL",
-        relationType: "MANGA_ADAPTATION"
-      };
-  
-      const responseData = await searchService.createAnime(newAnime);
-      setApiResponseData(responseData);
-      setApiResponse('Anime créé avec succès');
-  
-      // Recharger les données ou mettre à jour l'état local
-      // await loadAnimeData(); // ou autre logique de rafraîchissement
-  
-    } catch (error: any) {
-      console.error('Erreur lors de la création de l\'anime:', error);
+      const newItemData = createDefaultItem(licenseId);
       
-      // Gestion des erreurs plus précise
+      const serviceMethod = type === 'anime' ? searchService.createAnime : searchService.createManga;
+      const responseData = await serviceMethod(newItemData);
+      
+      setApiResponseData(responseData);
+      setApiResponse(`${type === 'anime' ? 'Anime' : 'Manga'} créé avec succès`);
+      
+      if (onUpdate) {
+        onUpdate(responseData);
+      }
+    } catch (error: any) {
+      console.error(`Erreur lors de la création du ${type}:`, error);
+      
       if (error.response) {
-        // Erreur HTTP avec réponse du serveur
         const errorDetails = error.response.details || error.response.error || `Erreur ${error.status}`;
         setError(`Erreur API: ${errorDetails}`);
         setApiResponseData(error.response);
       } else if (error.message) {
-        // Erreur JavaScript standard
         setError(error.message);
       } else {
-        // Erreur inconnue
         setError('Une erreur inattendue s\'est produite');
       }
       
@@ -105,9 +103,8 @@ const AnimeInfoCard: React.FC<AnimeInfoCardProps> = ({
     }
   };
 
-  // Fonction pour supprimer un anime
-  const handleDeleteAnime = async () => {
-    if (!editedAnime?.id) return;
+  const handleDelete = async () => {
+    if (!editedItem?.id) return;
     
     setIsLoading(true);
     setError(null);
@@ -115,22 +112,20 @@ const AnimeInfoCard: React.FC<AnimeInfoCardProps> = ({
     setApiResponse('');
     
     try {
-      // Utilisation du SearchService au lieu de fetch direct
-      const responseData = await searchService.deleteAnime(editedAnime.id);
+      const serviceMethod = type === 'anime' ? searchService.deleteAnime : searchService.deleteManga;
+      const responseData = await serviceMethod(editedItem.id);
       
       setApiResponseData(responseData);
-      setApiResponse('Anime supprimé avec succès');
+      setApiResponse(`${type === 'anime' ? 'Anime' : 'Manga'} supprimé avec succès`);
       setShowAlert(true);
       setShowDeleteConfirm(false);
       
-      // Notifier le composant parent de la suppression
-      if (onAnimeDeleted && editedAnime?.id) {
-        onAnimeDeleted(editedAnime.id);
+      if (onDeleted && editedItem?.id) {
+        onDeleted(editedItem.id);
       }
     } catch (err: any) {
-      console.error('Erreur lors de la suppression de l\'anime:', err);
+      console.error(`Erreur lors de la suppression du ${type}:`, err);
       
-      // Le SearchService encapsule déjà la gestion des erreurs HTTP
       const errorMessage = err.message || 'Erreur inconnue lors de la suppression';
       const detailedError = typeof err === 'object' ?
         `${errorMessage} (Code: ${err.code || 'inconnu'}) ${JSON.stringify(err.meta || {})}` :
@@ -143,17 +138,8 @@ const AnimeInfoCard: React.FC<AnimeInfoCardProps> = ({
     }
   };
 
-  if (isEmptyTemplate || !anime) {
-    return <EmptyAnimeCard onAddAnime={handleAddAnime} />;
-  }
-
-  const handleFieldChange = (field: string, value: any) => {
-    if (!editedAnime) return;
-    setEditedAnime({ ...editedAnime, [field]: value });
-  };
-
-  const saveAnimeChanges = async () => {
-    if (!editedAnime) return;
+  const handleSave = async () => {
+    if (!editedItem) return;
     
     setIsLoading(true);
     setError(null);
@@ -161,20 +147,20 @@ const AnimeInfoCard: React.FC<AnimeInfoCardProps> = ({
     setApiResponse('');
     
     try {
-      // Utilisation du SearchService au lieu de fetch direct
-      const responseData = await searchService.updateAnime(editedAnime.id, editedAnime);
+      const serviceMethod = type === 'anime' ? searchService.updateAnime : searchService.updateManga;
+      const responseData = await serviceMethod(editedItem.id, editedItem);
       
       setApiResponseData(responseData);
-      setApiResponse('Anime mis à jour avec succès');
+      setApiResponse(`${type === 'anime' ? 'Anime' : 'Manga'} mis à jour avec succès`);
       setShowAlert(true);
       setIsEditing(false);
       
-      if (onAnimeUpdated) {
-        onAnimeUpdated(responseData);
+      if (onUpdate) {
+        onUpdate(responseData);
       }
-      setEditedAnime(responseData);
+      setEditedItem(responseData);
     } catch (err: any) {
-      console.error('Erreur lors de la mise à jour de l\'anime:', err);
+      console.error(`Erreur lors de la mise à jour du ${type}:`, err);
       setError(err.message || 'Erreur lors de la mise à jour');
       setShowAlert(true);
     } finally {
@@ -182,19 +168,14 @@ const AnimeInfoCard: React.FC<AnimeInfoCardProps> = ({
     }
   };
 
-  const handleSeasonsUpdated = (updatedSeasons: any) => {
-    if (onAnimeUpdated && anime) {
-      const updatedAnime = {
-        ...anime,
-        seasons: updatedSeasons
-      };
-      onAnimeUpdated(updatedAnime);
-    }
+  const handleFieldChange = (field: string, value: any) => {
+    if (!editedItem) return;
+    setEditedItem({ ...editedItem, [field]: value } as T);
   };
 
   const handleCancel = () => {
     setIsEditing(false);
-    setEditedAnime(anime);
+    setEditedItem(item);
     setError(null);
   };
 
@@ -206,18 +187,25 @@ const AnimeInfoCard: React.FC<AnimeInfoCardProps> = ({
     setShowResponse(!showResponse);
   };
 
+  if (isEmptyTemplate || !item) {
+    return <GenericEmptyCard type={type} onAdd={handleAdd} />;
+  }
+
   return (
     <div className="card bg-base-100 card-border border-base-300 overflow-hidden">
-      <AnimeHeader
-        anime={anime}
+      <GenericCardHeader
+        type={type}
+        title={editedItem ? getTitle(editedItem) : ''}
+        subtitle={getSubtitle && editedItem ? getSubtitle(editedItem) : undefined}
         isEditing={isEditing}
-        editedAnime={editedAnime}
+        isLoading={isLoading}
         onEdit={() => setIsEditing(true)}
-        onSave={saveAnimeChanges}
+        onSave={handleSave}
         onCancel={handleCancel}
         onDelete={() => setShowDeleteConfirm(true)}
-        onFieldChange={handleFieldChange}
-        isLoading={isLoading}
+        onTitleChange={(value) => handleFieldChange('title', value)}
+        onSubtitleChange={getSubtitle ? (value) => handleFieldChange(type === 'anime' ? 'studio' : 'publisher', value) : undefined}
+        subtitlePlaceholder={subtitlePlaceholder}
       />
       
       <div className="card-body gap-4 p-4">
@@ -228,10 +216,10 @@ const AnimeInfoCard: React.FC<AnimeInfoCardProps> = ({
               <svg xmlns="http://www.w3.org/2000/svg" className="stroke-current flex-shrink-0 h-6 w-6" fill="none" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
               </svg>
-              <span>Êtes-vous sûr de vouloir supprimer définitivement cet anime ?</span>
+              <span>Êtes-vous sûr de vouloir supprimer définitivement ce {type} ?</span>
             </div>
             <div className="flex-none">
-              <button className="btn btn-sm btn-error" onClick={handleDeleteAnime} disabled={isLoading}>
+              <button className="btn btn-sm btn-error" onClick={handleDelete} disabled={isLoading}>
                 {isLoading ? 'Suppression...' : 'Confirmer'}
               </button>
               <button className="btn btn-sm btn-ghost ml-2" onClick={() => setShowDeleteConfirm(false)} disabled={isLoading}>
@@ -241,13 +229,14 @@ const AnimeInfoCard: React.FC<AnimeInfoCardProps> = ({
           </div>
         )}
 
-        {/* Affichage des alertes - indépendant du débogueur */}
+        {/* Affichage des alertes */}
         {showAlert && error && (
           <ErrorAlert message={error} onClose={handleAlertClose} />
         )}
         {showAlert && apiResponse && !error && (
           <SuccessAlert message={apiResponse} onClose={handleAlertClose} />
         )}
+        
         {isEditMode && (
           <button 
             className="btn btn-error btn-sm btn-outline" 
@@ -265,7 +254,7 @@ const AnimeInfoCard: React.FC<AnimeInfoCardProps> = ({
           </button>
         )}
 
-        {/* Affichage du débogueur - indépendant des alertes */}
+        {/* Affichage du débogueur */}
         {showResponse && (
           <ApiResponseDisplay
             response={apiResponseData ? JSON.stringify(apiResponseData, null, 2) : null}
@@ -274,31 +263,30 @@ const AnimeInfoCard: React.FC<AnimeInfoCardProps> = ({
           />
         )}
 
-       {isEditing ? (
-          <AnimeEditForm
-            editedAnime={editedAnime}
+        {isEditing ? (
+          <EditComponent
+            item={editedItem as T}
             onFieldChange={handleFieldChange}
           />
         ) : (
           <>
-            <AnimeDisplayInfo
-              anime={anime}
-              onSeasonsUpdated={handleSeasonsUpdated}
+            <DisplayComponent
+              item={item}
+              onUpdate={onUpdate}
             />
             {isEditMode && (
               <div className="text-right">
-                <button className="btn btn-success btn-sm btn-outline" onClick={handleAddAnime}>
+                <button className="btn btn-success btn-sm btn-outline" onClick={handleAdd}>
                   <Plus size={16} className="mr-1" />
-                  Ajouter un autre anime
+                  Ajouter un autre {type}
                 </button>
               </div>
             )}
           </>
         )}
-
       </div>
     </div>
   );
-};
+}
 
-export default AnimeInfoCard;
+export default GenericInfoCard;
